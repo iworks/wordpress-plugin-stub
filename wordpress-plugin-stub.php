@@ -1,8 +1,8 @@
 <?php
 /*
-Plugin Name: wordpress-plugin-stub.pot
-Text Domain: wordpress-plugin-stub.pot
-Plugin URI: http://iworks.pl/wordpress-plugin-stub.pot/
+Plugin Name: wordpress-plugin-stub
+Text Domain: wordpress-plugin-stub
+Plugin URI: http://iworks.pl/wordpress-plugin-stub/
 Description: 
 Version: PLUGIN_VERSION
 Author: Marcin Pietrzak
