@@ -34,7 +34,7 @@ class iworks_posttypes {
 	protected $base;
 
 	public function __construct() {
-		$this->options = get_config_options();
+		$this->options = iworks_wordpress_plugin_stub_get_options();
 		add_action( 'init', array( $this, 'register' ) );
 		/**
 		 * save post
@@ -169,6 +169,14 @@ class iworks_posttypes {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Add default class to postbox,
+	 */
+	public function add_defult_class_to_postbox( $classes ) {
+		$classes[] = 'iworks-type';
+		return $classes;
 	}
 }
 

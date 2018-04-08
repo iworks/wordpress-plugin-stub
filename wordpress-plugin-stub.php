@@ -68,6 +68,11 @@ $iworks_wordpress_plugin_stub_options = new iworks_options();
 $iworks_wordpress_plugin_stub_options->set_option_function_name( 'iworks_wordpress_plugin_stub_options' );
 $iworks_wordpress_plugin_stub_options->set_option_prefix( IWORKS_WORDPRESS_PLUGIN_STUB_PREFIX );
 
+function iworks_wordpress_plugin_stub_get_options() {
+	global $iworks_wordpress_plugin_stub_options;
+	return $iworks_wordpress_plugin_stub_options;
+}
+
 function iworks_wordpress_plugin_stub_options_init() {
 	global $iworks_wordpress_plugin_stub_options;
 	$iworks_wordpress_plugin_stub_options->options_init();
@@ -86,11 +91,6 @@ function iworks_wordpress_plugin_stub_deactivate() {
 }
 
 $iworks_wordpress_plugin_stub = new iworks_wordpress_plugin_stub();
-
-function get_config_options() {
-	global $iworks_wordpress_plugin_stub;
-	return $iworks_wordpress_plugin_stub;
-}
 
 /**
  * install & uninstall
