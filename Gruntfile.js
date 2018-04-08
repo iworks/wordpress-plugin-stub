@@ -458,8 +458,6 @@ module.exports = function( grunt ) {
 			}
 		},
 
-		},
-
 		// BUILD: Replace conditional tags in code.
 		replace: {
 			pro: {

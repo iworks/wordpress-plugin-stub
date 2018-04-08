@@ -3,7 +3,7 @@
 Plugin Name: WordPress Plugin Stub
 Text Domain: wordpress-plugin-stub
 Plugin URI: http://iworks.pl/wordpress-plugin-stub/
-Description: 
+Description:
 Version: PLUGIN_VERSION
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
@@ -86,6 +86,11 @@ function iworks_wordpress_plugin_stub_deactivate() {
 }
 
 $iworks_wordpress_plugin_stub = new iworks_wordpress_plugin_stub();
+
+function get_config_options() {
+	global $iworks_wordpress_plugin_stub;
+	return $iworks_wordpress_plugin_stub;
+}
 
 /**
  * install & uninstall
