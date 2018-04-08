@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: wordpress-plugin-stub
+Plugin Name: WordPress Plugin Stub
 Text Domain: wordpress-plugin-stub
 Plugin URI: http://iworks.pl/wordpress-plugin-stub/
 Description: 
