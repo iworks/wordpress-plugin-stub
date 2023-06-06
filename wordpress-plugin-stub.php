@@ -7,10 +7,10 @@ Description:
 Version: PLUGIN_VERSION
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License: GPLv3 or later
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Copyright 2018 Marcin Pietrzak (marcin@iworks.pl)
+Copyright 2023-PLUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
@@ -35,31 +35,31 @@ if ( ! defined( 'WPINC' ) ) {
  * static options
  */
 define( 'IWORKS_WORDPRESS_PLUGIN_STUB_VERSION', 'PLUGIN_VERSION' );
-define( 'IWORKS_WORDPRESS_PLUGIN_STUB_PREFIX',  'iworks_wordpress-plugin-stub_' );
-$base = dirname( __FILE__ );
-$vendor = $base.'/vendor';
+define( 'IWORKS_WORDPRESS_PLUGIN_STUB_PREFIX', 'iworks_wordpress-plugin-stub_' );
+$base   = dirname( __FILE__ );
+$vendor = $base . '/includes';
 
 /**
  * require: Iworkswordpress-plugin-stub Class
  */
 if ( ! class_exists( 'iworks_wordpress_plugin_stub' ) ) {
-	require_once $vendor.'/iworks/wordpress-plugin-stub.php';
+	require_once $vendor . '/iworks/wordpress-plugin-stub.php';
 }
 /**
  * configuration
  */
-require_once $base.'/etc/options.php';
+require_once $base . '/etc/options.php';
 /**
  * require: IworksOptions Class
  */
 if ( ! class_exists( 'iworks_options' ) ) {
-	require_once $vendor.'/iworks/options/options.php';
+	require_once $vendor . '/iworks/options/options.php';
 }
 
 /**
  * i18n
  */
-load_plugin_textdomain( 'wordpress-plugin-stub', false, plugin_basename( dirname( __FILE__ ) ).'/languages' );
+load_plugin_textdomain( 'wordpress-plugin-stub', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
 
 /**
  * load options
@@ -95,5 +95,5 @@ $iworks_wordpress_plugin_stub = new iworks_wordpress_plugin_stub();
 /**
  * install & uninstall
  */
-register_activation_hook( __FILE__,   'iworks_wordpress_plugin_stub_activate' );
+register_activation_hook( __FILE__, 'iworks_wordpress_plugin_stub_activate' );
 register_deactivation_hook( __FILE__, 'iworks_wordpress_plugin_stub_deactivate' );
