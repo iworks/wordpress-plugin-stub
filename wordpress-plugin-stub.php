@@ -64,6 +64,7 @@ load_plugin_textdomain( 'wordpress-plugin-stub', false, plugin_basename( dirname
 /**
  * load options
  */
+global $iworks_wordpress_plugin_stub_options;
 $iworks_wordpress_plugin_stub_options = new iworks_options();
 $iworks_wordpress_plugin_stub_options->set_option_function_name( 'iworks_wordpress_plugin_stub_options' );
 $iworks_wordpress_plugin_stub_options->set_option_prefix( IWORKS_WORDPRESS_PLUGIN_STUB_PREFIX );
