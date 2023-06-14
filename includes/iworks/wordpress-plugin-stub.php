@@ -1,7 +1,7 @@
 <?php
 /*
 
-Copyright 2018 Marcin Pietrzak (marcin@iworks.pl)
+Copyright 2018-PLUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
@@ -34,7 +34,7 @@ class iworks_wordpress_plugin_stub extends iworks {
 
 	public function __construct() {
 		parent::__construct();
-		$this->version = 'PLUGIN_VERSION';
+		$this->version    = 'PLUGIN_VERSION';
 		$this->capability = apply_filters( 'iworks_wordpress_plugin_stub_capability', 'manage_options' );
 		/**
 		 * admin init
@@ -72,9 +72,9 @@ class iworks_wordpress_plugin_stub extends iworks {
 		/**
 		 * Admin styles
 		 */
-		$file = sprintf( '/assets/styles/admin%s.css', $this->dev );
+		$file    = sprintf( '/assets/styles/admin%s.css', $this->dev );
 		$version = $this->get_version( $file );
-		$file = plugins_url( $file, $this->base );
+		$file    = plugins_url( $file, $this->base );
 		wp_register_style( 'admin-wordpress-plugin-stub', $file, array( 'jquery-ui-datepicker', 'select2' ), $version );
 		wp_enqueue_style( 'admin-wordpress-plugin-stub' );
 		/**
@@ -90,7 +90,7 @@ class iworks_wordpress_plugin_stub extends iworks {
 		if ( '' == $this->dev ) {
 			$files = array(
 				'wordpress-plugin-stub-admin-datepicker' => 'assets/scripts/admin/src/datepicker.js',
-				'wordpress-plugin-stub-admin-select2' => 'assets/scripts/admin/src/select2.js',
+				'wordpress-plugin-stub-admin-select2'    => 'assets/scripts/admin/src/select2.js',
 			);
 		}
 		$deps = array(
@@ -114,8 +114,8 @@ class iworks_wordpress_plugin_stub extends iworks {
 		 */
 		$data = array(
 			'messages' => array(),
-			'nonces' => array(),
-			'user_id' => get_current_user_id(),
+			'nonces'   => array(),
+			'user_id'  => get_current_user_id(),
 		);
 		wp_localize_script(
 			'wordpress_plugin_stub_admin',
@@ -127,7 +127,7 @@ class iworks_wordpress_plugin_stub extends iworks {
 	public function init() {
 		if ( is_admin() ) {
 		} else {
-			$file = 'assets/styles/wordpress_plugin_stub'.$this->dev.'.css';
+			$file = 'assets/styles/wordpress_plugin_stub' . $this->dev . '.css';
 			wp_enqueue_style( 'wordpress-plugin-stub', plugins_url( $file, $this->base ), array(), $this->get_version( $file ) );
 		}
 	}
@@ -136,9 +136,9 @@ class iworks_wordpress_plugin_stub extends iworks {
 	 * Plugin row data
 	 */
 	public function plugin_row_meta( $links, $file ) {
-		if ( $this->dir.'/wordpress-plugin-stub.php' == $file ) {
+		if ( $this->dir . '/wordpress-plugin-stub.php' == $file ) {
 			if ( ! is_multisite() && current_user_can( $this->capability ) ) {
-				$links[] = '<a href="admin.php?page='.$this->dir.'/admin/index.php">' . __( 'Settings' ) . '</a>';
+				$links[] = '<a href="admin.php?page=' . $this->dir . '/admin/index.php">' . __( 'Settings' ) . '</a>';
 			}
 			/* start:free */
 			$links[] = '<a href="http://iworks.pl/donate/wordpress-plugin-stub.php">' . __( 'Donate' ) . '</a>';
