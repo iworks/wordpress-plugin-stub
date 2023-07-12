@@ -23,11 +23,11 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-if ( class_exists( 'iworks' ) ) {
+if ( class_exists( 'iworks_wordpress_plugin_stub_base' ) ) {
 	return;
 }
 
-class iworks {
+class iworks_wordpress_plugin_stub_base {
 
 	protected $dev;
 	protected $meta_prefix = '_';
@@ -40,7 +40,7 @@ class iworks {
 		 * static settings
 		 */
 		$this->dev  = ( defined( 'IWORKS_DEV_MODE' ) && IWORKS_DEV_MODE ) ? '' : '.min';
-		$this->base = dirname( __FILE__ );
+		$this->base = dirname( dirname( __FILE__ ) );
 		$this->dir  = basename( dirname( $this->base ) );
 	}
 

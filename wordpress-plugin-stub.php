@@ -43,7 +43,7 @@ $vendor = $base . '/includes';
  * require: Iworkswordpress-plugin-stub Class
  */
 if ( ! class_exists( 'iworks_wordpress_plugin_stub' ) ) {
-	require_once $vendor . '/iworks/wordpress-plugin-stub.php';
+	require_once $vendor . '/iworks/class-wordpress-plugin-stub.php';
 }
 /**
  * configuration

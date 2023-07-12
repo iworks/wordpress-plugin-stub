@@ -320,6 +320,7 @@ module.exports = function(grunt) {
                         match: /PLUGIN_REQUIRES_WORDPRESS/g,
                         replace: '<%= pkg.requires.WordPress %>'
                     },
+                    { match: /PLUGIN_TESTED_WORDPRESS/g, replace: '<%= pkg.tested.WordPress %>' },
                     {
                         match: /PLUGIN_TAGLINE/g,
                         replace: '<%= pkg.tagline %>'
