@@ -26,7 +26,7 @@ if ( class_exists( 'iworks_wordpress_plugin_stub' ) ) {
 	return;
 }
 
-require_once( dirname( dirname( __FILE__ ) ) . '/class-wordpress-plugin-stub-base.php' );
+require_once( dirname( __FILE__ ) . '/class-wordpress-plugin-stub-base.php' );
 
 class iworks_wordpress_plugin_stub extends iworks_wordpress_plugin_stub_base {
 
