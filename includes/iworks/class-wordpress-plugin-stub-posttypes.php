@@ -22,11 +22,11 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-if ( class_exists( 'iworks_posttypes' ) ) {
+if ( class_exists( 'iworks_wordpress_plugin_posttypes' ) ) {
 	return;
 }
 
-class iworks_posttypes {
+class iworks_wordpress_plugin_posttypes {
 	protected $post_type_name;
 	protected $options;
 	protected $fields;
