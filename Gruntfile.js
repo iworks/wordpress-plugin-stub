@@ -351,7 +351,11 @@ module.exports = function(grunt) {
                 expand: true,
                 src: [
                     'release/**',
-                    '!release/**/images/**'
+                    '!release/**/images/**',
+                    '!release/**/*.gif',
+                    '!release/**/*.jpg',
+                    '!release/**/*.png',
+                    '!release/**/*.webp'
                 ],
                 dest: '.'
             }
