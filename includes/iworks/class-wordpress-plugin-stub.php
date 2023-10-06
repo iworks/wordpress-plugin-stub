@@ -40,6 +40,10 @@ class iworks_wordpress_plugin_stub extends iworks_wordpress_plugin_stub_base {
 		 * admin init
 		 */
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
+		/**
+		 * is active?
+		 */
+		add_filter( 'wordpress-plugin-stub/is_active', '__return_true' );
 	}
 
 	public function admin_init() {
