@@ -12,6 +12,10 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 == Description ==
 
+= GitHub =
+
+The WordPress Plugin Stub plugin is available also on [GitHub - WordPress Plugin Stub](https://github.com/iworks/wordpress-plugin-stub).
+
 == Installation ==
 
 There are 3 ways to install this plugin:
@@ -40,6 +44,10 @@ There are 3 ways to install this plugin:
 1. A new menu `WordPress Plugin Stub` will appear in your Admin.
 
 == Frequently Asked Questions ==
+
+= I have a problem with the plugin, or I want to suggest a feature. Where can I do this? =
+
+You can do it on [Support Threads](https://wordpress.org/support/plugin/wordpress-plugin-stub/#new-topic-0), but please add your ticket to [Github Issues](https://github.com/iworks/wordpress-plugin-stub/issues/new).
 
 == Screenshots ==
 
