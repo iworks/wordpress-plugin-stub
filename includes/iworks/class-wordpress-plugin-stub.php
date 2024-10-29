@@ -160,7 +160,7 @@ class iworks_wordpress_plugin_stub extends iworks_wordpress_plugin_stub_base {
 	 *
 	 * @since 1.0.0
 	 */
-	public function action_register_sidebar_load_plugin_textdomain() {
+	public function action_init_load_plugin_textdomain() {
 		load_plugin_textdomain(
 			'wordpress-plugin-stub',
 			false,
