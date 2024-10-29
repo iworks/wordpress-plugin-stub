@@ -146,10 +146,10 @@ class iworks_wordpress_plugin_stub extends iworks_wordpress_plugin_stub_base {
 	public function plugin_row_meta( $links, $file ) {
 		if ( $this->dir . '/wordpress-plugin-stub.php' == $file ) {
 			if ( ! is_multisite() && current_user_can( $this->capability ) ) {
-				$links[] = '<a href="admin.php?page=' . $this->dir . '/admin/index.php">' . __( 'Settings' ) . '</a>';
+				$links[] = '<a href="admin.php?page=' . $this->dir . '/admin/index.php">' . __( 'Settings', 'wordpress-plugin-stub' ) . '</a>';
 			}
 			/* start:free */
-			$links[] = '<a href="http://iworks.pl/donate/wordpress-plugin-stub.php">' . __( 'Donate' ) . '</a>';
+			$links[] = '<a href="http://iworks.pl/donate/wordpress-plugin-stub.php">' . __( 'Donate', 'wordpress-plugin-stub' ) . '</a>';
 			/* end:free */
 		}
 		return $links;
