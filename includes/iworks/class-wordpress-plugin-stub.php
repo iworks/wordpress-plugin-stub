@@ -37,16 +37,20 @@ class iworks_wordpress_plugin_stub extends iworks_wordpress_plugin_stub_base {
 		$this->version    = 'PLUGIN_VERSION';
 		$this->capability = apply_filters( 'iworks_wordpress_plugin_stub_capability', 'manage_options' );
 		/**
+		 * init
+		 */
+		add_action( 'init', array( $this, 'action_init_load_plugin_textdomain' ), 0 );
+		/**
 		 * admin init
 		 */
-		add_action( 'admin_init', array( $this, 'admin_init' ) );
+		add_action( 'admin_init', array( $this, 'action_admin_init' ) );
 		/**
 		 * is active?
 		 */
 		add_filter( 'wordpress-plugin-stub/is_active', '__return_true' );
 	}
 
-	public function admin_init() {
+	public function action_admin_init() {
 		iworks_wordpress_plugin_stub_options_init();
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
@@ -149,6 +153,19 @@ class iworks_wordpress_plugin_stub extends iworks_wordpress_plugin_stub_base {
 			/* end:free */
 		}
 		return $links;
+	}
+
+	/**
+	 * i18n
+	 *
+	 * @since 1.0.0
+	 */
+	public function action_register_sidebar_load_plugin_textdomain() {
+		load_plugin_textdomain(
+			'wordpress-plugin-stub',
+			false,
+			plugin_basename( $this->dir ) . '/languages'
+		);
 	}
 
 }

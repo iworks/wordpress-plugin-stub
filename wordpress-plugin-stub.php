@@ -57,11 +57,6 @@ if ( ! class_exists( 'iworks_options' ) ) {
 }
 
 /**
- * i18n
- */
-load_plugin_textdomain( 'wordpress-plugin-stub', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
-
-/**
  * load options
  */
 global $iworks_wordpress_plugin_stub_options;
