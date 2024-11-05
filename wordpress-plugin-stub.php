@@ -55,6 +55,19 @@ require_once $base . '/etc/options.php';
 if ( ! class_exists( 'iworks_options' ) ) {
 	require_once $vendor . '/iworks/options/options.php';
 }
+/**
+ * load posttypes - change to `__return_true' to load
+ */
+add_filter( 'wordpress-plugin-stub/load/posttype/faq', '__return_false');
+add_filter( 'wordpress-plugin-stub/load/posttype/hero', '__return_false');
+add_filter( 'wordpress-plugin-stub/load/posttype/newsletter', '__return_false');
+add_filter( 'wordpress-plugin-stub/load/posttype/opinion', '__return_false');
+add_filter( 'wordpress-plugin-stub/load/posttype/page', '__return_false');
+add_filter( 'wordpress-plugin-stub/load/posttype/person', '__return_false');
+add_filter( 'wordpress-plugin-stub/load/posttype/post', '__return_false');
+add_filter( 'wordpress-plugin-stub/load/posttype/project', '__return_false');
+add_filter( 'wordpress-plugin-stub/load/posttype/promo', '__return_false');
+add_filter( 'wordpress-plugin-stub/load/posttype/publication', '__return_false');
 
 /**
  * load options

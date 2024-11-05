@@ -17,10 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
  */
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
-}
+defined( 'ABSPATH' ) || exit;
 
 if ( class_exists( 'iworks_wordpress_plugin_stub' ) ) {
 	return;
@@ -36,6 +33,12 @@ class iworks_wordpress_plugin_stub extends iworks_wordpress_plugin_stub_base {
 		parent::__construct();
 		$this->version    = 'PLUGIN_VERSION';
 		$this->capability = apply_filters( 'iworks_wordpress_plugin_stub_capability', 'manage_options' );
+		/**
+		 * post types
+		 */
+		include_once 'class-wordpress-plugin-stub-posttypes.php';
+		new iworks_wordpress_plugin_posttypes();
+
 		/**
 		 * init
 		 */

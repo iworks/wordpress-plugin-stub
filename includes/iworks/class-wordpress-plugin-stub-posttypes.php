@@ -29,17 +29,36 @@ class iworks_wordpress_plugin_posttypes {
 	protected $post_type_name;
 	protected $options;
 	protected $fields;
-	protected $post_type_objects = array();
+	protected $posttype_objects = array();
 	protected $base;
 
 	public function __construct() {
 		$this->options = iworks_wordpress_plugin_stub_get_options();
-		add_action( 'init', array( $this, 'register' ) );
 		/**
 		 * save post
 		 */
 		add_action( 'save_post', array( $this, 'save_post_meta' ), 10, 3 );
 		$this->base = preg_replace( '/iworks.+/', '', __FILE__ );
+		/**
+		 * load post types
+		 */
+		$posttypes_classes_dir = $this->base . 'iworks/posttypes/';
+		foreach ( glob( $posttypes_classes_dir . 'class*.php' ) as $filename_with_path ) {
+			$filename = basename( $filename_with_path );
+			if ( ! preg_match( '/^class-wordpress-plugin-stub-posttype-([a-z]+).php$/', $filename, $matches ) ) {
+				continue;
+			}
+			$posttype_name = $matches[1];
+			$filter        = sprintf(
+				'wordpress-plugin-stub/load/posttype/%s',
+				$posttype_name
+			);
+			if ( apply_filters( $filter, false ) ) {
+				include_once $posttypes_classes_dir . $filename;
+				$class_name                                = sprintf( 'iworks_wordpress_plugin_stub_posttype_%s', $posttype_name );
+				$this->posttype_objects[ $post_type_name ] = new $class_name();
+			}
+		}
 	}
 
 	public function get_name() {
