@@ -1,8 +1,15 @@
 <?php
+/**
+ * Class for Post Type: PAGE
+ *
+ * @since 1.0.0
+ */
 
-require_once 'class-iworks-post-type.php';
+defined( 'ABSPATH' ) || exit;
 
-class iWorks_Post_Type_Page extends iWorks_Post_Type {
+require_once 'class-wordpress-plugin-stub-posttype.php';
+
+class iworks_wordpress_plugin_stub_posttype_page extends iworks_wordpress_plugin_stub_posttype_base {
 
 	/**
 	 * Option name, used to save data on postmeta table.
@@ -38,7 +45,16 @@ class iWorks_Post_Type_Page extends iWorks_Post_Type {
 
 	public function __construct() {
 		parent::__construct();
-		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
+		/**
+		 * Post Type Name
+		 *
+		 * @since 1.0.0
+		 */
+		$this->posttype_name = preg_replace( '/^iworks_wordpress_plugin_stub_posttype_/', '', __CLASS__ );
+		$this->register_class_custom_posttype_name( $this->posttype_name );
+		/**
+		 * WordPress Hooks
+		 */
 		add_action( 'admin_init', array( $this, 'register' ) );
 		add_action( 'load-post-new.php', array( $this, 'admin_enqueue' ) );
 		add_action( 'load-post.php', array( $this, 'admin_enqueue' ) );
@@ -46,10 +62,41 @@ class iWorks_Post_Type_Page extends iWorks_Post_Type {
 		add_action( 'save_post', array( $this, 'save_meta_description' ) );
 		add_action( 'wp_ajax_nopriv_opi_systems', array( $this, 'ajax_get_opi_systems' ) );
 		add_action( 'wp_ajax_opi_systems', array( $this, 'ajax_get_opi_systems' ) );
+		/**
+		 * WordPress Plugin Stub Hooks
+		 */
 		add_filter( 'opi_pib_theme_system_icon', array( $this, 'get_system_icon' ), 10, 3 );
 		add_filter( 'opi_pib_get_systems', array( $this, 'get_all_systems' ), 10, 2 );
 		add_filter( 'opi_pib_theme_system_url', array( $this, 'get_system_url' ), 10, 2 );
+		/**
+		 * settings
+		 */
+		$this->meta_boxes[ $this->posttypes_names[ $this->posttype_name ] ] = array(
+			'opinion-data' => array(
+				'title'  => __( 'Opinion Data', 'THEME_SLUG' ),
+				'fields' => array(
+					array(
+						'name'  => 'icon',
+						'type'  => 'image',
+						'label' => esc_html__( 'Icon', 'THEME_SLUG' ),
+					),
+					array(
+						'name'  => 'opinion_url',
+						'type'  => 'url',
+						'label' => esc_html__( 'The Opinion URL', 'THEME_SLUG' ),
+					),
+					array(
+						'name'  => 'author_url',
+						'type'  => 'url',
+						'label' => esc_html__( 'The Opinion Author URL', 'THEME_SLUG' ),
+					),
+				),
+			),
+		);
 	}
+
+	public function action_init_register_post_type() {}
+	public function action_init_register_taxonomy() {}
 
 	public function get_all_systems( $content, $parent_id ) {
 		$the_query = $this->get_subpages( $parent_id, -1 );
@@ -154,24 +201,6 @@ class iWorks_Post_Type_Page extends iWorks_Post_Type {
 		);
 	}
 
-	/**
-	 * Register meta box for pictures authors.
-	 *
-	 * @since 1.0.0
-	 */
-	public function add_meta_boxes() {
-		$post_types = array( $this->post_type );
-		add_meta_box(
-			'opi-icon',
-			__( 'Post data', 'THEME_SLUG' ),
-			array( $this, 'html_icon' ),
-			apply_filters( 'opi_metabox_post_icon', $post_types ),
-			'normal',
-			'default'
-		);
-		$this->add_meta_box_meta_description( $this->post_type );
-	}
-
 	private function get_src( $post_id ) {
 		$src = null;
 		if ( isset( $this->images[ $post_id ] ) ) {
@@ -226,68 +255,6 @@ class iWorks_Post_Type_Page extends iWorks_Post_Type {
 		 */
 		$value = filter_input( INPUT_POST, $this->option_name_numbers, FILTER_DEFAULT );
 		$this->update_meta( $post_id, $this->option_name_numbers, $value );
-	}
-
-	/**
-	 * HTML helper for meta box icons.
-	 *
-	 * @since 1.0.1
-	 *
-	 * @param WP_Post $post Edited post object.
-	 */
-	public function html_icon( $post ) {
-		wp_nonce_field( $this->option_name_icon . '_nonce', 'icon_nonce' );
-		$value = intval( get_post_meta( $post->ID, $this->option_name_icon, true ) );
-		$src   = $this->get_src( $post->ID );
-		if ( empty( $src ) ) {
-			$src = '';
-		}
-		wp_enqueue_media();
-		?>
-<div class="image-wrapper<?php echo esc_attr( empty( $src ) ? '' : ( 0 < $value ? ' has-file' : ' has-old-file' ) ); ?>">
-	<p>
-		<button type="button" class="button button-select-image"><?php esc_html_e( 'Upload image', 'THEME_SLUG' ); ?></button>
-		<button type="button" class="image-reset" aria-label="<?php esc_attr_e( 'Remove file', 'THEME_SLUG' ); ?>"><span class="dashicons dashicons-trash"></span></button>
-	</p>
-	<div class="ai-upload-image" aria-hidden="true">
-	<div role="button" class="ai-image-preview" style="background-image: url(<?php echo esc_attr( $src ); ?>);"></div>
-	</div>
-	<input type="hidden" name="<?php echo esc_attr( $this->option_name_icon ); ?>_image_id" value="<?php echo esc_attr( $value ); ?>" class="attachment-id" />
-</div>
-		<?php
-		/**
-		 * url
-		 */
-		$value = esc_url( get_post_meta( $post->ID, $this->option_name_url, true ) );
-		?>
-<div class="url-wrapper">
-	<label><?php esc_html_e( 'Enter target url (works only for "systems tab").', 'THEME_SLUG' ); ?><br />
-	<input type="url" name="<?php echo esc_attr( $this->option_name_url ); ?>" value="<?php echo esc_attr( $value ); ?>" class="regular-text code" />
-	</label>
-</div>
-		<?php
-		/**
-		 * class
-		 */
-		$value = esc_attr( get_post_meta( $post->ID, $this->option_name_class, true ) );
-		?>
-<div class="class-wrapper">
-	<label><?php esc_html_e( 'Extra classes (works only for "systems tab").', 'THEME_SLUG' ); ?><br />
-	<input type="class" name="<?php echo esc_attr( $this->option_name_class ); ?>" value="<?php echo esc_attr( $value ); ?>" class="regular-text code" />
-	</label>
-</div>
-		<?php
-		/**
-		 * numbers
-		 */
-		$value = esc_attr( get_post_meta( $post->ID, $this->option_name_numbers, true ) );
-		?>
-<div class="numbers-wrapper">
-	<label><?php esc_html_e( 'Show numbers (works only for "systems tab").', 'THEME_SLUG' ); ?><br />
-	<input type="numbers" name="<?php echo esc_attr( $this->option_name_numbers ); ?>" value="<?php echo esc_attr( $value ); ?>" class="regular-text code" />
-	</label>
-</div>
-		<?php
 	}
 
 	/**

@@ -6,19 +6,20 @@ require_once dirname( ( dirname( __FILE__ ) ) ) . '/class-wordpress-plugin-stub-
 
 abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpress_plugin_stub_base {
 
-	protected $post_type_name = array(
-		'faq'     => 'faq',
-		'opinion' => 'iworks_opinion',
-		'person'  => 'iworks_person',
-		'project' => 'iworks_project',
+	/**
+	 * Post Type Name
+	 *
+	 * @since 1.0.0
+	 */
+	protected string $posttype_name;
+
+	protected array $posttypes_names = array();
+
+	protected array $taxonomies_names = array(
+		'person_role' => 'iw_person_role',
 	);
 
-	protected $taxonomy_name = array(
-		'faq'         => 'faq_cat',
-		'person_role' => 'on_role',
-	);
-
-	protected $meta_boxes = array();
+	protected array $meta_boxes = array();
 
 	/**
 	 * post meta prefix
@@ -30,12 +31,40 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 		/**
 		 * WordPress Hooks
 		 */
-		add_action( 'init', array( $this, 'register_post_type' ) );
-		add_action( 'init', array( $this, 'register_taxonomy' ) );
+		add_action( 'init', array( $this, 'action_init_register_post_type' ), 0 );
+		add_action( 'init', array( $this, 'action_init_register_taxonomy' ), 0 );
+		/**
+		 * WordPress Plugin Stub Hooks
+		 */
+		/**
+		 * Settings
+		 */
+		$this->posttypes_names = apply_filters(
+			'iworks/wordpress-plugiun-stub/posttypes_names/array',
+			$this->posttypes_names
+		);
 	}
 
-	abstract public function register_post_type();
-	abstract public function register_taxonomy();
+	abstract public function action_init_register_post_type();
+	abstract public function action_init_register_taxonomy();
+
+	/**
+	 * Register the Post Type Name in the Class Parent Class.
+	 *
+	 * @since 1.0.0
+	 */
+	protected function register_class_custom_posttype_name( $posttype_name, $prefix = '' ) {
+		$this->posttypes_names[ $posttype_name ] = $prefix . $this->posttype_name;
+	}
+
+	/**
+	 * Save entry action
+	 *
+	 * @since 2.0.0
+	 */
+	public function action_save_post( $post_id, $post, $update ) {
+		$this->save_meta( $post_id, $post, $update, $this->posttype_name );
+	}
 
 	protected function get_select_array( $post_type, $atts = array() ) {
 		$args      = wp_parse_args(
@@ -56,7 +85,7 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 		return $list;
 	}
 
-	protected function add_meta_boxes( $post_type ) {
+	public function add_meta_boxes( $post_type ) {
 		if ( empty( $this->meta_boxes ) ) {
 			return;
 		}
@@ -72,8 +101,8 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 				isset( $data['context'] ) ? $data['context'] : 'advanced',
 				isset( $data['priority'] ) ? $data['priority'] : 'default',
 				array(
-					'post_type_name' => $post_type,
-					'id'             => $id,
+					'posttype_name' => $post_type,
+					'id'            => $id,
 				)
 			);
 		}
@@ -170,10 +199,10 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 	}
 
 	public function render_meta_box_content( $post, $args ) {
-		$post_type_name = $args['args']['post_type_name'];
-		$id             = $args['args']['id'];
+		$posttype_name = $args['args']['posttype_name'];
+		$id            = $args['args']['id'];
 		wp_nonce_field( $this->nonce_value, $this->get_post_meta_name( $id ) );
-		foreach ( $this->meta_boxes[ $post_type_name ][ $id ]['fields'] as $one ) {
+		foreach ( $this->meta_boxes[ $posttype_name ][ $id ]['fields'] as $one ) {
 			$this->render( $post, $one );
 		}
 	}

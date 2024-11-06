@@ -48,14 +48,14 @@ class iworks_wordpress_plugin_posttypes {
 			if ( ! preg_match( '/^class-wordpress-plugin-stub-posttype-([a-z]+).php$/', $filename, $matches ) ) {
 				continue;
 			}
-			$posttype_name = $matches[1];
-			$filter        = sprintf(
+			$post_type_name = $matches[1];
+			$filter         = sprintf(
 				'wordpress-plugin-stub/load/posttype/%s',
-				$posttype_name
+				$post_type_name
 			);
 			if ( apply_filters( $filter, false ) ) {
 				include_once $posttypes_classes_dir . $filename;
-				$class_name                                = sprintf( 'iworks_wordpress_plugin_stub_posttype_%s', $posttype_name );
+				$class_name                                = sprintf( 'iworks_wordpress_plugin_stub_posttype_%s', $post_type_name );
 				$this->posttype_objects[ $post_type_name ] = new $class_name();
 			}
 		}

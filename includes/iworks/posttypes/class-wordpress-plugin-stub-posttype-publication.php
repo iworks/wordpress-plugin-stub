@@ -1,35 +1,86 @@
 <?php
+/**
+ * Class for custom Post Type: PUBLICATION
+ *
+ * @since 1.0.0
+ */
 
-require_once 'class-iworks-post-type.php';
+defined( 'ABSPATH' ) || exit;
 
-class iWorks_Post_Type_Publication extends iWorks_Post_Type {
+require_once 'class-wordpress-plugin-stub-posttype.php';
 
-	private $post_type_name = 'opi_publication';
+class iworks_wordpress_plugin_stub_posttype_publication extends iworks_wordpress_plugin_stub_posttype_base {
 
 	public function __construct() {
 		parent::__construct();
-		add_action( 'init', array( $this, 'custom_post_type' ), 0 );
-		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
+		/**
+		 * Post Type Name
+		 *
+		 * @since 1.0.0
+		 */
+		$this->posttype_name = preg_replace( '/^iworks_wordpress_plugin_stub_posttype_/', '', __CLASS__ );
+		$this->register_class_custom_posttype_name( $this->posttype_name, 'iw_' );
+		/**
+		 * WordPress Hooks
+		 */
+		add_action( 'add_meta_boxes_' . $this->posttypes_names[ $this->posttype_name ], array( $this, 'add_meta_boxes' ) );
 		add_action( 'save_post', array( $this, 'save' ) );
 		add_filter( 'the_content', array( $this, 'the_content' ) );
 		add_action( 'pre_get_posts', array( $this, 'set_default_order' ) );
 		/**
-		 * Publications tab on main page
+		 * WordPress Plugin Stub Hooks
 		 */
 		add_filter( 'opi_pib_get_systems_publications', array( $this, 'get_random' ), 10, 2 );
 		add_filter( 'opi_pib_theme_system_tab_button_more_url', array( $this, 'get_archive_page_url' ), 10, 4 );
+		/**
+		 * settings
+		 */
+		$this->meta_boxes[ $this->posttypes_names[ $this->posttype_name ] ] = array(
+			'publication-data' => array(
+				'title'  => __( 'Data', 'THEME_SLUG' ),
+				'fields' => array(
+					array(
+						'name'  => 'language',
+						'type'  => 'select',
+						'label' => esc_html__( 'Language', 'THEME_SLUG' ),
+					),
+					array(
+						'name'  => 'year',
+						'type'  => 'year',
+						'label' => esc_html__( 'Year', 'THEME_SLUG' ),
+					),
+					array(
+						'name'  => 'authors',
+						'label' => esc_html__( 'Authors', 'THEME_SLUG' ),
+					),
+					array(
+						'name'  => 'where',
+						'label' => esc_html__( 'Where', 'THEME_SLUG' ),
+					),
+					array(
+						'name'  => 'url',
+						'type'  => 'url',
+						'label' => esc_html__( 'URL', 'THEME_SLUG' ),
+					),
+					array(
+						'name'  => 'conference',
+						'label' => esc_html__( 'Conference', 'THEME_SLUG' ),
+					),
+				),
+			),
+		);
 	}
 
 	/**
 	 * Set default order
 	 *
-	 * @since 1.3.6
+	 * @since 1.0.0
 	 */
 	public function set_default_order( $query ) {
 		if ( is_admin() ) {
 			return;
 		}
-		if ( $this->post_type_name !== $query->get( 'post_type' ) ) {
+		if ( $this->posttype_name !== $query->get( 'post_type' ) ) {
 			return;
 		}
 		$query->set( 'meta_key', 'opi_publication_year' );
@@ -46,14 +97,14 @@ class iWorks_Post_Type_Publication extends iWorks_Post_Type {
 		if ( 'publications' !== $type ) {
 			return $url;
 		}
-		return get_post_type_archive_link( $this->post_type_name );
+		return get_post_type_archive_link( $this->posttype_name );
 	}
 
 	public function get_random( $content, $args ) {
 		$args                   = wp_parse_args(
 			$args,
 			array(
-				'post_type'      => $this->post_type_name,
+				'post_type'      => $this->posttype_name,
 				'orderby'        => 'rand',
 				'posts_per_page' => 1,
 				'wp_doing_ajax'  => apply_filters( 'wp_doing_ajax', false ),
@@ -79,7 +130,7 @@ class iWorks_Post_Type_Publication extends iWorks_Post_Type {
 	}
 
 	public function the_content( $content ) {
-		if ( get_post_type() !== $this->post_type_name ) {
+		if ( get_post_type() !== $this->posttype_name ) {
 			return $content;
 		}
 		$post_ID = get_the_ID();
@@ -136,12 +187,14 @@ class iWorks_Post_Type_Publication extends iWorks_Post_Type {
 		return $c;
 	}
 
+	public function action_init_register_taxonomy() {}
+
 	/**
 	 * Register Custom Post Type
 	 *
-	 * @since 1.3.9
+	 * @since 1.0.0
 	 */
-	public function custom_post_type() {
+	public function action_init_register_post_type() {
 		$labels = array(
 			'name'                  => _x( 'Publications', 'Post Type General Name', 'THEME_SLUG' ),
 			'singular_name'         => _x( 'Publication', 'Post Type Singular Name', 'THEME_SLUG' ),
@@ -175,90 +228,13 @@ class iWorks_Post_Type_Publication extends iWorks_Post_Type {
 			'menu_icon'           => 'dashicons-businessperson',
 			'public'              => true,
 			'show_in_admin_bar'   => true,
-			'show_in_menu'        => apply_filters( 'opi_post_type_show_in_menu' . $this->post_type_name, 'edit.php' ),
+			'show_in_menu'        => apply_filters( 'opi_post_type_show_in_menu' . $this->posttype_name, 'edit.php' ),
 			'show_in_nav_menus'   => true,
 			'show_ui'             => true,
 			'show_in_rest'        => true,
 			'supports'            => array( 'title', 'editor', 'excerpt' ),
 		);
-		register_post_type( $this->post_type_name, $args );
-	}
-
-	/**
-	 * Add meta boxes
-	 *
-	 * @since 1.3.6
-	 */
-	public function add_meta_boxes() {
-		add_meta_box(
-			'opi-publication-data',
-			__( 'Publication data', 'THEME_SLUG' ),
-			array( $this, 'html_data' ),
-			$this->post_type_name,
-			'normal',
-			'default'
-		);
-	}
-
-	/**
-	 * HTML for metabox
-	 *
-	 * @since 1.3.6
-	 */
-	public function html_data( $post ) {
-		wp_nonce_field( __CLASS__, '_publication_nonce' );
-		?>
-<p>
-	<label><?php esc_attr_e( 'Language', 'THEME_SLUG' ); ?><br />
-		<?php
-		wp_dropdown_languages(
-			array(
-				'selected' => get_post_meta( $post->ID, 'opi_publication_language', true ),
-				'name'     => 'opi_publication_language',
-			)
-		);
-		?>
-	</label>
-</p>
-<p>
-	<label><?php esc_attr_e( 'Year', 'THEME_SLUG' ); ?><br />
-		<select name="opi_publication_year">
-			<?php $value = intval( get_post_meta( $post->ID, 'opi_publication_year', true ) ); ?>
-			<option value=""><?php esc_html_e( '-- select year --', 'THEME_SLUG' ); ?></option>
-		<?php
-		for ( $i = date( 'Y' );$i > 2000; $i-- ) {
-			printf( '<option value="%1$d" %2$s>%1$d</option>', $i, selected( $value, $i, false ) );
-		}
-		?>
-		</select>
-	</label>
-</p>
-<p>
-	<label><?php esc_attr_e( 'Authors', 'THEME_SLUG' ); ?><br />
-		<?php $value = get_post_meta( $post->ID, 'opi_publication_authors', true ); ?>
-		<input type="text" class="large-text" value="<?php echo esc_attr( $value ); ?>" name="opi_publication_authors" />
-	</label>
-</p>
-<p>
-	<label><?php esc_attr_e( 'Where', 'THEME_SLUG' ); ?><br />
-		<?php $value = get_post_meta( $post->ID, 'opi_publication_where', true ); ?>
-		<input type="text" class="large-text" value="<?php echo esc_attr( $value ); ?>" name="opi_publication_where" />
-	</label>
-</p>
-<p>
-	<label><?php esc_attr_e( 'URL', 'THEME_SLUG' ); ?><br />
-		<?php $value = get_post_meta( $post->ID, 'opi_publication_url', true ); ?>
-		<input type="url" class="large-text" value="<?php echo esc_attr( $value ); ?>" name="opi_publication_url" />
-	</label>
-</p>
-<p>
-	<label><?php esc_attr_e( 'Conference', 'THEME_SLUG' ); ?> <small class="description"><?php esc_html_e( '(only when needed)', 'THEME_SLUG' ); ?></small><br />
-		<?php $value = get_post_meta( $post->ID, 'opi_publication_conference', true ); ?>
-		<input type="text" class="large-text" value="<?php echo esc_attr( $value ); ?>" name="opi_publication_conference" />
-	</label>
-</p>
-		<?php
-
+		register_post_type( $this->posttype_name, $args );
 	}
 
 	/**

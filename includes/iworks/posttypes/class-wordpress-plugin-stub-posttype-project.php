@@ -1,32 +1,40 @@
 <?php
 /**
- * Opi projects class
+ * Class for custom Post Type: PROJECT
  *
- * @since 2.1.2
+ * @since 1.0.0
  */
 
-require_once 'class-iworks-post-type.php';
+defined( 'ABSPATH' ) || exit;
 
-class iWorks_Post_Type_Project extends iWorks_Post_Type {
+require_once 'class-wordpress-plugin-stub-posttype.php';
 
-	private $post_type_name       = 'opi_project';
+class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plugin_stub_posttype_base {
+
+	// private string $posttype_name;
+
 	private $fields               = array();
 	private $option_name_partners = '_partners';
 	/**
 	 * partners types
 	 *
-	 * @since 2.1.5
+	 * @since 1.0.0
 	 */
 	private $partners_types;
 
 	public function __construct() {
 		parent::__construct();
 		/**
+		 * Post Type Name
+		 *
+		 * @since 1.0.0
+		 */
+		$this->posttype_name = preg_replace( '/^iworks_wordpress_plugin_stub_posttype_/', '', __CLASS__ );
+		$this->register_class_custom_posttype_name( $this->posttype_name, 'iw_' );
+		/**
 		 * WordPress Hooks
 		 */
-		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
-		add_action( 'admin_init', array( $this, 'register' ) );
-		add_action( 'init', array( $this, 'custom_post_type' ), 0 );
+		add_action( 'add_meta_boxes_' . $this->posttypes_names[ $this->posttype_name ], array( $this, 'add_meta_boxes' ) );
 		add_action( 'load-post-new.php', array( $this, 'admin_enqueue' ) );
 		add_action( 'load-post.php', array( $this, 'admin_enqueue' ) );
 		add_action( 'pre_get_posts', array( $this, 'set_default_order' ) );
@@ -39,7 +47,54 @@ class iWorks_Post_Type_Project extends iWorks_Post_Type {
 		add_filter( 'opi_pib_get_opi_projects_random', array( $this, 'get_random' ), 10, 2 );
 		add_filter( 'opi_pib_get_opi_projects', array( $this, 'get_list' ) );
 		add_filter( 'opi_pib_get_opi_project_types', array( $this, 'filter_get_partners_types' ) );
+		/**
+		 * Settings
+		 */
+		$this->meta_boxes[] = array(
+			'project-data'  => array(
+				'title'  => __( 'Project Data', 'THEME_SLUG' ),
+				'fields' => array(
+					array(
+						'name'  => 'icon',
+						'type'  => 'image',
+						'label' => esc_html__( 'Icon', 'THEME_SLUG' ),
+					),
+					array(
+						'name'  => 'opinion_url',
+						'type'  => 'url',
+						'label' => esc_html__( 'The Opinion URL', 'THEME_SLUG' ),
+					),
+					array(
+						'name'  => 'author_url',
+						'type'  => 'url',
+						'label' => esc_html__( 'The Opinion Author URL', 'THEME_SLUG' ),
+					),
+				),
+			),
+			'project-media' => array(
+				'title'  => __( 'Project Media', 'THEME_SLUG' ),
+				'fields' => array(
+					array(
+						'name'  => 'icon',
+						'type'  => 'image',
+						'label' => esc_html__( 'Icon', 'THEME_SLUG' ),
+					),
+					array(
+						'name'  => 'opinion_url',
+						'type'  => 'url',
+						'label' => esc_html__( 'The Opinion URL', 'THEME_SLUG' ),
+					),
+					array(
+						'name'  => 'author_url',
+						'type'  => 'url',
+						'label' => esc_html__( 'The Opinion Author URL', 'THEME_SLUG' ),
+					),
+				),
+			),
+		);
 	}
+
+	public function action_init_register_taxonomy() {}
 
 	public function setup() {
 		$this->partners_types = array(
@@ -54,7 +109,7 @@ class iWorks_Post_Type_Project extends iWorks_Post_Type {
 	/**
 	 * Register plugin assets.
 	 *
-	 * @since 2.1.4
+	 * @since 1.0.0
 	 */
 	public function register() {
 		wp_register_style(
@@ -78,11 +133,11 @@ class iWorks_Post_Type_Project extends iWorks_Post_Type {
 	/**
 	 * Enqueue plugin assets.
 	 *
-	 * @since 2.1.4
+	 * @since 1.0.0
 	 */
 	public function admin_enqueue() {
 		global $typenow;
-		if ( $typenow !== $this->post_type_name ) {
+		if ( $typenow !== $this->posttype_name ) {
 			return;
 		}
 		wp_enqueue_script( strtolower( __CLASS__ ) );
@@ -95,7 +150,7 @@ class iWorks_Post_Type_Project extends iWorks_Post_Type {
 			'orderby'        => 'rand',
 			'posts_per_page' => max( 1, intval( $posts_per_page ) ),
 			'post_status'    => 'publish',
-			'post_type'      => $this->post_type_name,
+			'post_type'      => $this->posttype_name,
 		);
 		$the_query = new WP_Query( $args );
 		if ( 'pl_PL' === get_locale() ) {
@@ -118,13 +173,13 @@ class iWorks_Post_Type_Project extends iWorks_Post_Type {
 	/**
 	 * Set default order
 	 *
-	 * @since 2.1.2
+	 * @since 1.0.0
 	 */
 	public function set_default_order( $query ) {
 		if ( is_admin() ) {
 			return;
 		}
-		if ( $this->post_type_name !== $query->get( 'post_type' ) ) {
+		if ( $this->posttype_name !== $query->get( 'post_type' ) ) {
 			return;
 		}
 		$query->set( 'meta_key', '_project_date_start' );
@@ -140,13 +195,13 @@ class iWorks_Post_Type_Project extends iWorks_Post_Type {
 	/**
 	 * Get list
 	 *
-	 * @since 2.1.2
+	 * @since 1.0.0
 	 */
 	public function get_list( $content ) {
 		$args      = array(
 			'nopaging'    => true,
 			'post_status' => 'publish',
-			'post_type'   => $this->post_type_name,
+			'post_type'   => $this->posttype_name,
 		);
 		$the_query = new WP_Query( $args );
 		if ( $the_query->have_posts() ) {
@@ -159,11 +214,11 @@ class iWorks_Post_Type_Project extends iWorks_Post_Type {
 			$content .= ob_get_contents();
 			ob_end_clean();
 		}
-		$url = get_post_type_archive_link( $this->post_type_name );
+		$url = get_post_type_archive_link( $this->posttype_name );
 		if ( $url ) {
 			$content .= sprintf(
 				'<p class="more %s"><a href="%s" class="button">%s</a></p>',
-				esc_attr( $this->post_type_name ),
+				esc_attr( $this->posttype_name ),
 				$url,
 				esc_html__( 'Browse all projects', 'THEME_SLUG' )
 			);
@@ -174,10 +229,10 @@ class iWorks_Post_Type_Project extends iWorks_Post_Type {
 	/**
 	 * get content
 	 *
-	 * @since 2.1.2
+	 * @since 1.0.0
 	 */
 	public function the_content( $content ) {
-		if ( get_post_type() !== $this->post_type_name ) {
+		if ( get_post_type() !== $this->posttype_name ) {
 			return $content;
 		}
 		$post_ID = get_the_ID();
@@ -235,9 +290,9 @@ class iWorks_Post_Type_Project extends iWorks_Post_Type {
 	/**
 	 * Register Custom Post Type
 	 *
-	 * @since 2.1.2
+	 * @since 1.0.0
 	 */
-	public function custom_post_type() {
+	public function action_init_register_post_type() {
 		$labels = array(
 			'name'                  => _x( 'OPI projects', 'OPI Post Type General Name', 'THEME_SLUG' ),
 			'singular_name'         => _x( 'OPI project', 'OPI Post Type Singular Name', 'THEME_SLUG' ),
@@ -270,7 +325,7 @@ class iWorks_Post_Type_Project extends iWorks_Post_Type {
 			'labels'              => $labels,
 			'public'              => true,
 			'show_in_admin_bar'   => true,
-			'show_in_menu'        => apply_filters( 'opi_post_type_show_in_menu' . $this->post_type_name, 'edit.php' ),
+			'show_in_menu'        => apply_filters( 'opi_post_type_show_in_menu' . $this->posttype_name, 'edit.php' ),
 			'show_in_nav_menus'   => true,
 			'show_ui'             => true,
 			'show_in_rest'        => true,
@@ -282,31 +337,15 @@ class iWorks_Post_Type_Project extends iWorks_Post_Type {
 		if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
 			unset( $args['rewrite'] );
 		}
-		register_post_type( $this->post_type_name, $args );
+		register_post_type( $this->posttype_name, $args );
 	}
 
 	/**
 	 * Add meta boxes
 	 *
-	 * @since 2.1.2
+	 * @since 1.0.0
 	 */
-	public function add_meta_boxes() {
-		add_meta_box(
-			'opi-project-data',
-			__( 'Project data', 'THEME_SLUG' ),
-			array( $this, 'html_data' ),
-			$this->post_type_name,
-			'normal',
-			'default'
-		);
-		add_meta_box(
-			'opi-publication-media',
-			__( 'Project media files', 'THEME_SLUG' ),
-			array( $this, 'html_media' ),
-			$this->post_type_name,
-			'normal',
-			'default'
-		);
+	public function x_add_meta_boxes() {
 		/**
 		 * Partners
 		 */
@@ -315,7 +354,7 @@ class iWorks_Post_Type_Project extends iWorks_Post_Type {
 				'opi-post-partners-' . $type,
 				$label,
 				array( $this, 'html_post_partners_' . $type ),
-				$this->post_type_name,
+				$this->posttype_name,
 				'normal',
 				'default'
 			);
@@ -419,7 +458,7 @@ class iWorks_Post_Type_Project extends iWorks_Post_Type {
 	/**
 	 * HTML for metabox
 	 *
-	 * @since 2.1.2
+	 * @since 1.0.0
 	 */
 	public function html_data( $post ) {
 		$this->set_fields();
@@ -442,7 +481,7 @@ class iWorks_Post_Type_Project extends iWorks_Post_Type {
 	/**
 	 * Save project data.
 	 *
-	 * @since 2.1.2
+	 * @since 1.0.0
 	 *
 	 * @param integer $post_id Post ID.
 	 */
@@ -511,7 +550,7 @@ class iWorks_Post_Type_Project extends iWorks_Post_Type {
 	/**
 	 * Partner row helper
 	 *
-	 * @since 2.0.6
+	 * @since 1.0.0
 	 */
 	protected function partner_row( $data = array(), $type = '' ) {
 		$data = wp_parse_args(
@@ -538,7 +577,7 @@ class iWorks_Post_Type_Project extends iWorks_Post_Type {
 	/**
 	 * get partners types
 	 *
-	 * @since 2.1.5
+	 * @since 1.0.0
 	 */
 	public function filter_get_partners_types( $types ) {
 		return $this->partners_types;

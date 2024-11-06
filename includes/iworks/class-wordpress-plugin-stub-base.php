@@ -32,6 +32,7 @@ class iworks_wordpress_plugin_stub_base {
 	protected $base;
 	protected $dir;
 	protected $version;
+	protected $url;
 
 	public function __construct() {
 		/**
@@ -40,6 +41,7 @@ class iworks_wordpress_plugin_stub_base {
 		$this->dev  = ( defined( 'IWORKS_DEV_MODE' ) && IWORKS_DEV_MODE ) ? '' : '.min';
 		$this->base = dirname( __FILE__ );
 		$this->dir  = basename( dirname( dirname( $this->base ) ) );
+		$this->url  = plugins_url( $this->dir );
 	}
 
 	public function get_version( $file = null ) {

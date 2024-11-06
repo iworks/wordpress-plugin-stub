@@ -1,21 +1,35 @@
 <?php
+/**
+ * Class for custom Post Type: HERO
+ *
+ * @since 1.0.0
+ */
 
-require_once 'class-iworks-post-type.php';
+defined( 'ABSPATH' ) || exit;
 
-class iWorks_Post_Type_Hero extends iWorks_Post_Type {
+require_once 'class-wordpress-plugin-stub-posttype.php';
 
-	private $post_type_name = 'opi_hero';
+class iworks_wordpress_plugin_stub_posttype_hero extends iworks_wordpress_plugin_stub_posttype_base {
 
 	public function __construct() {
 		parent::__construct();
-		add_action( 'init', array( $this, 'custom_post_type' ), 0 );
+		/**
+		 * Post Type Name
+		 *
+		 * @since 1.0.0
+		 */
+		$this->posttype_name = preg_replace( '/^iworks_wordpress_plugin_stub_posttype_/', '', __CLASS__ );
+		$this->register_class_custom_posttype_name( $this->posttype_name, 'iw_' );
+		/**
+		 * WordPress Hooks
+		 */
 		add_shortcode( 'opi_heroes', array( $this, 'get_list' ) );
 	}
 
 	/**
 	 * Get post list
 	 *
-	 * @since 1.3.9
+	 * @since 1.0.0
 	 *
 	 * @param array $atts Shortcode attributes
 	 * @param string $content current content
@@ -24,7 +38,7 @@ class iWorks_Post_Type_Hero extends iWorks_Post_Type {
 	 */
 	public function get_list( $atts, $content = '' ) {
 		$args      = array(
-			'post_type'      => $this->post_type_name,
+			'post_type'      => $this->posttype_name,
 			'orderby'        => 'rand',
 			'posts_per_page' => 2,
 			'post_status'    => 'publish',
@@ -73,12 +87,14 @@ class iWorks_Post_Type_Hero extends iWorks_Post_Type {
 		return $content;
 	}
 
+	public function action_init_register_taxonomy() {}
+
 	/**
 	 * Register Custom Post Type
 	 *
-	 * @since 1.3.9
+	 * @since 1.0.0
 	 */
-	public function custom_post_type() {
+	public function action_init_register_post_type() {
 		$labels = array(
 			'name'                  => _x( 'Heroes', 'Post Type General Name', 'THEME_SLUG' ),
 			'singular_name'         => _x( 'Hero', 'Post Type Singular Name', 'THEME_SLUG' ),
@@ -112,13 +128,13 @@ class iWorks_Post_Type_Hero extends iWorks_Post_Type {
 			'menu_icon'           => 'dashicons-businessperson',
 			'public'              => false,
 			'show_in_admin_bar'   => false,
-			'show_in_menu'        => apply_filters( 'opi_post_type_show_in_menu' . $this->post_type_name, 'edit.php' ),
+			'show_in_menu'        => apply_filters( 'opi_post_type_show_in_menu' . $this->posttype_name, 'edit.php' ),
 			'show_in_nav_menus'   => false,
 			'show_ui'             => true,
 			'show_in_rest'        => true,
 			'supports'            => array( 'title', 'thumbnail', 'editor', 'excerpt', 'page-attributes' ),
 		);
-		register_post_type( $this->post_type_name, $args );
+		register_post_type( $this->posttype_name, $args );
 	}
 
 }

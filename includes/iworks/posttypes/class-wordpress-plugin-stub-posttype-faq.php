@@ -1,34 +1,45 @@
 <?php
 /**
- * Custom Post Type: FAQ
+ * Class for custom Post Type: FAQ
+ *
+ * @since 1.0.0
  */
 
 defined( 'ABSPATH' ) || exit;
 
 require_once 'class-wordpress-plugin-stub-posttype.php';
 
-/**
- * Class
- *
- * @since 1.0.0
- */
 class iworks_wordpress_plugin_stub_posttype_faq extends iworks_wordpress_plugin_stub_posttype_base {
 
 	private $list = array();
 
 	public function __construct() {
 		parent::__construct();
-		add_filter( 'manage_' . $this->post_type_name['faq'] . '_posts_columns', array( $this, 'filter_add_mendu_order_column' ) );
-		add_action( 'manage_' . $this->post_type_name['faq'] . '_posts_custom_column', array( $this, 'action_add_menu_order_value' ), 10, 2 );
+		/**
+		 * Post Type Name
+		 *
+		 * @since 1.0.0
+		 */
+		$this->posttype_name = preg_replace( '/^iworks_wordpress_plugin_stub_posttype_/', '', __CLASS__ );
+		$this->register_class_custom_posttype_name( $this->posttype_name, 'iw_' );
+		/**
+		 * WordPress Hooks
+		 */
+		add_filter( 'manage_' . $this->posttypes_names[ $this->posttype_name ] . '_posts_columns', array( $this, 'filter_add_menu_order_column' ) );
+		add_action( 'manage_' . $this->posttypes_names[ $this->posttype_name ] . '_posts_custom_column', array( $this, 'action_add_menu_order_value' ), 10, 2 );
 		add_shortcode( 'iworks-faq-list', array( $this, 'shortcode_list' ) );
 		add_filter( 'wp_localize_script_iworks_theme', array( $this, 'filter_wp_localize_script_iworks_theme' ) );
 		add_filter( 'iworks_post_type_faq_terms_options_list', array( $this, 'get_options_list_array' ) );
+		/**
+		 * Settings
+		 */
+		$this->taxonomies[ $this->posttype_name ] = 'iw_faq_cat';
 	}
 
 	/**
 	 * Register FAQs custom post type
 	 */
-	public function register_post_type() {
+	public function action_init_register_post_type() {
 
 		$labels = array(
 			'name'               => _x( 'FAQs', 'Post Type General Name', 'THEME_SLUG' ),
@@ -80,7 +91,7 @@ class iworks_wordpress_plugin_stub_posttype_faq extends iworks_wordpress_plugin_
 			),
 		);
 		register_post_type(
-			$this->post_type_name['faq'],
+			$this->posttypes_names[ $this->posttype_name ],
 			apply_filters(
 				'iworks/theme/register_post_type/faq/arguments',
 				$args
@@ -91,7 +102,7 @@ class iworks_wordpress_plugin_stub_posttype_faq extends iworks_wordpress_plugin_
 	/**
 	 * Register FAQ Group custom taxonomy
 	 */
-	public function register_taxonomy() {
+	public function action_init_register_taxonomy() {
 
 		$labels = array(
 			'name'                       => _x( 'FAQ Groups', 'Taxonomy General Name', 'THEME_SLUG' ),
@@ -132,8 +143,8 @@ class iworks_wordpress_plugin_stub_posttype_faq extends iworks_wordpress_plugin_
 		);
 
 		register_taxonomy(
-			$this->taxonomy_name['faq'],
-			array( $this->post_type_name['faq'] ),
+			$this->taxonomies[ $this->posttype_name ],
+			array( $this->posttypes_names[ $this->posttype_name ] ),
 			apply_filters( 'iworks/theme/register_taxonomy/faq/arguments', $args )
 		);
 	}
@@ -158,7 +169,7 @@ class iworks_wordpress_plugin_stub_posttype_faq extends iworks_wordpress_plugin_
 			return $content;
 		}
 		$query_args = array(
-			'post_type'      => $this->post_type_name['faq'],
+			'post_type'      => $this->posttype_name['faq'],
 			'order'          => 'ASC',
 			'orderby'        => 'menu_order',
 			'posts_per_page' => -1,

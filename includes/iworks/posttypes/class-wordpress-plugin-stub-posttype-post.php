@@ -1,40 +1,80 @@
 <?php
+/**
+ * Class for Post Type: POST
+ *
+ * @since 1.0.0
+ */
 
-require_once 'class-iworks-post-type.php';
+defined( 'ABSPATH' ) || exit;
 
-class iWorks_Post_Type_Post extends iWorks_Post_Type {
+require_once 'class-wordpress-plugin-stub-posttype.php';
 
-	/**
-	 * Post Type
-	 *
-	 * @since 2.0.0
-	 * @var string $post_type Post Type
-	 */
-	protected $post_type = 'post';
+class iworks_wordpress_plugin_stub_posttype_post extends iworks_wordpress_plugin_stub_posttype_base {
 
 	/**
 	 * Option name, used to save data on postmeta table.
 	 *
-	 * @since 2.0.0
+	 * @since 1.0.0
 	 * @var string $option_name_post_gallery Option name post_gallery.
 	 */
 	private $option_name_post_gallery = '_opi_post_gallery';
 
 	public function __construct() {
 		parent::__construct();
-		add_action( 'add_meta_boxes_' . $this->post_type, array( $this, 'add_meta_boxes' ) );
+		/**
+		 * Post Type Name
+		 *
+		 * @since 1.0.0
+		 */
+		$this->posttype_name = preg_replace( '/^iworks_wordpress_plugin_stub_posttype_/', '', __CLASS__ );
+		$this->register_class_custom_posttype_name( $this->posttype_name, 'iw_' );
+		/**
+		 * WordPress Hooks
+		 */
+		add_action( 'add_meta_boxes_' . $this->posttypes_names[ $this->posttype_name ], array( $this, 'add_meta_boxes' ) );
 		add_action( 'admin_init', array( $this, 'register' ) );
 		add_action( 'load-post-new.php', array( $this, 'admin_enqueue' ) );
 		add_action( 'load-post.php', array( $this, 'admin_enqueue' ) );
 		add_action( 'save_post', array( $this, 'save_post_gallery' ) );
 		add_filter( 'get_the_terms', array( $this, 'add_hash' ), 10, 3 );
-		add_filter( 'opi_related_list', array( $this, 'get_related' ), 10, 2 );
+		/**
+		 * WordPress Plugin Stub Hooks
+		 */
+		add_filter( 'wordpress_plugiun_stub_related_list', array( $this, 'get_related' ), 10, 2 );
+		/**
+		 * Settings
+		 */
+		$this->meta_boxes[] = array(
+			'opinion-data' => array(
+				'title'  => __( 'Post Gallery', 'THEME_SLUG' ),
+				'fields' => array(
+					array(
+						'name'  => 'icon',
+						'type'  => 'image',
+						'label' => esc_html__( 'Icon', 'THEME_SLUG' ),
+					),
+					array(
+						'name'  => 'opinion_url',
+						'type'  => 'url',
+						'label' => esc_html__( 'The Opinion URL', 'THEME_SLUG' ),
+					),
+					array(
+						'name'  => 'author_url',
+						'type'  => 'url',
+						'label' => esc_html__( 'The Opinion Author URL', 'THEME_SLUG' ),
+					),
+				),
+			),
+		);
 	}
+
+	public function action_init_register_post_type() {}
+	public function action_init_register_taxonomy() {}
 
 	/**
 	 * Related posts.
 	 *
-	 * @since 1.3.4
+	 * @since 1.0.0
 	 *
 	 * @return string
 	 */
@@ -94,7 +134,7 @@ class iWorks_Post_Type_Post extends iWorks_Post_Type {
 	/**
 	 * Filters the list of terms attached to the given post.
 	 *
-	 * @since 1.3.4
+	 * @since 1.0.0
 	 *
 	 * @param WP_Term[]|WP_Error $terms Array of attached terms, or WP_Error on failure.
 	 * @param int $post_ID  Post ID.
@@ -120,27 +160,9 @@ class iWorks_Post_Type_Post extends iWorks_Post_Type {
 	}
 
 	/**
-	 * Register meta box for images
-	 *
-	 * @since 2.0.0
-	 */
-	public function add_meta_boxes() {
-		$post_types = array( $this->post_type );
-		add_meta_box(
-			'opi-post_gallery',
-			__( 'Post gallery', 'THEME_SLUG' ),
-			array( $this, 'html_post_gallery' ),
-			apply_filters( 'opi_metabox_post_post_gallery', $post_types ),
-			'normal',
-			'default'
-		);
-		$this->add_meta_box_meta_description( $this->post_type );
-	}
-
-	/**
 	 * HTML helper for meta box post_gallerys.
 	 *
-	 * @since 1.0.1
+	 * @since 1.0.0
 	 *
 	 * @param WP_Post $post Edited post object.
 	 */

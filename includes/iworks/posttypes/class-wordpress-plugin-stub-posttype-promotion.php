@@ -1,31 +1,69 @@
 <?php
+/**
+ * Class for custom Post Type: PROMOTION
+ *
+ * @since 1.0.0
+ */
 
-require_once 'class-iworks-post-type.php';
+defined( 'ABSPATH' ) || exit;
 
-class iWorks_Post_Type_Promo extends iWorks_Post_Type {
+require_once 'class-wordpress-plugin-stub-posttype.php';
 
-	private $post_type_name                = 'opi_featured';
+class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugin_stub_posttype_base {
+
 	private $option_name_url               = '_opi_featured_url';
 	private $option_name_button_label_more = '_opi_featured_button_label_more';
 	private $option_name_ukrainian         = '_opi_featured_ukrainian';
 
 	public function __construct() {
 		parent::__construct();
-		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
+		/**
+		 * Post Type Name
+		 *
+		 * @since 1.0.0
+		 */
+		$this->posttype_name = preg_replace( '/^iworks_wordpress_plugin_stub_posttype_/', '', __CLASS__ );
+		$this->register_class_custom_posttype_name( $this->posttype_name, 'iw_' );
+		/**
+		 * WordPress Hooks
+		 */
+		add_action( 'add_meta_boxes_' . $this->posttypes_names[ $this->posttype_name ], array( $this, 'add_meta_boxes' ) );
 		add_action( 'admin_head', array( $this, 'css' ) );
 		add_action( 'init', array( $this, 'custom_post_type' ), 0 );
-		add_action( 'manage_' . $this->post_type_name . '_posts_custom_column', array( $this, 'column_content' ), 10, 2 );
+		add_action( 'manage_' . $this->posttypes_names[ $this->posttype_name ] . '_posts_custom_column', array( $this, 'action_add_menu_order_value' ), 10, 2 );
 		add_action( 'pre_get_posts', array( $this, 'admin_set_default_order' ) );
 		add_action( 'save_post', array( $this, 'save' ), PHP_INT_MAX );
-		add_filter( 'manage_' . $this->post_type_name . '_posts_columns', array( $this, 'column_add' ), 10, 2 );
-		add_filter( 'opi_pib_theme_main_page_get_promo', array( $this, 'get_list' ) );
+		add_filter( 'manage_' . $this->posttype_name . '_posts_columns', array( $this, 'column_add' ), 10, 2 );
 		add_filter( 'upload_mimes', array( $this, 'add_mime_types' ) );
+		/**
+		 * WordPress Plugin Stub Hooks
+		 */
+		add_filter( 'opi_pib_theme_main_page_get_promo', array( $this, 'get_list' ) );
+		/**
+		 * settings
+		 */
+		$this->meta_boxes[ $this->posttypes_names[ $this->posttype_name ] ] = array(
+			'featured-url' => array(
+				'title'  => __( 'URL Configuration', 'THEME_SLUG' ),
+				'fields' => array(
+					array(
+						'name'  => 'target_button_url',
+						'type'  => 'url',
+						'label' => esc_html__( 'Target Button URL', 'THEME_SLUG' ),
+					),
+					array(
+						'name'  => 'target_button_text',
+						'label' => esc_html__( 'Target Button Text', 'THEME_SLUG' ),
+					),
+				),
+			),
+		);
 	}
 
 	/**
 	 * Add colun size
 	 *
-	 * @since 1.3.6
+	 * @since 1.0.0
 	 */
 	public function css() {
 		echo '<style type="text/css">#menu_order, td.menu_order { width: 5em; }td.menu_order{text-align: right;}</style>';
@@ -34,7 +72,7 @@ class iWorks_Post_Type_Promo extends iWorks_Post_Type {
 	/**
 	 * Add column order
 	 *
-	 * @since 1.3.6
+	 * @since 1.0.0
 	 */
 	public function column_add( $columns ) {
 		$inserted = array(
@@ -51,9 +89,9 @@ class iWorks_Post_Type_Promo extends iWorks_Post_Type {
 	/**
 	 * add column order value
 	 *
-	 * @since 1.3.6
+	 * @since 1.0.0
 	 */
-	public function column_content( $column, $post_id ) {
+	public function action_add_menu_order_value( $column, $post_id ) {
 		switch ( $column ) {
 			case 'menu_order':
 				echo get_post_field( 'menu_order', $post_id, true );
@@ -65,13 +103,13 @@ class iWorks_Post_Type_Promo extends iWorks_Post_Type {
 	/**
 	 * Set default order for admin
 	 *
-	 * @since 1.3.6
+	 * @since 1.0.0
 	 */
 	public function admin_set_default_order( $query ) {
 		if ( ! is_admin() ) {
 			return;
 		}
-		if ( $this->post_type_name !== $query->get( 'post_type' ) ) {
+		if ( $this->posttype_name !== $query->get( 'post_type' ) ) {
 			return;
 		}
 		$query->set( 'orderby', 'menu_order' );
@@ -81,7 +119,7 @@ class iWorks_Post_Type_Promo extends iWorks_Post_Type {
 	/**
 	 * Add SVG files to allowed mimetypes
 	 *
-	 * @since 1.3.6
+	 * @since 1.0.0
 	 *
 	 */
 	public function add_mime_types( $mimes ) {
@@ -92,7 +130,7 @@ class iWorks_Post_Type_Promo extends iWorks_Post_Type {
 	/**
 	 * Get promo post list
 	 *
-	 * @since 1.3.6
+	 * @since 1.0.0
 	 *
 	 * @param string $content current content
 	 *
@@ -100,7 +138,7 @@ class iWorks_Post_Type_Promo extends iWorks_Post_Type {
 	 */
 	public function get_list( $content ) {
 		$args      = array(
-			'post_type'      => $this->post_type_name,
+			'post_type'      => $this->posttype_name,
 			'orderby'        => 'menu_order',
 			'order'          => 'ASC',
 			'posts_per_page' => 3,
@@ -166,12 +204,14 @@ class iWorks_Post_Type_Promo extends iWorks_Post_Type {
 		return $content;
 	}
 
+	public function action_init_register_taxonomy() {}
+
 	/**
 	 * Register Custom Post Type
 	 *
-	 * @since 1.3.6
+	 * @since 1.0.0
 	 */
-	public function custom_post_type() {
+	public function action_init_register_post_type() {
 		$labels = array(
 			'name'                  => _x( 'Featured', 'Post Type General Name', 'THEME_SLUG' ),
 			'singular_name'         => _x( 'Featured', 'Post Type Singular Name', 'THEME_SLUG' ),
@@ -205,23 +245,23 @@ class iWorks_Post_Type_Promo extends iWorks_Post_Type {
 			'menu_icon'           => 'dashicons-businessperson',
 			'public'              => false,
 			'show_in_admin_bar'   => false,
-			'show_in_menu'        => apply_filters( 'opi_post_type_show_in_menu' . $this->post_type_name, 'edit.php' ),
+			'show_in_menu'        => apply_filters( 'opi_post_type_show_in_menu' . $this->posttype_name, 'edit.php' ),
 			'show_in_nav_menus'   => false,
 			'show_ui'             => true,
 			'show_in_rest'        => false,
 			'supports'            => array( 'title', 'thumbnail', 'page-attributes' ),
 		);
-		register_post_type( $this->post_type_name, $args );
+		register_post_type( $this->posttype_name, $args );
 	}
 
 	/**
 	 * Save post meta
 	 *
-	 * @since 1.3.6
+	 * @since 1.0.0
 	 */
 	public function save( $post_id ) {
 		$post_type = get_post_type( $post_id );
-		if ( $post_type !== $this->post_type_name ) {
+		if ( $post_type !== $this->posttype_name ) {
 			return;
 		}
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
@@ -275,25 +315,9 @@ class iWorks_Post_Type_Promo extends iWorks_Post_Type {
 	}
 
 	/**
-	 * Add meta boxes
-	 *
-	 * @since 1.3.6
-	 */
-	public function add_meta_boxes() {
-		add_meta_box(
-			'opi-featured-url',
-			__( 'URL Configuration', 'THEME_SLUG' ),
-			array( $this, 'html_url' ),
-			$this->post_type_name,
-			'normal',
-			'default'
-		);
-	}
-
-	/**
 	 * HTML for URL metabox
 	 *
-	 * @since 1.3.6
+	 * @since 1.0.0
 	 */
 	public function html_url( $post ) {
 		wp_nonce_field( '_featured', 'featured_nonce' );

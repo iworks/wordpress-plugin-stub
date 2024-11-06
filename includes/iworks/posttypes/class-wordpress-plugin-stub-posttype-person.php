@@ -1,12 +1,30 @@
 <?php
+/**
+ * Class for custom Post Type: PERSON
+ *
+ * @since 1.0.0
+ */
 
-class iWorks_Post_Type_Person {
+defined( 'ABSPATH' ) || exit;
 
-	private $post_type_name = 'iworks_person';
-	private $taxonomy_name  = 'iworks_person_role';
+require_once 'class-wordpress-plugin-stub-posttype.php';
+
+class iworks_wordpress_plugin_stub_posttype_person extends iworks_wordpress_plugin_stub_posttype_base {
+
+	private $taxonomy_name = 'iworks_person_role';
 
 	public function __construct() {
-		add_action( 'init', array( $this, 'register' ), 0 );
+		parent::__construct();
+		/**
+		 * Post Type Name
+		 *
+		 * @since 1.0.0
+		 */
+		$this->posttype_name = preg_replace( '/^iworks_wordpress_plugin_stub_posttype_/', '', __CLASS__ );
+		$this->register_class_custom_posttype_name( $this->posttype_name, 'iw_' );
+		/**
+		 * WordPress Hooks
+		 */
 		add_shortcode( 'iworks_persons_list', array( $this, 'get_list' ) );
 		add_filter( 'og_og_type_value', array( $this, 'filter_og_og_type_value' ) );
 	}
@@ -14,7 +32,7 @@ class iWorks_Post_Type_Person {
 	/**
 	 * Get post list
 	 *
-	 * @since 1.3.9
+	 * @since 1.0.0
 	 *
 	 * @param array $atts Shortcode attributes
 	 * @param string $content current content
@@ -29,7 +47,7 @@ class iWorks_Post_Type_Person {
 				'posts_per_page' => -1,
 			)
 		);
-		$args['post_type']   = $this->post_type_name;
+		$args['post_type']   = $this->posttype_name;
 		$args['post_status'] = 'publish';
 		$the_query           = new WP_Query( $args );
 		/**
@@ -62,21 +80,11 @@ class iWorks_Post_Type_Person {
 	}
 
 	/**
-	 * Register CPT & CT
-	 *
-	 * @since 1.0.8
-	 */
-	public function register() {
-		$this->custom_post_type();
-		$this->custom_taxonomy();
-	}
-
-	/**
 	 * Register Custom Post Type
 	 *
-	 * @since 1.0.8
+	 * @since 1.0.0
 	 */
-	private function custom_post_type() {
+	public function action_init_register_post_type() {
 		$labels = array(
 			'name'                  => _x( 'Persons', 'Post Type General Name', 'THEME_SLUG' ),
 			'singular_name'         => _x( 'Person', 'Post Type Singular Name', 'THEME_SLUG' ),
@@ -120,7 +128,7 @@ class iWorks_Post_Type_Person {
 			),
 		);
 		register_post_type(
-			$this->post_type_name,
+			$this->posttype_name,
 			apply_filters( 'iworks_post_type_person_args', $args )
 		);
 	}
@@ -128,9 +136,9 @@ class iWorks_Post_Type_Person {
 	/**
 	 * Register Custom Taxonomy
 	 *
-	 * @since 1.0.8
+	 * @since 1.0.0
 	 */
-	private function custom_taxonomy() {
+	public function action_init_register_taxonomy() {
 		$labels = array(
 			'name'                       => _x( 'Roles', 'Role General Name', 'THEME_SLUG' ),
 			'singular_name'              => _x( 'Role', 'Role Singular Name', 'THEME_SLUG' ),
@@ -163,11 +171,11 @@ class iWorks_Post_Type_Person {
 				'slug' => defined( 'ICL_SITEPRESS_VERSION' ) ? 'role' : _x( 'role', 'iWorks Post Type Person SLUG', 'THEME_SLUG' ),
 			),
 		);
-		register_taxonomy( $this->taxonomy_name, array( $this->post_type_name ), $args );
+		register_taxonomy( $this->taxonomy_name, array( $this->posttype_name ), $args );
 	}
 
 	public function filter_og_og_type_value( $value ) {
-		if ( is_singular( $this->post_type_name ) ) {
+		if ( is_singular( $this->posttype_name ) ) {
 			return 'profile';
 		}
 		return $value;

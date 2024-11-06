@@ -1,18 +1,40 @@
 <?php
+/**
+ * Class for custom Post Type: OPINION
+ *
+ * @since 1.0.0
+ */
 
-require_once 'class-iworks-post-type.php';
+defined( 'ABSPATH' ) || exit;
 
-class iWorks_Post_Type_Opinion extends iWorks_Post_Type {
+require_once 'class-wordpress-plugin-stub-posttype.php';
+
+class iworks_wordpress_plugin_stub_posttype_opinion extends iworks_wordpress_plugin_stub_posttype_base {
 
 	private $list = array();
 
 	public function __construct() {
 		parent::__construct();
-		add_shortcode( 'iworks_opinions_list', array( $this, 'get_list' ) );
-		add_action( 'add_meta_boxes', array( $this, 'action_add_meta_boxes_add' ) );
+		/**
+		 * Post Type Name
+		 *
+		 * @since 1.0.0
+		 */
+		$this->posttype_name = preg_replace( '/^iworks_wordpress_plugin_stub_posttype_/', '', __CLASS__ );
+		$this->register_class_custom_posttype_name( $this->posttype_name, 'iw_' );
+		/**
+		 * WordPress Hooks
+		 */
 		add_filter( 'iworks_post_type_opinion_options_list', array( $this, 'get_options_list_array' ), 10, 2 );
-		add_action( 'save_post_' . $this->post_type_name['opinion'], array( $this, 'action_save_post_page' ), 10, 3 );
-		$this->meta_boxes[ $this->post_type_name['opinion'] ] = array(
+		add_action( 'save_post_' . $this->posttypes_names[ $this->posttype_name ], array( $this, 'action_save_post' ), 10, 3 );
+		/**
+		 * Shortcodes
+		 */
+		add_shortcode( 'iworks_opinions_list', array( $this, 'get_list' ) );
+		/**
+		 * Settings
+		 */
+		$this->meta_boxes[ $this->posttypes_names[ $this->posttype_name ] ] = array(
 			'opinion-data' => array(
 				'title'  => __( 'Opinion Data', 'THEME_SLUG' ),
 				'fields' => array(
@@ -46,7 +68,7 @@ class iWorks_Post_Type_Opinion extends iWorks_Post_Type {
 	/**
 	 * Get post list
 	 *
-	 * @since 1.3.9
+	 * @since 1.0.0
 	 *
 	 * @param array $atts Shortcode attributes
 	 * @param string $content current content
@@ -61,7 +83,7 @@ class iWorks_Post_Type_Opinion extends iWorks_Post_Type {
 				'posts_per_page' => 4,
 			)
 		);
-		$args['post_type']   = $this->post_type_name['opinion'];
+		$args['post_type']   = $this->posttype_name['opinion'];
 		$args['post_status'] = 'publish';
 		$the_query           = new WP_Query( $args );
 		/**
@@ -96,9 +118,9 @@ class iWorks_Post_Type_Opinion extends iWorks_Post_Type {
 	/**
 	 * Register Custom Post Type
 	 *
-	 * @since 1.0.8
+	 * @since 1.0.0
 	 */
-	public function register_post_type() {
+	public function action_init_register_post_type() {
 		$labels = array(
 			'name'                  => _x( 'Opinions', 'Post Type General Name', 'THEME_SLUG' ),
 			'singular_name'         => _x( 'Opinion', 'Post Type Singular Name', 'THEME_SLUG' ),
@@ -143,7 +165,7 @@ class iWorks_Post_Type_Opinion extends iWorks_Post_Type {
 			),
 		);
 		register_post_type(
-			$this->post_type_name['opinion'],
+			$this->posttypes_names['opinion'],
 			apply_filters( 'iworks_post_type_opinion_args', $args )
 		);
 	}
@@ -151,9 +173,9 @@ class iWorks_Post_Type_Opinion extends iWorks_Post_Type {
 	/**
 	 * Register Custom Taxonomy
 	 *
-	 * @since 1.0.8
+	 * @since 1.0.0
 	 */
-	public function register_taxonomy() {
+	public function action_init_register_taxonomy() {
 	}
 
 	/**
@@ -168,21 +190,10 @@ class iWorks_Post_Type_Opinion extends iWorks_Post_Type {
 		if ( ! empty( $this->list ) ) {
 			return $this->list;
 		}
-		$list       = $this->get_select_array( $this->post_type_name['opinion'] );
+		$list       = $this->get_select_array( $this->posttype_name['opinion'] );
 		$this->list = $list;
 		return $list;
 	}
 
-
-	public function action_add_meta_boxes_add( $post_type ) {
-		if ( $post_type !== $this->post_type_name['opinion'] ) {
-			return;
-		}
-		$this->add_meta_boxes( $this->post_type_name['opinion'] );
-	}
-
-	public function action_save_post_page( $post_id, $post, $update ) {
-		$this->save_meta( $post_id, $post, $update, $this->post_type_name['opinion'] );
-	}
 }
 
