@@ -46,22 +46,22 @@ class iworks_wordpress_plugin_stub_posttype_post extends iworks_wordpress_plugin
 		 */
 		$this->meta_boxes[] = array(
 			'opinion-data' => array(
-				'title'  => __( 'Post Gallery', 'THEME_SLUG' ),
+				'title'  => __( 'Post Gallery', 'wordpress-plugin-stub' ),
 				'fields' => array(
 					array(
 						'name'  => 'icon',
 						'type'  => 'image',
-						'label' => esc_html__( 'Icon', 'THEME_SLUG' ),
+						'label' => esc_html__( 'Icon', 'wordpress-plugin-stub' ),
 					),
 					array(
 						'name'  => 'opinion_url',
 						'type'  => 'url',
-						'label' => esc_html__( 'The Opinion URL', 'THEME_SLUG' ),
+						'label' => esc_html__( 'The Opinion URL', 'wordpress-plugin-stub' ),
 					),
 					array(
 						'name'  => 'author_url',
 						'type'  => 'url',
-						'label' => esc_html__( 'The Opinion Author URL', 'THEME_SLUG' ),
+						'label' => esc_html__( 'The Opinion Author URL', 'wordpress-plugin-stub' ),
 					),
 				),
 			),
@@ -88,7 +88,7 @@ class iworks_wordpress_plugin_stub_posttype_post extends iworks_wordpress_plugin
 			return $content;
 		}
 		$content .= '<div class="related-posts">';
-		$content .= sprintf( '<p class="related-posts-title">%s</p>', esc_html__( 'Related posts:', 'THEME_SLUG' ) );
+		$content .= sprintf( '<p class="related-posts-title">%s</p>', esc_html__( 'Related posts:', 'wordpress-plugin-stub' ) );
 		$content .= '<div class="related-posts-container">';
 		$i        = 0;
 		foreach ( $related_posts as $post ) {
@@ -187,7 +187,7 @@ class iworks_wordpress_plugin_stub_posttype_post extends iworks_wordpress_plugin
 		echo '</div>';
 		printf(
 			'<button class="button opi-pictures-list-add-new">%s</button>',
-			esc_html__( 'Add picture', 'THEME_SLUG' )
+			esc_html__( 'Add picture', 'wordpress-plugin-stub' )
 		);
 		echo '<script type="text/html" id="tmpl-opi-picture-author-row">';
 		$this->html_post_gallery_row( '{{{data.value}}}', '{{{data.src}}}' );
@@ -209,11 +209,11 @@ class iworks_wordpress_plugin_stub_posttype_post extends iworks_wordpress_plugin
 		<?php
 		esc_attr_e(
 			'Select file',
-			'THEME_SLUG'
+			'wordpress-plugin-stub'
 		);
 		?>
 																	"><span class="dashicons dashicons-format-image"></span></button>
-	<button type="button" class="image-reset" aria-label="<?php esc_attr_e( 'Remove file', 'THEME_SLUG' ); ?>"><span class="dashicons dashicons-trash"></span></button>
+	<button type="button" class="image-reset" aria-label="<?php esc_attr_e( 'Remove file', 'wordpress-plugin-stub' ); ?>"><span class="dashicons dashicons-trash"></span></button>
 	<input type="hidden" name="<?php echo esc_attr( $this->option_name_post_gallery ); ?>[]" value="<?php echo esc_attr( $value ); ?>" class="attachment-id" />
 </div>
 		<?php

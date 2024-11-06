@@ -44,16 +44,16 @@ class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugi
 		 */
 		$this->meta_boxes[ $this->posttypes_names[ $this->posttype_name ] ] = array(
 			'featured-url' => array(
-				'title'  => __( 'URL Configuration', 'THEME_SLUG' ),
+				'title'  => __( 'URL Configuration', 'wordpress-plugin-stub' ),
 				'fields' => array(
 					array(
 						'name'  => 'target_button_url',
 						'type'  => 'url',
-						'label' => esc_html__( 'Target Button URL', 'THEME_SLUG' ),
+						'label' => esc_html__( 'Target Button URL', 'wordpress-plugin-stub' ),
 					),
 					array(
 						'name'  => 'target_button_text',
-						'label' => esc_html__( 'Target Button Text', 'THEME_SLUG' ),
+						'label' => esc_html__( 'Target Button Text', 'wordpress-plugin-stub' ),
 					),
 				),
 			),
@@ -76,7 +76,7 @@ class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugi
 	 */
 	public function column_add( $columns ) {
 		$inserted = array(
-			'menu_order' => __( 'Order', 'THEME_SLUG' ),
+			'menu_order' => __( 'Order', 'wordpress-plugin-stub' ),
 		);
 		$columns  = array_merge(
 			array_slice( $columns, 0, 1, true ),
@@ -180,7 +180,7 @@ class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugi
 				);
 				$button_label_more = get_post_meta( get_the_ID(), $this->option_name_button_label_more, true );
 				if ( empty( $button_label_more ) ) {
-					$button_label_more = _x( 'Find out more', 'Promo button text', 'THEME_SLUG' );
+					$button_label_more = _x( 'Find out more', 'Promo button text', 'wordpress-plugin-stub' );
 				}
 				$content .= sprintf(
 					'<a href="%s" class="button button-small button-invert" %s title="%s">%s</a>',
@@ -188,7 +188,7 @@ class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugi
 					$target,
 					esc_attr(
 						sprintf(
-							__( 'Article on: %s', 'THEME_SLUG' ),
+							__( 'Article on: %s', 'wordpress-plugin-stub' ),
 							get_the_title()
 						)
 					),
@@ -213,34 +213,34 @@ class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugi
 	 */
 	public function action_init_register_post_type() {
 		$labels = array(
-			'name'                  => _x( 'Featured', 'Post Type General Name', 'THEME_SLUG' ),
-			'singular_name'         => _x( 'Featured', 'Post Type Singular Name', 'THEME_SLUG' ),
-			'menu_name'             => __( 'Featured', 'THEME_SLUG' ),
-			'name_admin_bar'        => __( 'Featured', 'THEME_SLUG' ),
-			'archives'              => __( 'Featured', 'THEME_SLUG' ),
-			'all_items'             => __( 'Featured', 'THEME_SLUG' ),
-			'add_new_item'          => __( 'Add New Featured', 'THEME_SLUG' ),
-			'add_new'               => __( 'Add New', 'THEME_SLUG' ),
-			'new_item'              => __( 'New Featured', 'THEME_SLUG' ),
-			'edit_item'             => __( 'Edit Featured', 'THEME_SLUG' ),
-			'update_item'           => __( 'Update Featured', 'THEME_SLUG' ),
-			'view_item'             => __( 'View Featured', 'THEME_SLUG' ),
-			'view_items'            => __( 'View Featured', 'THEME_SLUG' ),
-			'search_items'          => __( 'Search Featured', 'THEME_SLUG' ),
-			'not_found'             => __( 'Not found', 'THEME_SLUG' ),
-			'not_found_in_trash'    => __( 'Not found in Trash', 'THEME_SLUG' ),
-			'items_list'            => __( 'Featured list', 'THEME_SLUG' ),
-			'items_list_navigation' => __( 'Featured list navigation', 'THEME_SLUG' ),
-			'filter_items_list'     => __( 'Filter items list', 'THEME_SLUG' ),
+			'name'                  => _x( 'Featured', 'Post Type General Name', 'wordpress-plugin-stub' ),
+			'singular_name'         => _x( 'Featured', 'Post Type Singular Name', 'wordpress-plugin-stub' ),
+			'menu_name'             => __( 'Featured', 'wordpress-plugin-stub' ),
+			'name_admin_bar'        => __( 'Featured', 'wordpress-plugin-stub' ),
+			'archives'              => __( 'Featured', 'wordpress-plugin-stub' ),
+			'all_items'             => __( 'Featured', 'wordpress-plugin-stub' ),
+			'add_new_item'          => __( 'Add New Featured', 'wordpress-plugin-stub' ),
+			'add_new'               => __( 'Add New', 'wordpress-plugin-stub' ),
+			'new_item'              => __( 'New Featured', 'wordpress-plugin-stub' ),
+			'edit_item'             => __( 'Edit Featured', 'wordpress-plugin-stub' ),
+			'update_item'           => __( 'Update Featured', 'wordpress-plugin-stub' ),
+			'view_item'             => __( 'View Featured', 'wordpress-plugin-stub' ),
+			'view_items'            => __( 'View Featured', 'wordpress-plugin-stub' ),
+			'search_items'          => __( 'Search Featured', 'wordpress-plugin-stub' ),
+			'not_found'             => __( 'Not found', 'wordpress-plugin-stub' ),
+			'not_found_in_trash'    => __( 'Not found in Trash', 'wordpress-plugin-stub' ),
+			'items_list'            => __( 'Featured list', 'wordpress-plugin-stub' ),
+			'items_list_navigation' => __( 'Featured list navigation', 'wordpress-plugin-stub' ),
+			'filter_items_list'     => __( 'Filter items list', 'wordpress-plugin-stub' ),
 		);
 		$args   = array(
 			'can_export'          => true,
 			'capability_type'     => 'page',
-			'description'         => __( 'Featured', 'THEME_SLUG' ),
+			'description'         => __( 'Featured', 'wordpress-plugin-stub' ),
 			'exclude_from_search' => true,
 			'has_archive'         => false,
 			'hierarchical'        => false,
-			'label'               => __( 'Featured', 'THEME_SLUG' ),
+			'label'               => __( 'Featured', 'wordpress-plugin-stub' ),
 			'labels'              => $labels,
 			'menu_icon'           => 'dashicons-businessperson',
 			'public'              => false,
@@ -326,7 +326,7 @@ class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugi
 		 */
 		$url = get_post_meta( $post->ID, $this->option_name_url, true );
 		echo '<label><h4>';
-		_e( 'Target URL', 'THEME_SLUG' );
+		_e( 'Target URL', 'wordpress-plugin-stub' );
 		echo '</h4>';
 		printf(
 			'<input class="large-text code" type="url" name="%s" value="%s" />',
@@ -339,7 +339,7 @@ class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugi
 		 */
 		$button_label_more = get_post_meta( $post->ID, $this->option_name_button_label_more, true );
 		echo '<label><h4>';
-		_e( 'Target Button Label', 'THEME_SLUG' );
+		_e( 'Target Button Label', 'wordpress-plugin-stub' );
 		echo '</h4>';
 		printf(
 			'<input class="large-text " type="text" name="%s" value="%s" />',
@@ -349,20 +349,20 @@ class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugi
 		echo '</label>';
 		printf(
 			'<p class="description">%s</p>',
-			__( 'Leave empty to default', 'THEME_SLUG' )
+			__( 'Leave empty to default', 'wordpress-plugin-stub' )
 		);
 		/**
 		 * is ukrainian text?
 		 */
 		$ukrainian = get_post_meta( $post->ID, $this->option_name_ukrainian, true );
 		echo '<label><h4>';
-		_e( 'Is it Ukrainian language?', 'THEME_SLUG' );
+		_e( 'Is it Ukrainian language?', 'wordpress-plugin-stub' );
 		echo '</h4><label>';
 		printf(
 			'<input type="checkbox" name="%s" value="uk" %s /> %s',
 			esc_attr( $this->option_name_ukrainian ),
 			checked( 'uk', $ukrainian, false ),
-			esc_html__( 'Yes, it is in Ukrainian!', 'THEME_SLUG' )
+			esc_html__( 'Yes, it is in Ukrainian!', 'wordpress-plugin-stub' )
 		);
 		echo '</label>';
 	}

@@ -42,26 +42,26 @@ class iworks_wordpress_plugin_stub_posttype_faq extends iworks_wordpress_plugin_
 	public function action_init_register_post_type() {
 
 		$labels = array(
-			'name'               => _x( 'FAQs', 'Post Type General Name', 'THEME_SLUG' ),
-			'singular_name'      => _x( 'FAQ', 'Post Type Singular Name', 'THEME_SLUG' ),
-			'menu_name'          => _x( 'FAQs', 'Menu Name', 'THEME_SLUG' ),
-			'name_admin_bar'     => _x( 'FAQ', 'Admin Bar Name', 'THEME_SLUG' ),
-			'parent_item_colon'  => __( 'Parent FAQ:', 'THEME_SLUG' ),
-			'all_items'          => __( 'FAQs', 'THEME_SLUG' ),
-			'add_new_item'       => __( 'Add New FAQ', 'THEME_SLUG' ),
-			'add_new'            => __( 'Add New', 'THEME_SLUG' ),
-			'new_item'           => __( 'New FAQ', 'THEME_SLUG' ),
-			'edit_item'          => __( 'Edit FAQ', 'THEME_SLUG' ),
-			'update_item'        => __( 'Update FAQ', 'THEME_SLUG' ),
-			'view_item'          => __( 'View FAQ', 'THEME_SLUG' ),
-			'search_items'       => __( 'Search FAQ', 'THEME_SLUG' ),
-			'not_found'          => __( 'Not found', 'THEME_SLUG' ),
-			'not_found_in_trash' => __( 'Not found in Trash', 'THEME_SLUG' ),
+			'name'               => _x( 'FAQs', 'Post Type General Name', 'wordpress-plugin-stub' ),
+			'singular_name'      => _x( 'FAQ', 'Post Type Singular Name', 'wordpress-plugin-stub' ),
+			'menu_name'          => _x( 'FAQs', 'Menu Name', 'wordpress-plugin-stub' ),
+			'name_admin_bar'     => _x( 'FAQ', 'Admin Bar Name', 'wordpress-plugin-stub' ),
+			'parent_item_colon'  => __( 'Parent FAQ:', 'wordpress-plugin-stub' ),
+			'all_items'          => __( 'FAQs', 'wordpress-plugin-stub' ),
+			'add_new_item'       => __( 'Add New FAQ', 'wordpress-plugin-stub' ),
+			'add_new'            => __( 'Add New', 'wordpress-plugin-stub' ),
+			'new_item'           => __( 'New FAQ', 'wordpress-plugin-stub' ),
+			'edit_item'          => __( 'Edit FAQ', 'wordpress-plugin-stub' ),
+			'update_item'        => __( 'Update FAQ', 'wordpress-plugin-stub' ),
+			'view_item'          => __( 'View FAQ', 'wordpress-plugin-stub' ),
+			'search_items'       => __( 'Search FAQ', 'wordpress-plugin-stub' ),
+			'not_found'          => __( 'Not found', 'wordpress-plugin-stub' ),
+			'not_found_in_trash' => __( 'Not found in Trash', 'wordpress-plugin-stub' ),
 		);
 
 		$args = array(
-			'label'               => __( 'faq', 'THEME_SLUG' ),
-			'description'         => __( 'Frequently Asked Questions', 'THEME_SLUG' ),
+			'label'               => __( 'faq', 'wordpress-plugin-stub' ),
+			'description'         => __( 'Frequently Asked Questions', 'wordpress-plugin-stub' ),
 			'labels'              => apply_filters( 'iworks/theme/register_post_type/faq/labels', $labels ),
 			'supports'            => apply_filters(
 				'iworks/theme/register_post_type/faq/subpackage',
@@ -87,7 +87,7 @@ class iworks_wordpress_plugin_stub_posttype_faq extends iworks_wordpress_plugin_
 			'show_in_rest'        => true,
 			'rest_base'           => apply_filters(
 				'iworks/theme/register_post_type/faq/rest_base',
-				defined( 'ICL_SITEPRESS_VERSION' ) ? 'faqs' : __( 'faqs', 'THEME_SLUG' )
+				defined( 'ICL_SITEPRESS_VERSION' ) ? 'faqs' : __( 'faqs', 'wordpress-plugin-stub' )
 			),
 		);
 		register_post_type(
@@ -105,23 +105,23 @@ class iworks_wordpress_plugin_stub_posttype_faq extends iworks_wordpress_plugin_
 	public function action_init_register_taxonomy() {
 
 		$labels = array(
-			'name'                       => _x( 'FAQ Groups', 'Taxonomy General Name', 'THEME_SLUG' ),
-			'singular_name'              => _x( 'FAQ Group', 'Taxonomy Singular Name', 'THEME_SLUG' ),
-			'menu_name'                  => __( 'Groups', 'THEME_SLUG' ),
-			'all_items'                  => __( 'All FAQ Groups', 'THEME_SLUG' ),
-			'parent_item'                => __( 'Parent FAQ Group', 'THEME_SLUG' ),
-			'parent_item_colon'          => __( 'Parent FAQ Group:', 'THEME_SLUG' ),
-			'new_item_name'              => __( 'New FAQ Group Name', 'THEME_SLUG' ),
-			'add_new_item'               => __( 'Add New FAQ Group', 'THEME_SLUG' ),
-			'edit_item'                  => __( 'Edit FAQ Group', 'THEME_SLUG' ),
-			'update_item'                => __( 'Update FAQ Group', 'THEME_SLUG' ),
-			'view_item'                  => __( 'View FAQ Group', 'THEME_SLUG' ),
-			'separate_items_with_commas' => __( 'Separate FAQ Groups with commas', 'THEME_SLUG' ),
-			'add_or_remove_items'        => __( 'Add or remove FAQ Groups', 'THEME_SLUG' ),
-			'choose_from_most_used'      => __( 'Choose from the most used', 'THEME_SLUG' ),
-			'popular_items'              => __( 'Popular FAQ Groups', 'THEME_SLUG' ),
-			'search_items'               => __( 'Search FAQ Groups', 'THEME_SLUG' ),
-			'not_found'                  => __( 'Not Found', 'THEME_SLUG' ),
+			'name'                       => _x( 'FAQ Groups', 'Taxonomy General Name', 'wordpress-plugin-stub' ),
+			'singular_name'              => _x( 'FAQ Group', 'Taxonomy Singular Name', 'wordpress-plugin-stub' ),
+			'menu_name'                  => __( 'Groups', 'wordpress-plugin-stub' ),
+			'all_items'                  => __( 'All FAQ Groups', 'wordpress-plugin-stub' ),
+			'parent_item'                => __( 'Parent FAQ Group', 'wordpress-plugin-stub' ),
+			'parent_item_colon'          => __( 'Parent FAQ Group:', 'wordpress-plugin-stub' ),
+			'new_item_name'              => __( 'New FAQ Group Name', 'wordpress-plugin-stub' ),
+			'add_new_item'               => __( 'Add New FAQ Group', 'wordpress-plugin-stub' ),
+			'edit_item'                  => __( 'Edit FAQ Group', 'wordpress-plugin-stub' ),
+			'update_item'                => __( 'Update FAQ Group', 'wordpress-plugin-stub' ),
+			'view_item'                  => __( 'View FAQ Group', 'wordpress-plugin-stub' ),
+			'separate_items_with_commas' => __( 'Separate FAQ Groups with commas', 'wordpress-plugin-stub' ),
+			'add_or_remove_items'        => __( 'Add or remove FAQ Groups', 'wordpress-plugin-stub' ),
+			'choose_from_most_used'      => __( 'Choose from the most used', 'wordpress-plugin-stub' ),
+			'popular_items'              => __( 'Popular FAQ Groups', 'wordpress-plugin-stub' ),
+			'search_items'               => __( 'Search FAQ Groups', 'wordpress-plugin-stub' ),
+			'not_found'                  => __( 'Not Found', 'wordpress-plugin-stub' ),
 		);
 
 		$args = array(
@@ -138,7 +138,7 @@ class iworks_wordpress_plugin_stub_posttype_faq extends iworks_wordpress_plugin_
 			'show_in_rest'        => true,
 			'rest_base'           => apply_filters(
 				'iworks/theme/register_taxonomy/faq/rest_base',
-				defined( 'ICL_SITEPRESS_VERSION' ) ? 'faq_groups' : __( 'faq_groups', 'THEME_SLUG' )
+				defined( 'ICL_SITEPRESS_VERSION' ) ? 'faq_groups' : __( 'faq_groups', 'wordpress-plugin-stub' )
 			),
 		);
 
@@ -206,9 +206,9 @@ class iworks_wordpress_plugin_stub_posttype_faq extends iworks_wordpress_plugin_
 			if ( 'show' === $args['header-button'] ) {
 				$content .= sprintf(
 					'<button class="iworks-faq-header-toggle" aria-label="%s" aria-expanded="false" data-target-id="%s" data-expanded="false">%s</button>',
-					esc_attr__( 'Expand All', 'THEME_SLUG' ),
+					esc_attr__( 'Expand All', 'wordpress-plugin-stub' ),
 					esc_attr( $args['id'] ),
-					esc_html__( 'Expand All', 'THEME_SLUG' )
+					esc_html__( 'Expand All', 'wordpress-plugin-stub' )
 				);
 			}
 			if ( 'show' === $args['description'] ) {
@@ -240,13 +240,13 @@ class iworks_wordpress_plugin_stub_posttype_faq extends iworks_wordpress_plugin_
 					esc_attr( $id ),
 					esc_attr(
 						sprintf(
-							__( 'Expand %s', 'THEME_SLUG' ),
+							__( 'Expand %s', 'wordpress-plugin-stub' ),
 							get_the_title()
 						)
 					),
 					esc_html(
 						sprintf(
-							__( 'Expand %s', 'THEME_SLUG' ),
+							__( 'Expand %s', 'wordpress-plugin-stub' ),
 							get_the_title()
 						)
 					)
@@ -277,8 +277,8 @@ class iworks_wordpress_plugin_stub_posttype_faq extends iworks_wordpress_plugin_
 	public function filter_wp_localize_script_iworks_theme( $data ) {
 		$data['i18n']['modules']['faq'] = array(
 			'button' => array(
-				'expand_all'   => esc_html__( 'Expand All', 'THEME_SLUG' ),
-				'collapse_all' => esc_html__( 'Collapse All', 'THEME_SLUG' ),
+				'expand_all'   => esc_html__( 'Expand All', 'wordpress-plugin-stub' ),
+				'collapse_all' => esc_html__( 'Collapse All', 'wordpress-plugin-stub' ),
 			),
 		);
 		return $data;
@@ -302,7 +302,7 @@ class iworks_wordpress_plugin_stub_posttype_faq extends iworks_wordpress_plugin_
 			)
 		);
 		$list  = array(
-			'0' => esc_html__( '&mdash; Select &mdash;', 'THEME_SLUG' ),
+			'0' => esc_html__( '&mdash; Select &mdash;', 'wordpress-plugin-stub' ),
 		);
 		foreach ( $terms as $term ) {
 			$list[ $term->term_id ] = $term->name;

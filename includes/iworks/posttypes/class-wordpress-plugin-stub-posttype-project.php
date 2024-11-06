@@ -52,42 +52,42 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 		 */
 		$this->meta_boxes[] = array(
 			'project-data'  => array(
-				'title'  => __( 'Project Data', 'THEME_SLUG' ),
+				'title'  => __( 'Project Data', 'wordpress-plugin-stub' ),
 				'fields' => array(
 					array(
 						'name'  => 'icon',
 						'type'  => 'image',
-						'label' => esc_html__( 'Icon', 'THEME_SLUG' ),
+						'label' => esc_html__( 'Icon', 'wordpress-plugin-stub' ),
 					),
 					array(
 						'name'  => 'opinion_url',
 						'type'  => 'url',
-						'label' => esc_html__( 'The Opinion URL', 'THEME_SLUG' ),
+						'label' => esc_html__( 'The Opinion URL', 'wordpress-plugin-stub' ),
 					),
 					array(
 						'name'  => 'author_url',
 						'type'  => 'url',
-						'label' => esc_html__( 'The Opinion Author URL', 'THEME_SLUG' ),
+						'label' => esc_html__( 'The Opinion Author URL', 'wordpress-plugin-stub' ),
 					),
 				),
 			),
 			'project-media' => array(
-				'title'  => __( 'Project Media', 'THEME_SLUG' ),
+				'title'  => __( 'Project Media', 'wordpress-plugin-stub' ),
 				'fields' => array(
 					array(
 						'name'  => 'icon',
 						'type'  => 'image',
-						'label' => esc_html__( 'Icon', 'THEME_SLUG' ),
+						'label' => esc_html__( 'Icon', 'wordpress-plugin-stub' ),
 					),
 					array(
 						'name'  => 'opinion_url',
 						'type'  => 'url',
-						'label' => esc_html__( 'The Opinion URL', 'THEME_SLUG' ),
+						'label' => esc_html__( 'The Opinion URL', 'wordpress-plugin-stub' ),
 					),
 					array(
 						'name'  => 'author_url',
 						'type'  => 'url',
-						'label' => esc_html__( 'The Opinion Author URL', 'THEME_SLUG' ),
+						'label' => esc_html__( 'The Opinion Author URL', 'wordpress-plugin-stub' ),
 					),
 				),
 			),
@@ -98,11 +98,11 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 
 	public function setup() {
 		$this->partners_types = array(
-			'lider'         => __( 'Liders', 'THEME_SLUG' ),
-			'scientific'    => __( 'Scientific Partners', 'THEME_SLUG' ),
-			'business'      => __( 'Business Partners', 'THEME_SLUG' ),
-			'partner'       => __( 'Partners', 'THEME_SLUG' ),
-			'subcontractor' => __( 'Subcontractors', 'THEME_SLUG' ),
+			'lider'         => __( 'Liders', 'wordpress-plugin-stub' ),
+			'scientific'    => __( 'Scientific Partners', 'wordpress-plugin-stub' ),
+			'business'      => __( 'Business Partners', 'wordpress-plugin-stub' ),
+			'partner'       => __( 'Partners', 'wordpress-plugin-stub' ),
+			'subcontractor' => __( 'Subcontractors', 'wordpress-plugin-stub' ),
 		);
 	}
 
@@ -156,7 +156,7 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 		if ( 'pl_PL' === get_locale() ) {
 			$content .= '<span class="section-title">Publikacje OPI PIB</span>';
 		} else {
-			$content .= sprintf( '<span class="section-title">%s</span>', esc_html__( 'projects of OPI PIB', 'THEME_SLUG' ) );
+			$content .= sprintf( '<span class="section-title">%s</span>', esc_html__( 'projects of OPI PIB', 'wordpress-plugin-stub' ) );
 		}
 		if ( $the_query->have_posts() ) {
 			ob_start();
@@ -220,7 +220,7 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 				'<p class="more %s"><a href="%s" class="button">%s</a></p>',
 				esc_attr( $this->posttype_name ),
 				$url,
-				esc_html__( 'Browse all projects', 'THEME_SLUG' )
+				esc_html__( 'Browse all projects', 'wordpress-plugin-stub' )
 			);
 		}
 		return $content;
@@ -294,34 +294,34 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 	 */
 	public function action_init_register_post_type() {
 		$labels = array(
-			'name'                  => _x( 'OPI projects', 'OPI Post Type General Name', 'THEME_SLUG' ),
-			'singular_name'         => _x( 'OPI project', 'OPI Post Type Singular Name', 'THEME_SLUG' ),
-			'menu_name'             => __( 'OPI projects', 'THEME_SLUG' ),
-			'name_admin_bar'        => __( 'OPI projects', 'THEME_SLUG' ),
-			'archives'              => __( 'OPI projects', 'THEME_SLUG' ),
-			'all_items'             => __( 'OPI projects', 'THEME_SLUG' ),
-			'add_new_item'          => __( 'Add New project', 'THEME_SLUG' ),
-			'add_new'               => __( 'Add New', 'THEME_SLUG' ),
-			'new_item'              => __( 'New project', 'THEME_SLUG' ),
-			'edit_item'             => __( 'Edit project', 'THEME_SLUG' ),
-			'update_item'           => __( 'Update project', 'THEME_SLUG' ),
-			'view_item'             => __( 'View project', 'THEME_SLUG' ),
-			'view_items'            => __( 'View project', 'THEME_SLUG' ),
-			'search_items'          => __( 'Search project', 'THEME_SLUG' ),
-			'not_found'             => __( 'Not found', 'THEME_SLUG' ),
-			'not_found_in_trash'    => __( 'Not found in Trash', 'THEME_SLUG' ),
-			'items_list'            => __( 'OPI project list', 'THEME_SLUG' ),
-			'items_list_navigation' => __( 'OPI project list navigation', 'THEME_SLUG' ),
-			'filter_items_list'     => __( 'Filter items list', 'THEME_SLUG' ),
+			'name'                  => _x( 'OPI projects', 'OPI Post Type General Name', 'wordpress-plugin-stub' ),
+			'singular_name'         => _x( 'OPI project', 'OPI Post Type Singular Name', 'wordpress-plugin-stub' ),
+			'menu_name'             => __( 'OPI projects', 'wordpress-plugin-stub' ),
+			'name_admin_bar'        => __( 'OPI projects', 'wordpress-plugin-stub' ),
+			'archives'              => __( 'OPI projects', 'wordpress-plugin-stub' ),
+			'all_items'             => __( 'OPI projects', 'wordpress-plugin-stub' ),
+			'add_new_item'          => __( 'Add New project', 'wordpress-plugin-stub' ),
+			'add_new'               => __( 'Add New', 'wordpress-plugin-stub' ),
+			'new_item'              => __( 'New project', 'wordpress-plugin-stub' ),
+			'edit_item'             => __( 'Edit project', 'wordpress-plugin-stub' ),
+			'update_item'           => __( 'Update project', 'wordpress-plugin-stub' ),
+			'view_item'             => __( 'View project', 'wordpress-plugin-stub' ),
+			'view_items'            => __( 'View project', 'wordpress-plugin-stub' ),
+			'search_items'          => __( 'Search project', 'wordpress-plugin-stub' ),
+			'not_found'             => __( 'Not found', 'wordpress-plugin-stub' ),
+			'not_found_in_trash'    => __( 'Not found in Trash', 'wordpress-plugin-stub' ),
+			'items_list'            => __( 'OPI project list', 'wordpress-plugin-stub' ),
+			'items_list_navigation' => __( 'OPI project list navigation', 'wordpress-plugin-stub' ),
+			'filter_items_list'     => __( 'Filter items list', 'wordpress-plugin-stub' ),
 		);
 		$args   = array(
 			'can_export'          => true,
 			'capability_type'     => 'page',
-			'description'         => __( 'OPI project', 'THEME_SLUG' ),
+			'description'         => __( 'OPI project', 'wordpress-plugin-stub' ),
 			'exclude_from_search' => true,
 			'has_archive'         => true,
 			'hierarchical'        => false,
-			'label'               => __( 'OPI projects', 'THEME_SLUG' ),
+			'label'               => __( 'OPI projects', 'wordpress-plugin-stub' ),
 			'labels'              => $labels,
 			'public'              => true,
 			'show_in_admin_bar'   => true,
@@ -331,7 +331,7 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 			'show_in_rest'        => true,
 			'supports'            => array( 'title', 'editor', 'excerpt', 'thumbnail' ),
 			'rewrite'             => array(
-				'slug' => _x( 'project', 'slug for single project', 'THEME_SLUG' ),
+				'slug' => _x( 'project', 'slug for single project', 'wordpress-plugin-stub' ),
 			),
 		);
 		if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
@@ -369,7 +369,7 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 		echo '<p>';
 		printf(
 			'<button type="button" class="button button-add-partner">%s</button>',
-			esc_html__( 'Add a partner', 'THEME_SLUG' )
+			esc_html__( 'Add a partner', 'wordpress-plugin-stub' )
 		);
 		echo '</p>';
 		printf(
@@ -414,41 +414,41 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 	private function set_fields() {
 		$this->fields = array(
 			'_project_date_start'     => array(
-				'label' => __( 'Project start date', 'THEME_SLUG' ),
+				'label' => __( 'Project start date', 'wordpress-plugin-stub' ),
 				'type'  => 'date',
 			),
 			'_project_date_end'       => array(
-				'label' => __( 'Project end date', 'THEME_SLUG' ),
+				'label' => __( 'Project end date', 'wordpress-plugin-stub' ),
 				'type'  => 'date',
 			),
 			'_realization_date_start' => array(
-				'label' => __( 'Realization start date', 'THEME_SLUG' ),
+				'label' => __( 'Realization start date', 'wordpress-plugin-stub' ),
 				'type'  => 'date',
 			),
 			'_realization_date_end'   => array(
-				'label' => __( 'Realization end date', 'THEME_SLUG' ),
+				'label' => __( 'Realization end date', 'wordpress-plugin-stub' ),
 				'type'  => 'date',
 			),
 			'_project_cost'           => array(
-				'label'    => __( 'Project cost', 'THEME_SLUG' ),
+				'label'    => __( 'Project cost', 'wordpress-plugin-stub' ),
 				'type'     => 'number',
 				'sanitize' => 'floatval',
-				'sufix'    => __( 'PLN', 'THEME_SLUG' ),
+				'sufix'    => __( 'PLN', 'wordpress-plugin-stub' ),
 			),
 			'_project_funding'        => array(
-				'label'    => __( 'Project amount of funding', 'THEME_SLUG' ),
+				'label'    => __( 'Project amount of funding', 'wordpress-plugin-stub' ),
 				'type'     => 'number',
 				'sanitize' => 'floatval',
-				'sufix'    => __( 'PLN', 'THEME_SLUG' ),
+				'sufix'    => __( 'PLN', 'wordpress-plugin-stub' ),
 			),
 			'_project_currency'       => array(
-				'label'    => __( 'Project currency', 'THEME_SLUG' ),
+				'label'    => __( 'Project currency', 'wordpress-plugin-stub' ),
 				'type'     => 'text',
 				'sanitize' => 'esc_html',
 				'hide'     => true,
 			),
 			'_project_url'            => array(
-				'label'    => __( 'Project url', 'THEME_SLUG' ),
+				'label'    => __( 'Project url', 'wordpress-plugin-stub' ),
 				'type'     => 'url',
 				'sanitize' => 'esc_url',
 			),
@@ -569,7 +569,7 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 		);
 		printf(
 			'<button class="trash" type="button" aria-label="%s"><span class="dashicons dashicons-trash"></span></button>',
-			esc_attr__( 'Remove Partner', 'THEME_SLUG' )
+			esc_attr__( 'Remove Partner', 'wordpress-plugin-stub' )
 		);
 		echo '</div>';
 	}

@@ -57,11 +57,11 @@ class iworks_wordpress_plugin_stub_posttype_hero extends iworks_wordpress_plugin
 		$content .= '<div class="wp-block-group__inner-container">';
 		$content .= sprintf(
 			'<h2>%s</h2>',
-			esc_html__( 'Learn what our employees are saying.', 'THEME_SLUG' )
+			esc_html__( 'Learn what our employees are saying.', 'wordpress-plugin-stub' )
 		);
 		$content .= sprintf(
 			'<p class="become-one-of-them">%s</p>',
-			esc_html__( 'Become one of them!', 'THEME_SLUG' )
+			esc_html__( 'Become one of them!', 'wordpress-plugin-stub' )
 		);
 		$content .= '<ul>';
 		while ( $the_query->have_posts() ) {
@@ -96,34 +96,34 @@ class iworks_wordpress_plugin_stub_posttype_hero extends iworks_wordpress_plugin
 	 */
 	public function action_init_register_post_type() {
 		$labels = array(
-			'name'                  => _x( 'Heroes', 'Post Type General Name', 'THEME_SLUG' ),
-			'singular_name'         => _x( 'Hero', 'Post Type Singular Name', 'THEME_SLUG' ),
-			'menu_name'             => __( 'Heroes', 'THEME_SLUG' ),
-			'name_admin_bar'        => __( 'Heroes', 'THEME_SLUG' ),
-			'archives'              => __( 'Heroes', 'THEME_SLUG' ),
-			'all_items'             => __( 'Heroes', 'THEME_SLUG' ),
-			'add_new_item'          => __( 'Add New Hero', 'THEME_SLUG' ),
-			'add_new'               => __( 'Add New', 'THEME_SLUG' ),
-			'new_item'              => __( 'New Hero', 'THEME_SLUG' ),
-			'edit_item'             => __( 'Edit Hero', 'THEME_SLUG' ),
-			'update_item'           => __( 'Update Hero', 'THEME_SLUG' ),
-			'view_item'             => __( 'View Hero', 'THEME_SLUG' ),
-			'view_items'            => __( 'View Hero', 'THEME_SLUG' ),
-			'search_items'          => __( 'Search Hero', 'THEME_SLUG' ),
-			'not_found'             => __( 'Not found', 'THEME_SLUG' ),
-			'not_found_in_trash'    => __( 'Not found in Trash', 'THEME_SLUG' ),
-			'items_list'            => __( 'Hero list', 'THEME_SLUG' ),
-			'items_list_navigation' => __( 'Hero list navigation', 'THEME_SLUG' ),
-			'filter_items_list'     => __( 'Filter items list', 'THEME_SLUG' ),
+			'name'                  => _x( 'Heroes', 'Post Type General Name', 'wordpress-plugin-stub' ),
+			'singular_name'         => _x( 'Hero', 'Post Type Singular Name', 'wordpress-plugin-stub' ),
+			'menu_name'             => __( 'Heroes', 'wordpress-plugin-stub' ),
+			'name_admin_bar'        => __( 'Heroes', 'wordpress-plugin-stub' ),
+			'archives'              => __( 'Heroes', 'wordpress-plugin-stub' ),
+			'all_items'             => __( 'Heroes', 'wordpress-plugin-stub' ),
+			'add_new_item'          => __( 'Add New Hero', 'wordpress-plugin-stub' ),
+			'add_new'               => __( 'Add New', 'wordpress-plugin-stub' ),
+			'new_item'              => __( 'New Hero', 'wordpress-plugin-stub' ),
+			'edit_item'             => __( 'Edit Hero', 'wordpress-plugin-stub' ),
+			'update_item'           => __( 'Update Hero', 'wordpress-plugin-stub' ),
+			'view_item'             => __( 'View Hero', 'wordpress-plugin-stub' ),
+			'view_items'            => __( 'View Hero', 'wordpress-plugin-stub' ),
+			'search_items'          => __( 'Search Hero', 'wordpress-plugin-stub' ),
+			'not_found'             => __( 'Not found', 'wordpress-plugin-stub' ),
+			'not_found_in_trash'    => __( 'Not found in Trash', 'wordpress-plugin-stub' ),
+			'items_list'            => __( 'Hero list', 'wordpress-plugin-stub' ),
+			'items_list_navigation' => __( 'Hero list navigation', 'wordpress-plugin-stub' ),
+			'filter_items_list'     => __( 'Filter items list', 'wordpress-plugin-stub' ),
 		);
 		$args   = array(
 			'can_export'          => true,
 			'capability_type'     => 'page',
-			'description'         => __( 'Hero', 'THEME_SLUG' ),
+			'description'         => __( 'Hero', 'wordpress-plugin-stub' ),
 			'exclude_from_search' => true,
 			'has_archive'         => false,
 			'hierarchical'        => false,
-			'label'               => __( 'Heroes', 'THEME_SLUG' ),
+			'label'               => __( 'Heroes', 'wordpress-plugin-stub' ),
 			'labels'              => $labels,
 			'menu_icon'           => 'dashicons-businessperson',
 			'public'              => false,

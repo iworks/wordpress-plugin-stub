@@ -73,22 +73,22 @@ class iworks_wordpress_plugin_stub_posttype_page extends iworks_wordpress_plugin
 		 */
 		$this->meta_boxes[ $this->posttypes_names[ $this->posttype_name ] ] = array(
 			'opinion-data' => array(
-				'title'  => __( 'Opinion Data', 'THEME_SLUG' ),
+				'title'  => __( 'Opinion Data', 'wordpress-plugin-stub' ),
 				'fields' => array(
 					array(
 						'name'  => 'icon',
 						'type'  => 'image',
-						'label' => esc_html__( 'Icon', 'THEME_SLUG' ),
+						'label' => esc_html__( 'Icon', 'wordpress-plugin-stub' ),
 					),
 					array(
 						'name'  => 'opinion_url',
 						'type'  => 'url',
-						'label' => esc_html__( 'The Opinion URL', 'THEME_SLUG' ),
+						'label' => esc_html__( 'The Opinion URL', 'wordpress-plugin-stub' ),
 					),
 					array(
 						'name'  => 'author_url',
 						'type'  => 'url',
-						'label' => esc_html__( 'The Opinion Author URL', 'THEME_SLUG' ),
+						'label' => esc_html__( 'The Opinion Author URL', 'wordpress-plugin-stub' ),
 					),
 				),
 			),
@@ -119,11 +119,11 @@ class iworks_wordpress_plugin_stub_posttype_page extends iworks_wordpress_plugin
 					$url,
 					esc_attr(
 						sprintf(
-							__( 'Read more about the system: %s', 'THEME_SLUG' ),
+							__( 'Read more about the system: %s', 'wordpress-plugin-stub' ),
 							get_the_title()
 						)
 					),
-					esc_html__( 'Find out more', 'THEME_SLUG' )
+					esc_html__( 'Find out more', 'wordpress-plugin-stub' )
 				);
 			}
 			$content .= '</article>';
@@ -171,7 +171,7 @@ class iworks_wordpress_plugin_stub_posttype_page extends iworks_wordpress_plugin
 					'<span title="%s" class="logo">%s</span>',
 					esc_attr(
 						sprintf(
-							__( 'Logo: %s', 'THEME_SLUG' ),
+							__( 'Logo: %s', 'wordpress-plugin-stub' ),
 							get_the_title( $post_id )
 						)
 					),
@@ -185,7 +185,7 @@ class iworks_wordpress_plugin_stub_posttype_page extends iworks_wordpress_plugin
 				esc_url( $src ),
 				esc_attr(
 					sprintf(
-						__( 'Logo: %s', 'THEME_SLUG' ),
+						__( 'Logo: %s', 'wordpress-plugin-stub' ),
 						get_the_title( $post_id )
 					)
 				)
@@ -195,7 +195,7 @@ class iworks_wordpress_plugin_stub_posttype_page extends iworks_wordpress_plugin
 			'<span class="logo"><img src="%s" alt="%s" class="logo" /></span>',
 			esc_url( $src ),
 			sprintf(
-				__( 'Logo %s', 'THEME_SLUG' ),
+				__( 'Logo %s', 'wordpress-plugin-stub' ),
 				get_the_title( $post_id )
 			)
 		);
@@ -300,7 +300,7 @@ class iworks_wordpress_plugin_stub_posttype_page extends iworks_wordpress_plugin
 			'posts_per_page'   => $posts_per_page,
 			'suppress_filters' => true,
 		);
-		$content = __( 'There is no entries!', 'THEME_SLUG' );
+		$content = __( 'There is no entries!', 'wordpress-plugin-stub' );
 		return new WP_Query( $args );
 	}
 
@@ -312,7 +312,7 @@ class iworks_wordpress_plugin_stub_posttype_page extends iworks_wordpress_plugin
 		$posts_per_page = filter_input( INPUT_POST, 'posts_per_page', FILTER_DEFAULT );
 		$action         = $this->get_nonce_name( $id, 'systems' );
 		if ( ! wp_verify_nonce( $nonce, $action ) ) {
-			wp_send_json_error( __( 'Security check failed!', 'THEME_SLUG' ) );
+			wp_send_json_error( __( 'Security check failed!', 'wordpress-plugin-stub' ) );
 		}
 		if ( empty( $posts_per_page ) ) {
 			$posts_per_page = 3;
@@ -424,7 +424,7 @@ class iworks_wordpress_plugin_stub_posttype_page extends iworks_wordpress_plugin
 						$content .= '</article>';
 						if ( 'git-readme' === $class ) {
 							$content    .= '</div>';
-							$button_text = __( 'See other models', 'THEME_SLUG' );
+							$button_text = __( 'See other models', 'wordpress-plugin-stub' );
 						}
 					}
 				}
@@ -435,7 +435,7 @@ class iworks_wordpress_plugin_stub_posttype_page extends iworks_wordpress_plugin
 		if ( empty( $content ) ) {
 			$content   = sprintf(
 				'<div>%s</div>',
-				wpautop( esc_html__( 'Something went wrong!', 'THEME_SLUG' ) )
+				wpautop( esc_html__( 'Something went wrong!', 'wordpress-plugin-stub' ) )
 			);
 			$classes[] = 'error';
 			$classes[] = 'notice';
@@ -455,16 +455,16 @@ class iworks_wordpress_plugin_stub_posttype_page extends iworks_wordpress_plugin
 		 */
 		if ( $add_button ) {
 			if ( empty( $button_text ) ) {
-				$button_text = 'en' === $language ? esc_html( 'Show all' ) : esc_html__( 'Show all', 'THEME_SLUG' );
+				$button_text = 'en' === $language ? esc_html( 'Show all' ) : esc_html__( 'Show all', 'wordpress-plugin-stub' );
 				switch ( $type ) {
 					case 'systems':
-						$button_text = 'en' === $language ? esc_html( 'Show all systems' ) : esc_html__( 'Show all systems', 'THEME_SLUG' );
+						$button_text = 'en' === $language ? esc_html( 'Show all systems' ) : esc_html__( 'Show all systems', 'wordpress-plugin-stub' );
 						break;
 					case 'trainings':
-						$button_text = 'en' === $language ? esc_html( 'See training offer' ) : esc_html__( 'See training offer', 'THEME_SLUG' );
+						$button_text = 'en' === $language ? esc_html( 'See training offer' ) : esc_html__( 'See training offer', 'wordpress-plugin-stub' );
 						break;
 					case 'publications':
-						$button_text = 'en' === $language ? esc_html( 'Show all publications' ) : esc_html__( 'Show all publications', 'THEME_SLUG' );
+						$button_text = 'en' === $language ? esc_html( 'Show all publications' ) : esc_html__( 'Show all publications', 'wordpress-plugin-stub' );
 						break;
 				}
 			}

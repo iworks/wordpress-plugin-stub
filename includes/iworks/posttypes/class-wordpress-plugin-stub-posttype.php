@@ -77,7 +77,7 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 				'post_status'    => 'publish',
 			)
 		);
-		$list[0]   = __( '&mdash; Select &mdash;', 'THEME_SLUG' );
+		$list[0]   = __( '&mdash; Select &mdash;', 'wordpress-plugin-stub' );
 		$the_query = new WP_Query( $args );
 		foreach ( $the_query->posts as $post ) {
 			$list[ $post->ID ] = $post->post_title;
@@ -120,7 +120,7 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 			'<select name="%s">',
 			esc_attr( $one['name'] )
 		);
-		printf( '<option value="">%s</option>', __( '&mdash; Select &mdash;', 'THEME_SLUG' ) );
+		printf( '<option value="">%s</option>', __( '&mdash; Select &mdash;', 'wordpress-plugin-stub' ) );
 		foreach ( $one['options'] as $option_value => $option_name ) {
 			printf(
 				'<option value="%s" %s>%s</option>',
@@ -238,7 +238,7 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 		}
 	}
 	public function filter_add_menu_order_column( $columns ) {
-		$columns['menu_order'] = __( 'Order', 'THEME_SLUG' );
+		$columns['menu_order'] = __( 'Order', 'wordpress-plugin-stub' );
 		return $columns;
 	}
 

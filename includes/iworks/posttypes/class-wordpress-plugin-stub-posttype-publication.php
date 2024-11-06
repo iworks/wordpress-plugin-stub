@@ -37,34 +37,34 @@ class iworks_wordpress_plugin_stub_posttype_publication extends iworks_wordpress
 		 */
 		$this->meta_boxes[ $this->posttypes_names[ $this->posttype_name ] ] = array(
 			'publication-data' => array(
-				'title'  => __( 'Data', 'THEME_SLUG' ),
+				'title'  => __( 'Data', 'wordpress-plugin-stub' ),
 				'fields' => array(
 					array(
 						'name'  => 'language',
 						'type'  => 'select',
-						'label' => esc_html__( 'Language', 'THEME_SLUG' ),
+						'label' => esc_html__( 'Language', 'wordpress-plugin-stub' ),
 					),
 					array(
 						'name'  => 'year',
 						'type'  => 'year',
-						'label' => esc_html__( 'Year', 'THEME_SLUG' ),
+						'label' => esc_html__( 'Year', 'wordpress-plugin-stub' ),
 					),
 					array(
 						'name'  => 'authors',
-						'label' => esc_html__( 'Authors', 'THEME_SLUG' ),
+						'label' => esc_html__( 'Authors', 'wordpress-plugin-stub' ),
 					),
 					array(
 						'name'  => 'where',
-						'label' => esc_html__( 'Where', 'THEME_SLUG' ),
+						'label' => esc_html__( 'Where', 'wordpress-plugin-stub' ),
 					),
 					array(
 						'name'  => 'url',
 						'type'  => 'url',
-						'label' => esc_html__( 'URL', 'THEME_SLUG' ),
+						'label' => esc_html__( 'URL', 'wordpress-plugin-stub' ),
 					),
 					array(
 						'name'  => 'conference',
-						'label' => esc_html__( 'Conference', 'THEME_SLUG' ),
+						'label' => esc_html__( 'Conference', 'wordpress-plugin-stub' ),
 					),
 				),
 			),
@@ -115,7 +115,7 @@ class iworks_wordpress_plugin_stub_posttype_publication extends iworks_wordpress
 		if ( 'pl_PL' === get_locale() ) {
 			$content .= '<span class="section-title">Publikacje Naukowe OPI PIB</span>';
 		} else {
-			$content .= sprintf( '<span class="section-title">%s</span>', esc_html__( 'Scientific publications of OPI PIB', 'THEME_SLUG' ) );
+			$content .= sprintf( '<span class="section-title">%s</span>', esc_html__( 'Scientific publications of OPI PIB', 'wordpress-plugin-stub' ) );
 		}
 		if ( $the_query->have_posts() ) {
 			ob_start();
@@ -196,34 +196,34 @@ class iworks_wordpress_plugin_stub_posttype_publication extends iworks_wordpress
 	 */
 	public function action_init_register_post_type() {
 		$labels = array(
-			'name'                  => _x( 'Publications', 'Post Type General Name', 'THEME_SLUG' ),
-			'singular_name'         => _x( 'Publication', 'Post Type Singular Name', 'THEME_SLUG' ),
-			'menu_name'             => __( 'Publications', 'THEME_SLUG' ),
-			'name_admin_bar'        => __( 'Publications', 'THEME_SLUG' ),
-			'archives'              => __( 'Publications', 'THEME_SLUG' ),
-			'all_items'             => __( 'Publications', 'THEME_SLUG' ),
-			'add_new_item'          => __( 'Add New Publication', 'THEME_SLUG' ),
-			'add_new'               => __( 'Add New', 'THEME_SLUG' ),
-			'new_item'              => __( 'New Publication', 'THEME_SLUG' ),
-			'edit_item'             => __( 'Edit Publication', 'THEME_SLUG' ),
-			'update_item'           => __( 'Update Publication', 'THEME_SLUG' ),
-			'view_item'             => __( 'View Publication', 'THEME_SLUG' ),
-			'view_items'            => __( 'View Publication', 'THEME_SLUG' ),
-			'search_items'          => __( 'Search Publication', 'THEME_SLUG' ),
-			'not_found'             => __( 'Not found', 'THEME_SLUG' ),
-			'not_found_in_trash'    => __( 'Not found in Trash', 'THEME_SLUG' ),
-			'items_list'            => __( 'Publication list', 'THEME_SLUG' ),
-			'items_list_navigation' => __( 'Publication list navigation', 'THEME_SLUG' ),
-			'filter_items_list'     => __( 'Filter items list', 'THEME_SLUG' ),
+			'name'                  => _x( 'Publications', 'Post Type General Name', 'wordpress-plugin-stub' ),
+			'singular_name'         => _x( 'Publication', 'Post Type Singular Name', 'wordpress-plugin-stub' ),
+			'menu_name'             => __( 'Publications', 'wordpress-plugin-stub' ),
+			'name_admin_bar'        => __( 'Publications', 'wordpress-plugin-stub' ),
+			'archives'              => __( 'Publications', 'wordpress-plugin-stub' ),
+			'all_items'             => __( 'Publications', 'wordpress-plugin-stub' ),
+			'add_new_item'          => __( 'Add New Publication', 'wordpress-plugin-stub' ),
+			'add_new'               => __( 'Add New', 'wordpress-plugin-stub' ),
+			'new_item'              => __( 'New Publication', 'wordpress-plugin-stub' ),
+			'edit_item'             => __( 'Edit Publication', 'wordpress-plugin-stub' ),
+			'update_item'           => __( 'Update Publication', 'wordpress-plugin-stub' ),
+			'view_item'             => __( 'View Publication', 'wordpress-plugin-stub' ),
+			'view_items'            => __( 'View Publication', 'wordpress-plugin-stub' ),
+			'search_items'          => __( 'Search Publication', 'wordpress-plugin-stub' ),
+			'not_found'             => __( 'Not found', 'wordpress-plugin-stub' ),
+			'not_found_in_trash'    => __( 'Not found in Trash', 'wordpress-plugin-stub' ),
+			'items_list'            => __( 'Publication list', 'wordpress-plugin-stub' ),
+			'items_list_navigation' => __( 'Publication list navigation', 'wordpress-plugin-stub' ),
+			'filter_items_list'     => __( 'Filter items list', 'wordpress-plugin-stub' ),
 		);
 		$args   = array(
 			'can_export'          => true,
 			'capability_type'     => 'page',
-			'description'         => __( 'Publication', 'THEME_SLUG' ),
+			'description'         => __( 'Publication', 'wordpress-plugin-stub' ),
 			'exclude_from_search' => true,
 			'has_archive'         => true,
 			'hierarchical'        => false,
-			'label'               => __( 'Publications', 'THEME_SLUG' ),
+			'label'               => __( 'Publications', 'wordpress-plugin-stub' ),
 			'labels'              => $labels,
 			'menu_icon'           => 'dashicons-businessperson',
 			'public'              => true,
