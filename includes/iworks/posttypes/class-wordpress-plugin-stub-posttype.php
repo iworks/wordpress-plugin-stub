@@ -20,6 +20,12 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 	 */
 	protected string $taxonomy_name;
 
+	/**
+	 * Media Option Name
+	 *
+	 * @since 1.0.0
+	 */
+	protected string $option_name_media = '_iw_media';
 
 	protected array $posttypes_names = array();
 
@@ -114,26 +120,28 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 		return $list;
 	}
 
-	public function add_meta_boxes( $post_type ) {
+	public function add_meta_boxes( $post ) {
+		/**
+		 * check available fields
+		 */
 		if ( empty( $this->meta_boxes ) ) {
 			return;
 		}
-		if ( ! isset( $this->meta_boxes[ $post_type ] ) ) {
-			return;
-		}
-		foreach ( $this->meta_boxes[ $post_type ] as $id => $data ) {
-			add_meta_box(
-				$id,
-				$data['title'],
-				array( $this, 'render_meta_box_content' ),
-				$post_type,
-				isset( $data['context'] ) ? $data['context'] : 'advanced',
-				isset( $data['priority'] ) ? $data['priority'] : 'default',
-				array(
-					'posttype_name' => $post_type,
-					'id'            => $id,
-				)
-			);
+		foreach ( $this->meta_boxes as $meta_box_key => $meta_box_data ) {
+			foreach ( $meta_box_data as $id => $data ) {
+				add_meta_box(
+					$id,
+					$data['title'],
+					array( $this, 'render_meta_box_content' ),
+					$post->post_type,
+					isset( $data['context'] ) ? $data['context'] : 'advanced',
+					isset( $data['priority'] ) ? $data['priority'] : 'default',
+					array(
+						'posttype_name' => $post->post_type,
+						'id'            => $id,
+					)
+				);
+			}
 		}
 	}
 
@@ -230,7 +238,7 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 	public function render_meta_box_content( $post, $args ) {
 		$posttype_name = $args['args']['posttype_name'];
 		$id            = $args['args']['id'];
-		wp_nonce_field( $this->nonce_value, $this->get_post_meta_name( $id ) );
+		wp_nonce_field( $id, $this->get_post_meta_name( $id ) );
 		foreach ( $this->meta_boxes[ $posttype_name ][ $id ]['fields'] as $one ) {
 			$this->render( $post, $one );
 		}
@@ -320,7 +328,6 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 		if ( empty( $this->meta_boxes ) ) {
 			return;
 		}
-		l( $this->meta_boxes );
 		foreach ( $this->meta_boxes as $meta_box_key => $meta_box_data ) {
 			if ( ! isset( $meta_box_data['fields'] ) ) {
 				continue;
@@ -334,6 +341,31 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 				// do_action( 'iworks/wordpress-plugin-stub/postmeta/update', $post->ID, $option_name, $value, $key, $data );
 			}
 		}
+	}
+
+	protected function get_media_html( $post_ID ) {
+		$content = '';
+		$value   = get_post_meta( $post_ID, $this->option_name_media );
+		if ( ! empty( $value ) && is_array( $value ) ) {
+			$value = array_unique( $value );
+			foreach ( $value as $attachment_ID ) {
+				$data     = $this->get_attachment_data( $attachment_ID );
+				$content .= sprintf(
+					'<p class="filtry-publication-url filtry-publication-url-%s-%s"><a href="%s" rel="alternate">%s</a></p>',
+					esc_attr( $data['type'] ),
+					esc_attr( $data['subtype'] ),
+					esc_attr( $data['url'] ),
+					esc_html( empty( $data['caption'] ) ? $data['url'] : $data['caption'] )
+				);
+			}
+		}
+		return $content;
+	}
+	protected function get_post_meta_name( $name ) {
+		return sprintf(
+			'_iw_%s',
+			esc_attr( $name )
+		);
 	}
 }
 

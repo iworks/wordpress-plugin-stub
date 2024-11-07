@@ -50,7 +50,7 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 		/**
 		 * Settings
 		 */
-		$this->meta_boxes[] = array(
+		$this->meta_boxes[ $this->posttypes_names[ $this->posttype_name ] ] = array(
 			'project-data'  => array(
 				'title'  => __( 'Project Data', 'wordpress-plugin-stub' ),
 				'fields' => array(
@@ -156,13 +156,13 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 		if ( 'pl_PL' === get_locale() ) {
 			$content .= '<span class="section-title">Publikacje OPI PIB</span>';
 		} else {
-			$content .= sprintf( '<span class="section-title">%s</span>', esc_html__( 'projects of OPI PIB', 'wordpress-plugin-stub' ) );
+			$content .= sprintf( '<span class="section-title">%s</span>', esc_html__( 'Projects of OPI PIB', 'wordpress-plugin-stub' ) );
 		}
 		if ( $the_query->have_posts() ) {
 			ob_start();
 			while ( $the_query->have_posts() ) {
 				$the_query->the_post();
-				get_template_part( 'template-parts/single-content', 'project' );
+				get_template_part( 'template-parts/single-content', 'Project' );
 			}
 			$content .= ob_get_contents();
 			ob_end_clean();
@@ -209,7 +209,7 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 			ob_start();
 			while ( $the_query->have_posts() ) {
 				$the_query->the_post();
-				get_template_part( 'template-parts/single-content', 'project', $args );
+				get_template_part( 'template-parts/single-content', 'Project', $args );
 			}
 			$content .= ob_get_contents();
 			ob_end_clean();
@@ -294,12 +294,12 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 	 */
 	public function action_init_register_post_type() {
 		$labels = array(
-			'name'                  => _x( 'OPI projects', 'OPI Post Type General Name', 'wordpress-plugin-stub' ),
-			'singular_name'         => _x( 'OPI project', 'OPI Post Type Singular Name', 'wordpress-plugin-stub' ),
-			'menu_name'             => __( 'OPI projects', 'wordpress-plugin-stub' ),
-			'name_admin_bar'        => __( 'OPI projects', 'wordpress-plugin-stub' ),
-			'archives'              => __( 'OPI projects', 'wordpress-plugin-stub' ),
-			'all_items'             => __( 'OPI projects', 'wordpress-plugin-stub' ),
+			'name'                  => _x( 'Projects', 'Post Type General Name', 'wordpress-plugin-stub' ),
+			'singular_name'         => _x( 'Project', 'Post Type Singular Name', 'wordpress-plugin-stub' ),
+			'menu_name'             => __( 'Projects', 'wordpress-plugin-stub' ),
+			'name_admin_bar'        => __( 'Projects', 'wordpress-plugin-stub' ),
+			'archives'              => __( 'Projects', 'wordpress-plugin-stub' ),
+			'all_items'             => __( 'Projects', 'wordpress-plugin-stub' ),
 			'add_new_item'          => __( 'Add New project', 'wordpress-plugin-stub' ),
 			'add_new'               => __( 'Add New', 'wordpress-plugin-stub' ),
 			'new_item'              => __( 'New project', 'wordpress-plugin-stub' ),
@@ -310,34 +310,34 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 			'search_items'          => __( 'Search project', 'wordpress-plugin-stub' ),
 			'not_found'             => __( 'Not found', 'wordpress-plugin-stub' ),
 			'not_found_in_trash'    => __( 'Not found in Trash', 'wordpress-plugin-stub' ),
-			'items_list'            => __( 'OPI project list', 'wordpress-plugin-stub' ),
-			'items_list_navigation' => __( 'OPI project list navigation', 'wordpress-plugin-stub' ),
+			'items_list'            => __( 'Project list', 'wordpress-plugin-stub' ),
+			'items_list_navigation' => __( 'Project list navigation', 'wordpress-plugin-stub' ),
 			'filter_items_list'     => __( 'Filter items list', 'wordpress-plugin-stub' ),
 		);
 		$args   = array(
 			'can_export'          => true,
 			'capability_type'     => 'page',
-			'description'         => __( 'OPI project', 'wordpress-plugin-stub' ),
+			'description'         => __( 'Project', 'wordpress-plugin-stub' ),
 			'exclude_from_search' => true,
 			'has_archive'         => true,
 			'hierarchical'        => false,
-			'label'               => __( 'OPI projects', 'wordpress-plugin-stub' ),
+			'label'               => __( 'Projects', 'wordpress-plugin-stub' ),
 			'labels'              => $labels,
 			'public'              => true,
 			'show_in_admin_bar'   => true,
-			'show_in_menu'        => apply_filters( 'opi_post_type_show_in_menu' . $this->posttype_name, 'edit.php' ),
+			'show_in_menu'        => apply_filters( 'opi_post_type_show_in_menu' . $this->posttypes_names[ $this->posttype_name ], 'edit.php' ),
 			'show_in_nav_menus'   => true,
 			'show_ui'             => true,
 			'show_in_rest'        => true,
 			'supports'            => array( 'title', 'editor', 'excerpt', 'thumbnail' ),
 			'rewrite'             => array(
-				'slug' => _x( 'project', 'slug for single project', 'wordpress-plugin-stub' ),
+				'slug' => _x( 'Project', 'slug for single project', 'wordpress-plugin-stub' ),
 			),
 		);
 		if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
 			unset( $args['rewrite'] );
 		}
-		register_post_type( $this->posttype_name, $args );
+		register_post_type( $this->posttypes_names[ $this->posttype_name ], $args );
 	}
 
 	/**
@@ -448,7 +448,7 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 				'hide'     => true,
 			),
 			'_project_url'            => array(
-				'label'    => __( 'Project url', 'wordpress-plugin-stub' ),
+				'label'    => __( 'Project URL', 'wordpress-plugin-stub' ),
 				'type'     => 'url',
 				'sanitize' => 'esc_url',
 			),

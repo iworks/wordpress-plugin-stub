@@ -28,7 +28,7 @@ if ( class_exists( 'iworks_wordpress_plugin_stub_base' ) ) {
 class iworks_wordpress_plugin_stub_base {
 
 	protected $dev;
-	protected $meta_prefix = '_';
+	protected $meta_prefix = '_iw';
 	protected $base;
 	protected $dir;
 	protected $version;
