@@ -19,7 +19,7 @@ class iworks_wordpress_plugin_stub_posttype_hero extends iworks_wordpress_plugin
 		 * @since 1.0.0
 		 */
 		$this->posttype_name = preg_replace( '/^iworks_wordpress_plugin_stub_posttype_/', '', __CLASS__ );
-		$this->register_class_custom_posttype_name( $this->posttype_name, 'iw_' );
+		$this->register_class_custom_posttype_name( $this->posttype_name, 'iw' );
 		/**
 		 * WordPress Hooks
 		 */

@@ -21,7 +21,12 @@ class iworks_wordpress_plugin_stub_posttype_faq extends iworks_wordpress_plugin_
 		 * @since 1.0.0
 		 */
 		$this->posttype_name = preg_replace( '/^iworks_wordpress_plugin_stub_posttype_/', '', __CLASS__ );
-		$this->register_class_custom_posttype_name( $this->posttype_name, 'iw_' );
+		$this->register_class_custom_posttype_name( $this->posttype_name, 'iw' );
+		/**
+		 * Taxonomy name
+		 */
+		$this->taxonomy_name = preg_replace( '/^iworks_wordpress_plugin_stub_posttype_/', '', __CLASS__ );
+		$this->register_class_custom_taxonomy_name( $this->taxonomy_name, 'iw', 'group' );
 		/**
 		 * WordPress Hooks
 		 */
@@ -30,10 +35,6 @@ class iworks_wordpress_plugin_stub_posttype_faq extends iworks_wordpress_plugin_
 		add_shortcode( 'iworks-faq-list', array( $this, 'shortcode_list' ) );
 		add_filter( 'wp_localize_script_iworks_theme', array( $this, 'filter_wp_localize_script_iworks_theme' ) );
 		add_filter( 'iworks_post_type_faq_terms_options_list', array( $this, 'get_options_list_array' ) );
-		/**
-		 * Settings
-		 */
-		$this->taxonomies[ $this->posttype_name ] = 'iw_faq_cat';
 	}
 
 	/**
@@ -143,7 +144,7 @@ class iworks_wordpress_plugin_stub_posttype_faq extends iworks_wordpress_plugin_
 		);
 
 		register_taxonomy(
-			$this->taxonomies[ $this->posttype_name ],
+			$this->get_taxonomy( $this->posttype_name ),
 			array( $this->posttypes_names[ $this->posttype_name ] ),
 			apply_filters( 'iworks/theme/register_taxonomy/faq/arguments', $args )
 		);

@@ -34,11 +34,7 @@ class iworks_wordpress_plugin_posttypes {
 
 	public function __construct() {
 		$this->options = iworks_wordpress_plugin_stub_get_options();
-		/**
-		 * save post
-		 */
-		add_action( 'save_post', array( $this, 'save_post_meta' ), 10, 3 );
-		$this->base = preg_replace( '/iworks.+/', '', __FILE__ );
+		$this->base    = preg_replace( '/iworks.+/', '', __FILE__ );
 		/**
 		 * load post types
 		 */
@@ -117,58 +113,6 @@ class iworks_wordpress_plugin_posttypes {
 		echo $content;
 	}
 
-	/**
-	 * Save post metadata when a post is saved.
-	 *
-	 * @param int $post_id The post ID.
-	 * @param post $post The post object.
-	 * @param bool $update Whether this is an existing post being updated or not.
-	 */
-	public function save_post_meta_fields( $post_id, $post, $update, $fields ) {
-
-		/*
-		 * In production code, $slug should be set only once in the plugin,
-		 * preferably as a class property, rather than in each function that needs it.
-		 */
-		$post_type = get_post_type( $post_id );
-
-		// If this isn't a Copyricorrect post, don't update it.
-		if ( $this->post_type_name != $post_type ) {
-			return false;
-		}
-		foreach ( $fields as $group => $group_data ) {
-			$post_key = $this->options->get_option_name( $group );
-			if ( isset( $_POST[ $post_key ] ) ) {
-				foreach ( $group_data as $key => $data ) {
-					$value = isset( $_POST[ $post_key ][ $key ] ) ? $_POST[ $post_key ][ $key ] : null;
-					if ( is_string( $value ) ) {
-						$value = trim( $value );
-					} elseif ( is_array( $value ) ) {
-						if (
-							isset( $value['integer'] ) && 0 == $value['integer']
-							&& isset( $value['fractional'] ) && 0 == $value['fractional']
-						) {
-							$value = null;
-						}
-					}
-					$option_name = $this->options->get_option_name( $group . '_' . $key );
-					if ( empty( $value ) ) {
-						delete_post_meta( $post->ID, $option_name );
-					} else {
-						if ( isset( $data['type'] ) && 'date' == $data['type'] ) {
-							$value = strtotime( $value );
-						}
-						$result = add_post_meta( $post->ID, $option_name, $value, true );
-						if ( ! $result ) {
-							update_post_meta( $post->ID, $option_name, $value );
-						}
-						do_action( 'iworks_5o5_posttype_update_post_meta', $post->ID, $option_name, $value, $key, $data );
-					}
-				}
-			}
-		}
-		return true;
-	}
 
 	/**
 	 * Check post type

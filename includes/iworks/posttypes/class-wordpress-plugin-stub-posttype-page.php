@@ -59,7 +59,7 @@ class iworks_wordpress_plugin_stub_posttype_page extends iworks_wordpress_plugin
 		add_action( 'load-post-new.php', array( $this, 'admin_enqueue' ) );
 		add_action( 'load-post.php', array( $this, 'admin_enqueue' ) );
 		add_action( 'save_post', array( $this, 'save_icon' ) );
-		add_action( 'save_post', array( $this, 'save_meta_description' ) );
+		// add_action( 'save_post', array( $this, 'save_meta_description' ) );
 		add_action( 'wp_ajax_nopriv_opi_systems', array( $this, 'ajax_get_opi_systems' ) );
 		add_action( 'wp_ajax_opi_systems', array( $this, 'ajax_get_opi_systems' ) );
 		/**

@@ -13,11 +13,17 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 	 */
 	protected string $posttype_name;
 
+	/**
+	 * Taxonomy Name
+	 *
+	 * @since 1.0.0
+	 */
+	protected string $taxonomy_name;
+
+
 	protected array $posttypes_names = array();
 
-	protected array $taxonomies_names = array(
-		'person_role' => 'iw_person_role',
-	);
+	protected array $taxonomies_names = array();
 
 	protected array $meta_boxes = array();
 
@@ -33,15 +39,20 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 		 */
 		add_action( 'init', array( $this, 'action_init_register_post_type' ), 0 );
 		add_action( 'init', array( $this, 'action_init_register_taxonomy' ), 0 );
+		add_action( 'save_post', array( $this, 'action_save_post_meta' ), 10, 3 );
 		/**
 		 * WordPress Plugin Stub Hooks
 		 */
 		/**
 		 * Settings
 		 */
-		$this->posttypes_names = apply_filters(
-			'iworks/wordpress-plugiun-stub/posttypes_names/array',
+		$this->posttypes_names  = apply_filters(
+			'iworks/wordpress-plugin-stub/posttypes_names/array',
 			$this->posttypes_names
+		);
+		$this->taxonomies_names = apply_filters(
+			'iworks/wordpress-plugin-stub/taxonomies_names/array',
+			$this->taxonomies_names
 		);
 	}
 
@@ -54,7 +65,25 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 	 * @since 1.0.0
 	 */
 	protected function register_class_custom_posttype_name( $posttype_name, $prefix = '' ) {
-		$this->posttypes_names[ $posttype_name ] = $prefix . $this->posttype_name;
+		if ( ! empty( $prefix ) ) {
+			$prefix = sprintf( '%s_', $prefix );
+		}
+		$this->posttypes_names[ $posttype_name ] = $prefix . $posttype_name;
+	}
+
+	/**
+	 * Register the Taxonomy Name in the Class Parent Class.
+	 *
+	 * @since 1.0.0
+	 */
+	protected function register_class_custom_taxonomy_name( $taxonomy_name, $prefix = '', $sufix = '' ) {
+		if ( ! empty( $prefix ) ) {
+			$prefix = sprintf( '%s_', $prefix );
+		}
+		if ( ! empty( $sufix ) ) {
+			$sufix = sprintf( '_%s', $sufix );
+		}
+		$this->taxonomies_names[ $taxonomy_name ] = $prefix . $taxonomy_name . $sufix;
 	}
 
 	/**
@@ -250,6 +279,60 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 					get_post_field( $column, $post_id )
 				);
 				return;
+		}
+	}
+
+	protected function get_taxonomy( $taxonomy_name ) {
+		if ( ! isset( $this->taxonomies_names[ $taxonomy_name ] ) ) {
+			$this->taxonomies_names = apply_filters(
+				'iworks/wordpress-plugin-stub/taxonomies_names/array',
+				$this->taxonomies_names
+			);
+		}
+		if ( isset( $this->taxonomies_names[ $taxonomy_name ] ) ) {
+			return  $this->taxonomies_names[ $taxonomy_name ];
+		}
+		return new WP_Error( 'taxonomy', esc_html__( 'Selected Taxonomy dosn\'t exists.', 'wordpress-plugin-stub' ) );
+	}
+
+	/**
+	 * Save post metadata when a post is saved.
+	 *
+	 * @param int $post_id The post ID.
+	 * @param post $post The post object.
+	 * @param bool $update Whether this is an existing post being updated or not.
+	 */
+	public function action_save_post_meta( $post_id, $post, $update ) {
+		/*
+		 * In production code, $slug should be set only once in the plugin,
+		 * preferably as a class property, rather than in each function that needs it.
+		 */
+		$post_type = get_post_type( $post_id );
+		/**
+		 *  If this isn't a correct post, don't update it.
+		 */
+		if ( $this->posttype_name != $post_type ) {
+			return;
+		}
+		/**
+		 * check available fields
+		 */
+		if ( empty( $this->meta_boxes ) ) {
+			return;
+		}
+		l( $this->meta_boxes );
+		foreach ( $this->meta_boxes as $meta_box_key => $meta_box_data ) {
+			if ( ! isset( $meta_box_data['fields'] ) ) {
+				continue;
+			}
+			if ( ! is_array( $meta_box_data['fields'] ) ) {
+				continue;
+			}
+			foreach ( $meta_box_data['fields'] as $group => $group_data ) {
+				$post_key = $this->options->get_option_name( $group );
+				l( $post_key );
+				// do_action( 'iworks/wordpress-plugin-stub/postmeta/update', $post->ID, $option_name, $value, $key, $data );
+			}
 		}
 	}
 }

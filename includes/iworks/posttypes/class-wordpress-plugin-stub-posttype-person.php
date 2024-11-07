@@ -11,8 +11,6 @@ require_once 'class-wordpress-plugin-stub-posttype.php';
 
 class iworks_wordpress_plugin_stub_posttype_person extends iworks_wordpress_plugin_stub_posttype_base {
 
-	private $taxonomy_name = 'iworks_person_role';
-
 	public function __construct() {
 		parent::__construct();
 		/**
@@ -21,7 +19,12 @@ class iworks_wordpress_plugin_stub_posttype_person extends iworks_wordpress_plug
 		 * @since 1.0.0
 		 */
 		$this->posttype_name = preg_replace( '/^iworks_wordpress_plugin_stub_posttype_/', '', __CLASS__ );
-		$this->register_class_custom_posttype_name( $this->posttype_name, 'iw_' );
+		$this->register_class_custom_posttype_name( $this->posttype_name, 'iw' );
+		/**
+		 * Taxonomy name
+		 */
+		$this->taxonomy_name = preg_replace( '/^iworks_wordpress_plugin_stub_posttype_/', '', __CLASS__ );
+		$this->register_class_custom_taxonomy_name( $this->taxonomy_name, 'iw', 'role' );
 		/**
 		 * WordPress Hooks
 		 */
