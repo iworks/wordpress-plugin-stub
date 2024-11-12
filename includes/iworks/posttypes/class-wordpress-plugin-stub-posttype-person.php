@@ -33,6 +33,14 @@ class iworks_wordpress_plugin_stub_posttype_person extends iworks_wordpress_plug
 	}
 
 	/**
+	 * class settings
+	 *
+	 * @since 1.0.0
+	 */
+	public function action_init_settings() {
+	}
+
+	/**
 	 * Get post list
 	 *
 	 * @since 1.0.0

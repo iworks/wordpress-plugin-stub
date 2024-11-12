@@ -25,7 +25,8 @@ module.exports = function(grunt) {
 		js_files_concat: {
 			'assets/scripts/admin/admin.js': [
 				'assets/scripts/admin/src/datepicker.js',
-				'assets/scripts/admin/src/select2.js'
+				'assets/scripts/admin/src/select2.js',
+				'assets/scripts/admin/src/media-library.js',
 			]
 		},
 
@@ -192,7 +193,10 @@ module.exports = function(grunt) {
 				}
 			},
 			scripts: {
-				files: ['assets/scripts/src//**/*.js'],
+				files: [
+					'assets/scripts/src/**/*.js',
+					'assets/scripts/admin/src/**/*.js',
+				],
 				tasks: ['jshint', 'concat', 'uglify'],
 				options: {
 					debounceDelay: 500
@@ -224,7 +228,6 @@ module.exports = function(grunt) {
 						poedit: true, // Includes common Poedit headers.
 						'x-poedit-keywordslist': true // Include a list of all possible gettext functions.
 					},
-					exclude: ['node_modules', '.git', '.sass-cache', 'release'],
 					type: 'wp-plugin',
 					updateTimestamp: true,
 					updatePoFiles: true

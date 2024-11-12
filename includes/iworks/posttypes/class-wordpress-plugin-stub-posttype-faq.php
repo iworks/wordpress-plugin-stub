@@ -38,6 +38,14 @@ class iworks_wordpress_plugin_stub_posttype_faq extends iworks_wordpress_plugin_
 	}
 
 	/**
+	 * class settings
+	 *
+	 * @since 1.0.0
+	 */
+	public function action_init_settings() {
+	}
+
+	/**
 	 * Register FAQs custom post type
 	 */
 	public function action_init_register_post_type() {

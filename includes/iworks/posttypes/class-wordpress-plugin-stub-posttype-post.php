@@ -68,6 +68,14 @@ class iworks_wordpress_plugin_stub_posttype_post extends iworks_wordpress_plugin
 		);
 	}
 
+	/**
+	 * class settings
+	 *
+	 * @since 1.0.0
+	 */
+	public function action_init_settings() {
+	}
+
 	public function action_init_register_post_type() {}
 	public function action_init_register_taxonomy() {}
 

@@ -61,6 +61,14 @@ class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugi
 	}
 
 	/**
+	 * class settings
+	 *
+	 * @since 1.0.0
+	 */
+	public function action_init_settings() {
+	}
+
+	/**
 	 * Add colun size
 	 *
 	 * @since 1.0.0

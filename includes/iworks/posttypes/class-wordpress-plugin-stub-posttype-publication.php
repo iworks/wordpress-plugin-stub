@@ -72,6 +72,14 @@ class iworks_wordpress_plugin_stub_posttype_publication extends iworks_wordpress
 	}
 
 	/**
+	 * class settings
+	 *
+	 * @since 1.0.0
+	 */
+	public function action_init_settings() {
+	}
+
+	/**
 	 * Set default order
 	 *
 	 * @since 1.0.0

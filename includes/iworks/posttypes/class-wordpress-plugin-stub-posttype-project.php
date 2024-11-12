@@ -35,10 +35,7 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 		 * WordPress Hooks
 		 */
 		add_action( 'add_meta_boxes_' . $this->posttypes_names[ $this->posttype_name ], array( $this, 'add_meta_boxes' ) );
-		add_action( 'load-post-new.php', array( $this, 'admin_enqueue' ) );
-		add_action( 'load-post.php', array( $this, 'admin_enqueue' ) );
 		add_action( 'pre_get_posts', array( $this, 'set_default_order' ) );
-		add_action( 'save_post', array( $this, 'save' ) );
 		add_filter( 'the_content', array( $this, 'the_content' ) );
 		add_action( 'wp_loaded', array( $this, 'setup' ) );
 		/**
@@ -47,9 +44,15 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 		add_filter( 'opi_pib_get_opi_projects_random', array( $this, 'get_random' ), 10, 2 );
 		add_filter( 'opi_pib_get_opi_projects', array( $this, 'get_list' ) );
 		add_filter( 'opi_pib_get_opi_project_types', array( $this, 'filter_get_partners_types' ) );
-		/**
-		 * Settings
-		 */
+	}
+
+	/**
+	 * class settings
+	 *
+	 * @since 1.0.0
+	 */
+	public function action_init_settings() {
+		$this->load_plugin_admin_assets                                     = true;
 		$this->meta_boxes[ $this->posttypes_names[ $this->posttype_name ] ] = array(
 			'project-data'  => array(
 				'title'  => __( 'Project Data', 'wordpress-plugin-stub' ),
@@ -105,45 +108,6 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 			'subcontractor' => __( 'Subcontractors', 'wordpress-plugin-stub' ),
 		);
 	}
-
-	/**
-	 * Register plugin assets.
-	 *
-	 * @since 1.0.0
-	 */
-	public function register() {
-		wp_register_style(
-			strtolower( __CLASS__ ),
-			get_stylesheet_directory_uri() . '/assets/css/admin/partners.css',
-			array(),
-			$this->version
-		);
-		wp_register_script(
-			strtolower( __CLASS__ ),
-			get_stylesheet_directory_uri() . '/assets/scripts/admin-partners.js',
-			array(
-				'jquery',
-				'jquery-ui-sortable',
-			),
-			$this->version,
-			true
-		);
-	}
-
-	/**
-	 * Enqueue plugin assets.
-	 *
-	 * @since 1.0.0
-	 */
-	public function admin_enqueue() {
-		global $typenow;
-		if ( $typenow !== $this->posttype_name ) {
-			return;
-		}
-		wp_enqueue_script( strtolower( __CLASS__ ) );
-		wp_enqueue_style( strtolower( __CLASS__ ) );
-	}
-
 
 	public function get_random( $content, $posts_per_page ) {
 		$args      = array(
@@ -475,58 +439,6 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 			if ( method_exists( $this, $method ) ) {
 				echo $this->$method( $key, $value, $one['label'] );
 			}
-		}
-	}
-
-	/**
-	 * Save project data.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param integer $post_id Post ID.
-	 */
-	public function save( $post_ID ) {
-		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-			return;
-		}
-		$nonce = filter_input( INPUT_POST, '_project_nonce' );
-		if ( ! wp_verify_nonce( $nonce, __CLASS__ ) ) {
-			return;
-		}
-		if ( ! current_user_can( 'edit_post', $post_ID ) ) {
-			return;
-		}
-		$this->set_fields();
-		foreach ( $this->fields as $key => $one ) {
-			$value = filter_input( INPUT_POST, $key );
-			if ( isset( $one['sanitize'] ) ) {
-				$value = $one['sanitize']( $value );
-			}
-			$this->update_meta( $post_ID, $key, $value );
-		}
-		/**
-		 * Partners
-		 */
-		if ( isset( $_POST[ $this->option_name_partners ] ) ) {
-			$partners = array();
-			foreach ( $this->partners_types as $type => $label ) {
-				$value = array();
-				if ( isset( $_POST[ $this->option_name_partners ][ $type ] )
-					&& is_array( $_POST[ $this->option_name_partners ][ $type ] )
-				) {
-					foreach ( $_POST[ $this->option_name_partners ][ $type ] as $one ) {
-						$one = filter_var( $one );
-						if ( empty( $one ) ) {
-							continue;
-						}
-						$value[] = $one;
-					}
-				}
-				$partners[ $type ] = $value;
-			}
-			$this->update_meta( $post_ID, $this->option_name_partners, $partners );
-		} else {
-			delete_post_meta( $post_ID, $this->option_name_partners );
 		}
 	}
 

@@ -66,6 +66,14 @@ class iworks_wordpress_plugin_stub_posttype_opinion extends iworks_wordpress_plu
 	}
 
 	/**
+	 * class settings
+	 *
+	 * @since 1.0.0
+	 */
+	public function action_init_settings() {
+	}
+
+	/**
 	 * Get post list
 	 *
 	 * @since 1.0.0
