@@ -28,6 +28,7 @@ class iworks_wordpress_plugin_stub_posttype_person extends iworks_wordpress_plug
 		/**
 		 * WordPress Hooks
 		 */
+		add_action( 'add_meta_boxes_' . $this->posttypes_names[ $this->posttype_name ], array( $this, 'add_meta_boxes' ) );
 		add_shortcode( 'iworks_persons_list', array( $this, 'get_list' ) );
 		add_filter( 'og_og_type_value', array( $this, 'filter_og_og_type_value' ) );
 	}

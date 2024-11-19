@@ -23,6 +23,7 @@ class iworks_wordpress_plugin_stub_posttype_hero extends iworks_wordpress_plugin
 		/**
 		 * WordPress Hooks
 		 */
+		add_action( 'add_meta_boxes_' . $this->posttypes_names[ $this->posttype_name ], array( $this, 'add_meta_boxes' ) );
 		add_shortcode( 'opi_heroes', array( $this, 'get_list' ) );
 	}
 

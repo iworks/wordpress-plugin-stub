@@ -48,15 +48,15 @@ mv includes/iworks/class-wordpress-plugin-stub-posttypes.php includes/iworks/cla
 PDIR=includes/iworks/posttypes
 PCLASS=class-wordpress-plugin-stub-posttype
 mv ${PDIR}/${PCLASS}.php ${PDIR}/class-${SLUG}-posttype.php
-mv ${PDIR}/${PCLASS}-faq.php ${PDIR}/class-posttype-${SLUG}-faq.php
-mv ${PDIR}/${PCLASS}-hero.php ${PDIR}/class-posttype-${SLUG}-hero.php
-mv ${PDIR}/${PCLASS}-opinion.php ${PDIR}/class-posttype-${SLUG}-opinion.php
-mv ${PDIR}/${PCLASS}-page.php ${PDIR}/class-posttype-${SLUG}-page.php
-mv ${PDIR}/${PCLASS}-person.php ${PDIR}/class-posttype-${SLUG}-person.php
-mv ${PDIR}/${PCLASS}-post.php ${PDIR}/class-posttype-${SLUG}-post.php
-mv ${PDIR}/${PCLASS}-project.php ${PDIR}/class-posttype-${SLUG}-project.php
-mv ${PDIR}/${PCLASS}-promotion.php ${PDIR}/class-posttype-${SLUG}-promotion.php
-mv ${PDIR}/${PCLASS}-publication.php ${PDIR}/class-posttype-${SLUG}-publication.php
+mv ${PDIR}/${PCLASS}-faq.php ${PDIR}/class-${SLUG}-posttype-faq.php
+mv ${PDIR}/${PCLASS}-hero.php ${PDIR}/class-${SLUG}-posttype-hero.php
+mv ${PDIR}/${PCLASS}-opinion.php ${PDIR}/class-${SLUG}-posttype-opinion.php
+mv ${PDIR}/${PCLASS}-page.php ${PDIR}/class-${SLUG}-posttype-page.php
+mv ${PDIR}/${PCLASS}-person.php ${PDIR}/class-${SLUG}-posttype-person.php
+mv ${PDIR}/${PCLASS}-post.php ${PDIR}/class-${SLUG}-posttype-post.php
+mv ${PDIR}/${PCLASS}-project.php ${PDIR}/class-${SLUG}-posttype-project.php
+mv ${PDIR}/${PCLASS}-promotion.php ${PDIR}/class-${SLUG}-posttype-promotion.php
+mv ${PDIR}/${PCLASS}-publication.php ${PDIR}/class-${SLUG}-posttype-publication.php
 #
 # language
 #

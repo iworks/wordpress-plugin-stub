@@ -25,8 +25,9 @@ class iworks_wordpress_plugin_stub_posttype_opinion extends iworks_wordpress_plu
 		/**
 		 * WordPress Hooks
 		 */
-		add_filter( 'iworks_post_type_opinion_options_list', array( $this, 'get_options_list_array' ), 10, 2 );
+		add_action( 'add_meta_boxes_' . $this->posttypes_names[ $this->posttype_name ], array( $this, 'add_meta_boxes' ) );
 		add_action( 'save_post_' . $this->posttypes_names[ $this->posttype_name ], array( $this, 'action_save_post' ), 10, 3 );
+		add_filter( 'iworks_post_type_opinion_options_list', array( $this, 'get_options_list_array' ), 10, 2 );
 		/**
 		 * Shortcodes
 		 */
