@@ -11,38 +11,6 @@ require_once 'class-wordpress-plugin-stub-posttype.php';
 
 class iworks_wordpress_plugin_stub_posttype_page extends iworks_wordpress_plugin_stub_posttype_base {
 
-	/**
-	 * Option name, used to save data on postmeta table.
-	 *
-	 * @since 1.0.0
-	 * @var string $option_name_icon Option name ICON.
-	 */
-	private $option_name_icon = '_opi_icon';
-
-	/**
-	 * Option name, used to save data on postmeta table.
-	 *
-	 * @since 1.0.0
-	 * @var string $option_name_url Option name URL.
-	 */
-	private $option_name_url = '_opi_url';
-
-	/**
-	 * Option name, used to save data on postmeta table.
-	 *
-	 * @since 1.0.0
-	 * @var string $option_name_class Option name class.
-	 */
-	private $option_name_class = '_opi_class';
-
-	/**
-	 * Option name, used to save data on postmeta table.
-	 *
-	 * @since 1.0.0
-	 * @var string $option_name_numbers Option name numbers.
-	 */
-	private $option_name_numbers = '_opi_numbers';
-
 	public function __construct() {
 		parent::__construct();
 		/**
