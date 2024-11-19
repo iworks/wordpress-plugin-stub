@@ -20,10 +20,12 @@ echo Plugin slug:   ${SLUG}
 
 git clone git@github.com:iworks/wordpress-plugin-stub.git ${SLUG}
 cd ${SLUG}
+
 #
 # replace plugin name
 #
-FILES=$(find -type f|grep -E "txt|php|pot|json|Gruntfile.js")
+FILES=$(find -type f|grep -E "(txt|php|pot|json|js)$"| grep -v "assets/externals")
+
 perl -pi -e "s/wordpress-plugin-stub/${SLUG}/g"   ${FILES}
 perl -pi -e "s/WORDPRESS_PLUGIN_STUB/${PREFIX}/g" ${FILES}
 perl -pi -e "s/wordpress_plugin_stub/${CLASS}/g"  ${FILES}
@@ -38,7 +40,7 @@ mkdir -p ./includes/iworks
 #
 # rename files
 #
-mv wordpress-plugin-stub.php ${SLUG}.php
+mv wordpressplugin-stub.php ${SLUG}.php
 mv includes/iworks/class-wordpress-plugin-stub.php includes/iworks/class-${SLUG}.php
 mv includes/iworks/class-wordpress-plugin-stub-base.php includes/iworks/class-${SLUG}-base.php
 mv includes/iworks/class-wordpress-plugin-stub-posttypes.php includes/iworks/class-${SLUG}-posttypes.php

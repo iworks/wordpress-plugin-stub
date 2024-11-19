@@ -24,7 +24,6 @@ class iworks_wordpress_plugin_stub_posttype_page extends iworks_wordpress_plugin
 		 * WordPress Hooks
 		 */
 		add_action( 'add_meta_boxes_' . $this->posttypes_names[ $this->posttype_name ], array( $this, 'add_meta_boxes' ) );
-		add_action( 'admin_init', array( $this, 'register' ) );
 		add_action( 'load-post-new.php', array( $this, 'admin_enqueue' ) );
 		add_action( 'load-post.php', array( $this, 'admin_enqueue' ) );
 		/**
