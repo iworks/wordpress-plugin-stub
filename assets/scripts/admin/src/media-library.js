@@ -1,19 +1,13 @@
-jQuery(function($){
+jQuery(function($) {
 	// Set all variables to be used in scope
-	var frame,
-		metaBox = $('#meta-box-id.postbox'), // Your meta box id here
-		addImgLink = metaBox.find('.upload-custom-img'),
-		delImgLink = metaBox.find( '.delete-custom-img'),
-		imgContainer = metaBox.find( '.custom-img-container'),
-		imgIdInput = metaBox.find( '.custom-img-id' );
+	var frame;
 
 	// ADD IMAGE LINK
-	addImgLink.on( 'click', function( event ){
-
+	$('.postbox .iworks-field-image .button-upload').on('click', function(event) {
+		var $container = $(this).closest('.iworks-field-image');
 		event.preventDefault();
-
 		// If the media frame already exists, reopen it.
-		if ( frame ) {
+		if (frame) {
 			frame.open();
 			return;
 		}
@@ -24,27 +18,23 @@ jQuery(function($){
 			button: {
 				text: window.iworks_wordpress_plugin_stub.l10n.wp_media.button.text
 			},
-			multiple: false  // Set to true to allow multiple files to be selected
+			multiple: false // Set to true to allow multiple files to be selected
 		});
 
-
 		// When an image is selected in the media frame...
-		frame.on( 'select', function() {
-
+		frame.on('select', function() {
 			// Get media attachment details from the frame state
 			var attachment = frame.state().get('selection').first().toJSON();
+			l(attachment);
 
 			// Send the attachment URL to our custom image input field.
-			imgContainer.append( '<img src="'+attachment.url+'" alt="" style="max-width:100%;"/>' );
+			$('img', $container).attr('src', attachment.url);
 
 			// Send the attachment id to our hidden input
-			imgIdInput.val( attachment.id );
-
-			// Hide the add image link
-			addImgLink.addClass( 'hidden' );
+			$('.attachment-id', $container).val(attachment.id);
 
 			// Unhide the remove image link
-			delImgLink.removeClass( 'hidden' );
+			$('.button-delete', $container).removeClass('hidden');
 		});
 
 		// Finally, open the modal on click
@@ -53,21 +43,17 @@ jQuery(function($){
 
 
 	// DELETE IMAGE LINK
-	delImgLink.on( 'click', function( event ){
-
+	$('.postbox .iworks-field-image .button-delete').on('click', function(event) {
+		var $container = $(this).closest('.iworks-field-image');
 		event.preventDefault();
-
 		// Clear out the preview image
-		imgContainer.html( '' );
-
-		// Un-hide the add image link
-		addImgLink.removeClass( 'hidden' );
+		$('img', $container).attr('src', '');
 
 		// Hide the delete image link
-		delImgLink.addClass( 'hidden' );
+		$(this).addClass('hidden');
 
 		// Delete the image id from the hidden input
-		imgIdInput.val( '' );
+		$('.attachment-id', $container).val('');
 
 	});
 
