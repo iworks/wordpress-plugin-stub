@@ -42,7 +42,27 @@ mv wordpress-plugin-stub.php ${SLUG}.php
 mv includes/iworks/class-wordpress-plugin-stub.php includes/iworks/class-${SLUG}.php
 mv includes/iworks/class-wordpress-plugin-stub-base.php includes/iworks/class-${SLUG}-base.php
 mv includes/iworks/class-wordpress-plugin-stub-posttypes.php includes/iworks/class-${SLUG}-posttypes.php
+#
+# rename files: posttypes
+#
+PDIR=includes/iworks/posttypes
+PCLASS=class-wordpress-plugin-stub-posttype
+mv ${PDIR}/${PCLASS}.php ${PDIR}/class-${SLUG}-posttype.php
+mv ${PDIR}/${PCLASS}-faq.php ${PDIR}/class-posttype-${SLUG}-faq.php
+mv ${PDIR}/${PCLASS}-hero.php ${PDIR}/class-posttype-${SLUG}-hero.php
+mv ${PDIR}/${PCLASS}-opinion.php ${PDIR}/class-posttype-${SLUG}-opinion.php
+mv ${PDIR}/${PCLASS}-page.php ${PDIR}/class-posttype-${SLUG}-page.php
+mv ${PDIR}/${PCLASS}-person.php ${PDIR}/class-posttype-${SLUG}-person.php
+mv ${PDIR}/${PCLASS}-post.php ${PDIR}/class-posttype-${SLUG}-post.php
+mv ${PDIR}/${PCLASS}-project.php ${PDIR}/class-posttype-${SLUG}-project.php
+mv ${PDIR}/${PCLASS}-promotion.php ${PDIR}/class-posttype-${SLUG}-promotion.php
+mv ${PDIR}/${PCLASS}-publication.php ${PDIR}/class-posttype-${SLUG}-publication.php
+#
+# language
+#
 mv languages/wordpress-plugin-stub.pot languages/${SLUG}.pot
+xgettext -D languages/ -o ./languages/pl_PO.po
+
 
 rm -rf ./.git ./assets/bin
 
