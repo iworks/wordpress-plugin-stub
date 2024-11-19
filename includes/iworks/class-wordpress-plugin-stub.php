@@ -102,6 +102,7 @@ class iworks_wordpress_plugin_stub extends iworks_wordpress_plugin_stub_base {
 			$files = array(
 				'wordpress-plugin-stub-admin-datepicker' => 'assets/scripts/admin/src/datepicker.js',
 				'wordpress-plugin-stub-admin-select2'    => 'assets/scripts/admin/src/select2.js',
+				'wordpress-plugin-stub-admin-media-library'    => 'assets/scripts/admin/src/media-library.js',
 			);
 		}
 		$deps = array(
