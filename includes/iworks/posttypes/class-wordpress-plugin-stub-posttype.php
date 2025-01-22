@@ -1,5 +1,23 @@
 <?php
+/**
 
+
+Copyright 2025-PLUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
+
+this program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License, version 2, as
+published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+ */
 defined( 'ABSPATH' ) || exit;
 
 require_once dirname( ( dirname( __FILE__ ) ) ) . '/class-wordpress-plugin-stub-base.php';
@@ -162,8 +180,13 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 	 * @since 1.0.0
 	 */
 	protected function render( $post, $one ) {
-		$method = sprintf( 'render_meta_%s', $one['type'] );
-		echo $method;
+		$one     = wp_parse_args(
+			$one,
+			array(
+				'type' => 'text',
+			)
+		);
+		$method  = sprintf( 'render_meta_%s', $one['type'] );
 		$classes = array(
 			'iworks-field',
 			sprintf( 'iworks-field-%s', $one['type'] ),
@@ -203,8 +226,21 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 		if ( is_admin() ) {
 			wp_enqueue_media();
 		}
-		$src = '';
-		echo '<div class="iworks-wordpress-plugin-stub-image">';
+		if ( isset( $one['label'] ) ) {
+			echo '<p>';
+			echo $one['label'];
+			echo '</p>';
+		}
+		echo '<p class="iworks-field-image-row">';
+		/**
+		 * image
+		 */
+		$src = wp_get_attachment_image_src( $one['meta']['value'] );
+		if ( $src ) {
+			$src = $src[0];
+		} else {
+			$src = '';
+		}
 		printf(
 			'<img src="%s" alt="" style="%s%sclear:right;display:block;margin-bottom:10px;" />',
 			esc_attr( $src ? $src : '' ),
@@ -212,20 +248,20 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 			array_key_exists( 'max-height', $one ) && is_integer( $one['max-height'] ) ? sprintf( 'max-height: %dpx;', $one['max-height'] ) : ''
 		);
 		printf(
-			'<input type=" hidden" name="%s" value="%s" />',
-			esc_attr( $one['meta']['value'] ),
-			esc_attr( $one['meta']['key'] )
+			'<input class="attachment-id" type="hidden" name="%s" value="%s">',
+			esc_attr( $one['meta']['key'] ),
+			esc_attr( $one['meta']['value'] )
 		);
 		printf(
 			'<input type="button" class="button button-upload" value="%s" />',
 			esc_attr__( 'Select Image', 'wordpress-plugin-stub' ),
 		);
 		printf(
-			'<input type="button" class="button button-delete" value="%s" %s/>',
+			'<input type="button" value="%s" class="button button-delete%s">',
 			esc_attr__( 'Delete image', 'wordpress-plugin-stub' ),
-			empty( $value ) ? ' style="display:none"' : ''
+			empty( $value ) ? ' hidden' : ''
 		);
-		echo '</div>';
+		echo '</p>';
 	}
 
 	private function render_meta_select( $post, $one ) {
@@ -401,49 +437,59 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 		/**
 		 * check available fields
 		 */
-		if ( empty( $this->meta_boxes ) ) {
+		if (
+			empty( $this->meta_boxes )
+			|| ! is_array( $this->meta_boxes )
+			|| ! isset( $this->meta_boxes[ $post_type ] )
+		) {
 			return;
 		}
 		/**
 		 * check user permissions
 		 */
-		if ( ! current_user_can( 'edit_post', $post_ID ) ) {
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
 			return;
 		}
-		l( $_POST );
-		foreach ( $this->meta_boxes as $meta_box_key => $meta_box_data ) {
+		/**
+		 * save fields
+		 */
+		foreach ( $this->meta_boxes[ $post_type ] as $group => $meta_box_data ) {
 			if ( ! isset( $meta_box_data['fields'] ) ) {
 				continue;
 			}
 			if ( ! is_array( $meta_box_data['fields'] ) ) {
 				continue;
 			}
-			foreach ( $meta_box_data['fields'] as $group => $group_data ) {
-				$post_key = $this->options->get_option_name( $group );
-				l( $post_key );
-				// do_action( 'iworks/wordpress-plugin-stub/postmeta/update', $post->ID, $option_name, $value, $key, $data );
+			/**
+			 * check nonce
+			 */
+			$nonce = filter_input( INPUT_POST, $this->get_post_meta_name( $group ) );
+			if ( ! wp_verify_nonce( $nonce, $group ) ) {
+				continue;
+			}
+			/**
+			 * handle fields
+			 */
+			foreach ( $meta_box_data['fields'] as $field ) {
+				$key   = $this->get_post_meta_name( $field['name'], $group );
+				$value = filter_input( INPUT_POST, $key );
+				switch ( $field['type'] ) {
+					case 'image':
+						$value = intval( $value );
+						break;
+					case 'text':
+						$value = wp_kses_post( $value );
+						break;
+				}
+				delete_post_meta( $post_id, $key );
+				if ( $value ) {
+					update_post_meta( $post_id, $key, $value );
+				}
+				do_action( 'iworks/opi-science-portal-support/postmeta/update', $post_id, $field, $key, $value );
 			}
 		}
 	}
 
-	protected function get_media_html( $post_ID ) {
-		$content = '';
-		$value   = get_post_meta( $post_ID, $this->option_name_media );
-		if ( ! empty( $value ) && is_array( $value ) ) {
-			$value = array_unique( $value );
-			foreach ( $value as $attachment_ID ) {
-				$data     = $this->get_attachment_data( $attachment_ID );
-				$content .= sprintf(
-					'<p class="filtry-publication-url filtry-publication-url-%s-%s"><a href="%s" rel="alternate">%s</a></p>',
-					esc_attr( $data['type'] ),
-					esc_attr( $data['subtype'] ),
-					esc_attr( $data['url'] ),
-					esc_html( empty( $data['caption'] ) ? $data['url'] : $data['caption'] )
-				);
-			}
-		}
-		return $content;
-	}
 	protected function get_post_meta_name( $name, $group = '' ) {
 		if ( ! empty( $group ) ) {
 			return sprintf(
@@ -509,7 +555,7 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 	public function action_admin_enqueue_scripts_register_assets() {
 		wp_register_style(
 			strtolower( __CLASS__ ),
-			$this->url . '/assets/css/admin/partners.css',
+			$this->url . '/assets/css/admin/admin.css',
 			array(),
 			$this->version
 		);
@@ -529,5 +575,19 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 		);
 	}
 
+	protected function get_icon_svg( $icon ) {
+		return sprintf(
+			'data:image/svg+xml;base64,%s',
+			base64_encode(
+				file_get_contents(
+					sprintf(
+						'%s/assets/images/%s.svg',
+						dirname( dirname( $this->base ) ),
+						sanitize_file_name( $icon )
+					)
+				)
+			)
+		);
+	}
 }
 

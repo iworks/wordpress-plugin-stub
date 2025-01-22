@@ -1,7 +1,7 @@
 <?php
 /*
 
-Copyright 2018-PLUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
+Copyright 2025-PLUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
@@ -102,7 +102,7 @@ class iworks_wordpress_plugin_stub extends iworks_wordpress_plugin_stub_base {
 			$files = array(
 				'wordpress-plugin-stub-admin-datepicker' => 'assets/scripts/admin/src/datepicker.js',
 				'wordpress-plugin-stub-admin-select2'    => 'assets/scripts/admin/src/select2.js',
-				'wordpress-plugin-stub-admin-media-library'    => 'assets/scripts/admin/src/media-library.js',
+				'wordpress-plugin-stub-admin-media-library' => 'assets/scripts/admin/src/media-library.js',
 			);
 		}
 		$deps = array(
