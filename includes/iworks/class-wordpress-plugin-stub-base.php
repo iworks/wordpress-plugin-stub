@@ -1,7 +1,7 @@
 <?php
 /*
 
-Copyright 20255555LUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
+Copyright 2025-PLUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
@@ -33,14 +33,30 @@ class iworks_wordpress_plugin_stub_base {
 	protected $version;
 	protected $url;
 
+	/**
+	 * DEBUG
+	 *
+	 * @since 1.0.0
+	 */
+	protected $debug = false;
+
+	/**
+	 * EOL?
+	 *
+	 * @since 1.0.0
+	 */
+	protected string $eol = '';
+
 	public function __construct() {
 		/**
 		 * static settings
 		 */
-		$this->dev  = ( defined( 'IWORKS_DEV_MODE' ) && IWORKS_DEV_MODE ) ? '' : '.min';
-		$this->base = dirname( __FILE__ );
-		$this->dir  = basename( dirname( dirname( $this->base ) ) );
-		$this->url  = plugins_url( $this->dir );
+		$this->debug = ( defined( 'WP_DEBUG' ) && WP_DEBUG ) || ( defined( 'IWORKS_DEV_MODE' ) && IWORKS_DEV_MODE );
+		$this->dev   = $this->debug ? '' : '.min';
+		$this->eol   = $this->debug ? PHP_EOL : '';
+		$this->base  = dirname( __FILE__ );
+		$this->dir   = basename( dirname( dirname( $this->base ) ) );
+		$this->url   = plugins_url( $this->dir );
 	}
 
 	public function get_version( $file = null ) {

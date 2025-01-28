@@ -57,9 +57,9 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 		/**
 		 * projects tab on main page
 		 */
-		add_filter( 'opi_pib_get_opi_projects_random', array( $this, 'get_random' ), 10, 2 );
-		add_filter( 'opi_pib_get_opi_projects', array( $this, 'get_list' ) );
-		add_filter( 'opi_pib_get_opi_project_types', array( $this, 'filter_get_partners_types' ) );
+		add_filter( 'iworks_get_projects_random', array( $this, 'get_random' ), 10, 2 );
+		add_filter( 'iworks_get_projects', array( $this, 'get_list' ) );
+		add_filter( 'iworks_get_project_types', array( $this, 'filter_get_partners_types' ) );
 	}
 
 	/**
