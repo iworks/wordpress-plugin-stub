@@ -67,7 +67,7 @@ class iworks_wordpress_plugin_stub_base {
 					return md5_file( $file );
 				}
 			}
-			return rand( 0, PHP_INT_MAX );
+			return time();
 		}
 		return $this->version;
 	}

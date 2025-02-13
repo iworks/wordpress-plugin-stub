@@ -26,11 +26,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
  */
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
-}
-
+defined( 'ABSPATH' ) || exit; // Exit if accessed directly
 /**
  * static options
  */
@@ -71,13 +67,18 @@ add_filter( 'wordpress-plugin-stub/load/posttype/publication', '__return_false' 
 /**
  * load options
  */
-global $iworks_wordpress_plugin_stub_options;
-$iworks_wordpress_plugin_stub_options = new iworks_options();
-$iworks_wordpress_plugin_stub_options->set_option_function_name( 'iworks_wordpress_plugin_stub_options' );
-$iworks_wordpress_plugin_stub_options->set_option_prefix( IWORKS_WORDPRESS_PLUGIN_STUB_PREFIX );
-
 function iworks_wordpress_plugin_stub_get_options() {
 	global $iworks_wordpress_plugin_stub_options;
+	if ( is_object( $iworks_wordpress_plugin_stub_options ) ) {
+		return $iworks_wordpress_plugin_stub_options;
+	}
+	$iworks_wordpress_plugin_stub_options = new iworks_options();
+	$iworks_wordpress_plugin_stub_options->set_option_function_name( 'iworks_wordpress_plugin_stub_options' );
+	$iworks_wordpress_plugin_stub_options->set_option_prefix( IWORKS_WORDPRESS_PLUGIN_STUB_PREFIX );
+	if ( method_exists( $iworks_wordpress_plugin_stub_options, 'set_plugin' ) ) {
+		$iworks_wordpress_plugin_stub_options->set_plugin( basename( __FILE__ ) );
+	}
+	$iworks_wordpress_plugin_stub_options->init();
 	return $iworks_wordpress_plugin_stub_options;
 }
 
