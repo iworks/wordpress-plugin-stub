@@ -38,11 +38,6 @@ class iworks_wordpress_plugin_stub extends iworks_wordpress_plugin_stub_base {
 		 */
 		include_once 'class-wordpress-plugin-stub-posttypes.php';
 		new iworks_wordpress_plugin_posttypes();
-
-		/**
-		 * init
-		 */
-		add_action( 'init', array( $this, 'action_init_load_plugin_textdomain' ), 0 );
 		/**
 		 * admin init
 		 */
@@ -157,19 +152,6 @@ class iworks_wordpress_plugin_stub extends iworks_wordpress_plugin_stub_base {
 			/* end:free */
 		}
 		return $links;
-	}
-
-	/**
-	 * i18n
-	 *
-	 * @since 1.0.0
-	 */
-	public function action_init_load_plugin_textdomain() {
-		load_plugin_textdomain(
-			'wordpress-plugin-stub',
-			false,
-			plugin_basename( $this->dir ) . '/languages'
-		);
 	}
 
 }
