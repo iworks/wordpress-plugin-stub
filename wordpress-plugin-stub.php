@@ -82,27 +82,10 @@ function iworks_wordpress_plugin_stub_get_options() {
 	return $iworks_wordpress_plugin_stub_options;
 }
 
-function iworks_wordpress_plugin_stub_options_init() {
-	global $iworks_wordpress_plugin_stub_options;
-	$iworks_wordpress_plugin_stub_options->options_init();
-}
-
-function iworks_wordpress_plugin_stub_activate() {
-	$iworks_wordpress_plugin_stub_options = new iworks_options();
-	$iworks_wordpress_plugin_stub_options->set_option_function_name( 'iworks_wordpress_plugin_stub_options' );
-	$iworks_wordpress_plugin_stub_options->set_option_prefix( IWORKS_WORDPRESS_PLUGIN_STUB_PREFIX );
-	$iworks_wordpress_plugin_stub_options->activate();
-}
-
-function iworks_wordpress_plugin_stub_deactivate() {
-	global $iworks_wordpress_plugin_stub_options;
-	$iworks_wordpress_plugin_stub_options->deactivate();
-}
-
 $iworks_wordpress_plugin_stub = new iworks_wordpress_plugin_stub();
 
 /**
  * install & uninstall
  */
-register_activation_hook( __FILE__, 'iworks_wordpress_plugin_stub_activate' );
-register_deactivation_hook( __FILE__, 'iworks_wordpress_plugin_stub_deactivate' );
+register_activation_hook( __FILE__, array( $iworks_wordpress_plugin_stub, 'register_activation_hook' ) );
+register_deactivation_hook( __FILE__, array( $iworks_wordpress_plugin_stub, 'register_deactivation_hook' ) );
