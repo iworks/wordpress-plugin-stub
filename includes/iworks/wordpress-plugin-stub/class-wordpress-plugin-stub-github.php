@@ -38,7 +38,7 @@ class iworks_wordpress_plugin_stub_github {
 	 * @since 1.0.0
 	 */
 	public function action_init_load_plugin_textdomain() {
-		$file = dirname( dirname( __FILE__ ) );
+		$file = dirname( dirname( dirname( __FILE__ ) ) );
 		$root = rtrim( plugin_dir_path( $file ), '/' );
 		load_plugin_textdomain(
 			'wordpress-plugin-stub',

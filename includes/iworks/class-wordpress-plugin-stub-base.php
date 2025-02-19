@@ -34,6 +34,13 @@ class iworks_wordpress_plugin_stub_base {
 	protected $url;
 
 	/**
+	 * plugin includes directory
+	 *
+	 * @since 1.0.0
+	 */
+	protected string $includes_directory;
+
+	/**
 	 * DEBUG
 	 *
 	 * @since 1.0.0
@@ -52,11 +59,24 @@ class iworks_wordpress_plugin_stub_base {
 		 * static settings
 		 */
 		$this->debug = ( defined( 'WP_DEBUG' ) && WP_DEBUG ) || ( defined( 'IWORKS_DEV_MODE' ) && IWORKS_DEV_MODE );
-		$this->dev   = $this->debug ? '' : '.min';
-		$this->eol   = $this->debug ? PHP_EOL : '';
-		$this->base  = dirname( __FILE__ );
-		$this->dir   = basename( dirname( dirname( $this->base ) ) );
-		$this->url   = plugins_url( $this->dir );
+		/**
+		 * use minimized scripts if not debug
+		 */
+		$this->dev = $this->debug ? '' : '.min';
+		/**
+		 * add EOL if debug
+		 */
+		$this->eol = $this->debug ? PHP_EOL : '';
+		/**
+		 * directories and urls
+		 */
+		$this->base = dirname( __FILE__ );
+		$this->dir  = basename( dirname( dirname( $this->base ) ) );
+		$this->url  = plugins_url( $this->dir );
+		/**
+		 * plugin includes directory
+		 */
+		$this->includes_directory = __DIR__ . '/wordpress-plugin-stub';
 	}
 
 	public function get_version( $file = null ) {
