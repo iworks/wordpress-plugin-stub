@@ -2,7 +2,7 @@
 
 Please take a moment to review this document in order to make the contribution process easy and effective for everyone involved.
 
-Following these guidelines will help us get back to you more quickly, and will show that you care about making WordPress Plugin Stub better just like we do. In return, we'll do our best to respond to your issue or pull request as soon as possible with the same respect.
+Following these guidelines will help us get back to you more quickly, and will show that you care about making Simple SEO Improvements better just like we do. In return, we'll do our best to respond to your issue or pull request as soon as possible with the same respect.
 
 
 ## Use the issue tracker
@@ -84,7 +84,7 @@ Example:
 
 Feature requests are very welcome! But take a moment to find out whether your idea fits with the scope and aims of the project. It's up to *you* to make a strong case to convince the project's developers of the merits of this feature. Please provide as much detail and context as possible.
 
-Building something great means choosing features carefully especially because it is much, much easier to add features than it is to take them away. Additions to WordPress Plugin Stub will be evaluated on a combination of scope (how well it fits into the project), maintenance burden and general usefulness to users.
+Building something great means choosing features carefully especially because it is much, much easier to add features than it is to take them away. Additions to Simple SEO Improvements will be evaluated on a combination of scope (how well it fits into the project), maintenance burden and general usefulness to users.
 
 <a name="pull-requests"></a>
 ## Pull requests
@@ -94,7 +94,7 @@ They should remain focused in scope and avoid containing unrelated commits.
 
 **Please ask first** before embarking on any significant pull request (e.g. implementing features, refactoring code), otherwise you risk spending a lot of time working on something that the project's developers might not want to merge into the project. You can solicit feedback and opinions in an open enhancement issue, or [create a new one](https://github.com/iworks/wordpress-plugin-stub/issues/new).
 
-Please use the [git flow for pull requests](#git-flow) and follow [WordPress Coding Standards](http://make.wordpress.org/core/handbook/coding-standards/) before submitting your work. Adhering to these guidelines is the best way to get your work included in WordPress Plugin Stub.
+Please use the [git flow for pull requests](#git-flow) and follow [WordPress Coding Standards](http://make.wordpress.org/core/handbook/coding-standards/) before submitting your work. Adhering to these guidelines is the best way to get your work included in Simple SEO Improvements.
 
 <a name="git-flow"></a>
 #### Git Flow for pull requests

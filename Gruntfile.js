@@ -123,6 +123,9 @@ module.exports = function(grunt) {
 			match: /PLUGIN_TAGLINE/g,
 			replace: '<%= pkg.tagline %>'
 		}, {
+			match: /PLUGIN_TAGS/g,
+			replace: '<%= pkg.tags.join(", ") %>'
+		}, {
 			match: /PLUGIN_TILL_YEAR/g,
 			replace: buildyear
 		}, {
@@ -217,7 +220,7 @@ module.exports = function(grunt) {
 				options: {
 					banner: '/*! <%= pkg.title %> - <%= pkg.version %>\n' +
 					' * <%= pkg.homepage %>\n' +
-					' * Copyright (c) <%= grunt.template.today("yyyy") %>;' +
+					' * Copyright (c) <%= grunt.template.today("yyyy") %>;\n' +
 					' * Licensed <%= pkg.license %>' +
 					' */\n',
 					mangle: {
@@ -264,9 +267,13 @@ module.exports = function(grunt) {
 		},
 		concat_css: {
 			options: {},
-			all: {
+			frontend: {
 				src: ['assets/styles/frontend/settings.css', 'assets/styles/frontend/*.css'],
 				dest: 'assets/styles/<%= pkg.name %>-frontend.css'
+			},
+			admin: {
+				src: ['assets/styles/admin/*.css'],
+				dest: 'assets/styles/<%= pkg.name %>-admin.css'
 			}
 		},
 
@@ -296,7 +303,7 @@ module.exports = function(grunt) {
 				files: [
 					'assets/sass/*.scss',
 					'assets/sass/**/*.scss',
-					'inc/modules/**/*.scss'
+					'include/modules/**/*.scss'
 				],
 				tasks: ['sass', 'concat_css', 'cssmin'],
 				options: {
@@ -352,6 +359,7 @@ module.exports = function(grunt) {
 						'report-msgid-bugs-to': 'http://iworks.pl',
 						'x-poedit-keywordslist': true // Include a list of all possible gettext functions.
 					},
+					exclude: ['node_modules', '.git', '.sass-cache', 'release'],
 					type: 'wp-plugin',
 					updateTimestamp: true,
 					updatePoFiles: true
