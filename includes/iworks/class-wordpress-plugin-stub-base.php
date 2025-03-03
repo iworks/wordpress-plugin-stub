@@ -32,8 +32,25 @@ class iworks_wordpress_plugin_stub_base {
 	protected $dir;
 	protected $version;
 	protected $url;
+	protected $plugin_file;
+	protected $plugin_file_path;
 
 	/**
+	 * plugin settings capability
+	 */
+	private string $capability = 'manage_options';
+
+	/**
+	 * plugin version
+	 */
+	protected string $version = 'PLUGIN_VERSION';
+
+	/**
+	 * options
+	 */
+	/**
+	protected $options;
+
 	 * plugin includes directory
 	 *
 	 * @since 1.0.0
@@ -74,9 +91,17 @@ class iworks_wordpress_plugin_stub_base {
 		$this->dir  = basename( dirname( dirname( $this->base ) ) );
 		$this->url  = plugins_url( $this->dir );
 		/**
+		 * plugin ID
+		 */
+		$this->plugin_file_path = $this->base . '/simple-consent-mode.php';
+		$this->plugin_file      = plugin_basename( $this->plugin_file_path );
+		/**
 		 * plugin includes directory
 		 */
 		$this->includes_directory = __DIR__ . '/wordpress-plugin-stub';
+		/**
+		 * WordPress Hooks
+		 */
 	}
 
 	public function get_version( $file = null ) {
