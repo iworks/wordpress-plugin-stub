@@ -148,6 +148,7 @@ module.exports = function(grunt) {
 		// Regex patterns to exclude from transation.
 		translation: {
 			ignore_files: [
+				'README.md',
 				'.git*',
 				'includes/external/.*', // External libraries.
 				'node_modules/.*',
@@ -172,7 +173,7 @@ module.exports = function(grunt) {
 				stripBanners: true,
 				banner: '/*! <%= pkg.title %> - <%= pkg.version %>\n' +
 				' * <%= pkg.homepage %>\n' +
-				' * Copyright (c) <%= grunt.template.today("yyyy") %>;' +
+				' * Copyright (c) <%= grunt.template.today("yyyy") %>\n' +
 				' * Licensed <%= pkg.license %>' +
 				' */\n'
 			},
