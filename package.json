@@ -5,7 +5,7 @@
     "description": "WordPress Plugin Stub",
     "version": "0.0.1",
     "homepage": "http://wordpress-plugin-stub.iworks.pl/",
-    "keywords": [
+    "tags": [
     ],
     "author": [
         {
