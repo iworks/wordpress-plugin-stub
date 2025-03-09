@@ -23,16 +23,13 @@ if ( class_exists( 'iworks_wordpress_plugin_stub_github' ) ) {
 	return;
 }
 
-require_once( dirname( __DIR__ ) . '/class-wordpress-plugin-stub-base.php' );
-
-class iworks_wordpress_plugin_stub_github extends iworks_wordpress_plugin_stub_base {
+class iworks_wordpress_plugin_stub_github {
 
 	private string $repository = 'iworks/wordpress-plugin-stub';
 	private string $basename   = 'wordpress-plugin-stub';
 	private $github_response;
 
 	public function __construct() {
-		parent::__construct();
 		/**
 		 * WordPress Hooks
 		 */
@@ -48,11 +45,8 @@ class iworks_wordpress_plugin_stub_github extends iworks_wordpress_plugin_stub_b
 	 * @since 1.0.0
 	 */
 	public function action_init_load_plugin_textdomain() {
-		load_plugin_textdomain(
-			'wordpress-plugin-stub',
-			false,
-			plugin_basename( $this->dir ) . '/languages'
-		);
+		$dir = plugin_basename( dirname( dirname( dirname( __DIR__ ) ) ) ) . '/languages';
+		load_plugin_textdomain( 'wordpress-plugin-stub', false, $dir );
 	}
 
 	/**
