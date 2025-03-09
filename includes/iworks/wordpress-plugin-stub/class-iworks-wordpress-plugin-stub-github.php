@@ -27,8 +27,8 @@ require_once( dirname( __DIR__ ) . '/class-wordpress-plugin-stub-base.php' );
 
 class iworks_wordpress_plugin_stub_github extends iworks_wordpress_plugin_stub_base {
 
-	private string $repository = 'iworks/simple-consent-mode';
-	private string $basename   = 'simple-consent-mode';
+	private string $repository = 'iworks/wordpress-plugin-stub';
+	private string $basename   = 'wordpress-plugin-stub';
 	private $github_response;
 
 	public function __construct() {

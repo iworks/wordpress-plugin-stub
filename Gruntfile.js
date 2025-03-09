@@ -62,7 +62,7 @@ module.exports = function(grunt) {
 			'!assets/scripts/src/**',
 			'!assets/scss/**',
 			'!assets/styles/frontend/**',
-			'!includes/iworks/wordpress-plugin-stub/class-wordpress-plugin-stub-github.php',
+			'!includes/iworks/wordpress-plugin-stub/class-iworks-wordpress-plugin-stub-github.php',
 			'!includes/pro/**',
 			'!languages/*.mo',
 			'!languages/*.po',

@@ -45,7 +45,7 @@ class iworks_wordpress_plugin_stub extends iworks_wordpress_plugin_stub_base {
 		/**
 		 * load github class
 		 */
-		$filename = $this->includes_directory . '/class-wordpress-plugin-stub-github.php';
+		$filename = $this->includes_directory . '/class-iworks-wordpress-plugin-stub-github.php';
 		if ( is_file( $filename ) ) {
 			include_once $filename;
 			new iworks_wordpress_plugin_stub_github();
