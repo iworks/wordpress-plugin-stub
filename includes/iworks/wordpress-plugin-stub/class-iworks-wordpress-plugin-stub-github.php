@@ -33,7 +33,6 @@ class iworks_wordpress_plugin_stub_github extends iworks_wordpress_plugin_stub_b
 
 	public function __construct() {
 		parent::__construct();
-		$this->version = 'PLUGIN_VERSION';
 		/**
 		 * WordPress Hooks
 		 */
