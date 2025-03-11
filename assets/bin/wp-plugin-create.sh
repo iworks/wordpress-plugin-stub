@@ -40,7 +40,7 @@ mkdir -p ./includes/iworks
 #
 # rename files
 #
-mv wordpressplugin-stub.php ${SLUG}.php
+mv wordpress-plugin-stub.php ${SLUG}.php
 mv includes/iworks/class-wordpress-plugin-stub.php includes/iworks/class-${SLUG}.php
 mv includes/iworks/class-wordpress-plugin-stub-base.php includes/iworks/class-${SLUG}-base.php
 mv includes/iworks/class-wordpress-plugin-stub-posttypes.php includes/iworks/class-${SLUG}-posttypes.php
