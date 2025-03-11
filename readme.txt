@@ -17,18 +17,15 @@ PLUGIN_TAGLINE
 
 The WordPress Plugin Stub plugin is available also on [GitHub - WordPress Plugin Stub](https://github.com/iworks/wordpress-plugin-stub).
 
-
 = See Room for Improvement? =
 
-Awesome! There are several ways you can get involved to help enhance Simple SEO Improvements:
+Awesome! There are several ways you can get involved to help enhance WordPress Plugin Stub:
 
 # **Report Bugs**: If you encounter a bug, error, or any other issue, please report it! Simply [create a new topic in the plugin forum](https://wordpress.org/support/plugin/wordpress-plugin-stub/#new-topic-0). Once a developer verifies the bug, they'll file an official [report on GitHub](https://github.com/iworks/wordpress-plugin-stub/issues/new), where the issue will be addressed.
 # **Suggest New Features**: Got a great idea? We'd love to hear it! Start a new topic in the plugin forum to share your suggestion, explaining why the feature would be valuable. This opens up the discussion and helps us prioritize new enhancements.
 # **Submit Pull Requests**: If you're a developer, the best way to contribute is by helping with [existing issues on GitHub](https://github.com/iworks/wordpress-plugin-stub/issues). Be sure to check out our [contributing guide for developers](https://github.com/iworks/wordpress-plugin-stub/blob/master/contributing.md) to get started.
 
-Thank you for helping us make Simple SEO Improvements better for everyone!
-
-
+Thank you for helping us make **WordPress Plugin Stub** better for everyone!
 
 == Installation ==
 
@@ -65,6 +62,10 @@ You can do it on [Support Threads](https://wordpress.org/support/plugin/wordpres
 == Screenshots ==
 
 == Changelog ==
+
+= 1.0.0 - 2025-03-11 =
+
+* Initial Release
 
 == Upgrade Notice ==
 
