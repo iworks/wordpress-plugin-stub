@@ -30,7 +30,6 @@ class iworks_wordpress_plugin_stub_base {
 	protected $meta_prefix = '_iw';
 	protected $base;
 	protected $dir;
-	protected $version;
 	protected $url;
 	protected $plugin_file;
 	protected $plugin_file_path;
@@ -203,5 +202,17 @@ class iworks_wordpress_plugin_stub_base {
 
 	protected function html_title( $text ) {
 		printf( '<h1 class="wp-heading-inline">%s</h1>', esc_html( $text ) );
+	}
+
+	/**
+	 * check option object
+	 *
+	 * @since 1.0.9
+	 */
+	protected function check_option_object() {
+		if ( is_a( $this->options, 'iworks_options' ) ) {
+			return;
+		}
+		$this->options = iworks_wordpress_plugin_stub_get_options();
 	}
 }

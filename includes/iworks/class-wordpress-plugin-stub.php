@@ -57,8 +57,7 @@ class iworks_wordpress_plugin_stub extends iworks_wordpress_plugin_stub_base {
 	}
 
 	public function action_admin_init() {
-		$this->options = iworks_wordpress_plugin_stub_get_options();
-		$this->options->options_init();
+		$this->check_option_object();
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
 	}
@@ -170,9 +169,7 @@ class iworks_wordpress_plugin_stub extends iworks_wordpress_plugin_stub_base {
 	 */
 	public function register_activation_hook() {
 		$this->db_install();
-		$this->options = iworks_wordpress_plugin_stub_get_options();
-		$this->options->set_option_function_name( 'iworks_wordpress_plugin_stub_options' );
-		$this->options->set_option_prefix( IWORKS_WORDPRESS_PLUGIN_STUB_PREFIX );
+		$this->check_option_object();
 		$this->options->activate();
 		do_action( 'iworks/wordpress-plugin-stub/register_activation_hook' );
 	}
@@ -183,7 +180,7 @@ class iworks_wordpress_plugin_stub extends iworks_wordpress_plugin_stub_base {
 	 * @since 1.0.0
 	 */
 	public function register_deactivation_hook() {
-		$this->options = iworks_wordpress_plugin_stub_get_options();
+		$this->check_option_object();
 		$this->options->deactivate();
 		do_action( 'iworks/wordpress-plugin-stub/register_deactivation_hook' );
 	}
