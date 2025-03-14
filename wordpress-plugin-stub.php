@@ -2,8 +2,8 @@
 /*
 Plugin Name: WordPress Plugin Stub
 Text Domain: wordpress-plugin-stub
-Plugin URI: http://iworks.pl/wordpress-plugin-stub/
-Description:
+Plugin URI: PLUGIN_URI
+Description: PLUGIN_TAGLINE
 Version: PLUGIN_VERSION
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/

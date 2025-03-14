@@ -20,10 +20,10 @@
     },
     "requires": {
         "WordPress": "6.0",
-        "PHP": "8.0"
+        "PHP": "8.1"
     },
     "tested": {
-        "WordPress": "6.7"
+        "WordPress": "6.8"
     },
     "devDependencies": {
         "grunt": "^1",

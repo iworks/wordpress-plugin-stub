@@ -1,7 +1,7 @@
 === WordPress Plugin Stub ===
 Contributors: iworks
 Donate link: https://ko-fi.com/iworks?utm_source=wordpress-plugin-stub&utm_medium=readme-donate
-Tags:
+Tags: PLUGIN_TAGS
 Requires at least: PLUGIN_REQUIRES_WORDPRESS
 Tested up to: PLUGIN_TESTED_WORDPRESS
 Stable tag: PLUGIN_VERSION
@@ -26,6 +26,8 @@ Awesome! There are several ways you can get involved to help enhance WordPress P
 # **Submit Pull Requests**: If you're a developer, the best way to contribute is by helping with [existing issues on GitHub](https://github.com/iworks/wordpress-plugin-stub/issues). Be sure to check out our [contributing guide for developers](https://github.com/iworks/wordpress-plugin-stub/blob/master/contributing.md) to get started.
 
 Thank you for helping us make **WordPress Plugin Stub** better for everyone!
+
+The plugin is available also on [GitHub - WordPress Plugin Stub](https://github.com/iworks/wordpress-plugin-stub/).
 
 == Installation ==
 
@@ -63,7 +65,9 @@ You can do it on [Support Threads](https://wordpress.org/support/plugin/wordpres
 
 == Changelog ==
 
-= 1.0.0 - 2025-03-11 =
+Project maintained on GitHub at [iworks/wordpress-plugin-stub](https://github.com/iworks/wordpress-plugin-stub/).
+
+= 1.0.0 - 2025-03-14 =
 
 * Initial Release
 

@@ -39,9 +39,10 @@ class iworks_wordpress_plugin_stub extends iworks_wordpress_plugin_stub_base {
 		include_once 'class-wordpress-plugin-stub-posttypes.php';
 		new iworks_wordpress_plugin_posttypes();
 		/**
-		 * admin init
+		 * WordPress Hooks
 		 */
 		add_action( 'admin_init', array( $this, 'action_admin_init' ) );
+		add_action( 'init', array( $this, 'action_init_settings' ) );
 		/**
 		 * load github class
 		 */
@@ -139,7 +140,16 @@ class iworks_wordpress_plugin_stub extends iworks_wordpress_plugin_stub_base {
 		);
 	}
 
-	public function init() {
+	/**
+	 * Initialize plugin
+	 *
+	 * @since 1.0.0
+	 */
+	public function action_init_settings() {
+		/**
+		 * options
+		 */
+		$this->check_option_object();
 		if ( is_admin() ) {
 		} else {
 			$file = 'assets/styles/wordpress_plugin_stub' . $this->dev . '.css';

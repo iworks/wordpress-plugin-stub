@@ -45,11 +45,6 @@ class iworks_wordpress_plugin_stub_base {
 	protected string $version = 'PLUGIN_VERSION';
 
 	/**
-	 * options
-	 */
-	/**
-	protected $options;
-
 	 * plugin includes directory
 	 *
 	 * @since 1.0.0
@@ -69,6 +64,13 @@ class iworks_wordpress_plugin_stub_base {
 	 * @since 1.0.0
 	 */
 	protected string $eol = '';
+
+	/**
+	 * iWorks Options Class Object
+	 *
+	 * @since 1.0.0
+	 */
+	protected $options;
 
 	public function __construct() {
 		/**
@@ -207,7 +209,7 @@ class iworks_wordpress_plugin_stub_base {
 	/**
 	 * check option object
 	 *
-	 * @since 1.0.9
+	 * @since 1.0.0
 	 */
 	protected function check_option_object() {
 		if ( is_a( $this->options, 'iworks_options' ) ) {
