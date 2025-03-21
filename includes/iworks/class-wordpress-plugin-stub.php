@@ -163,11 +163,47 @@ class iworks_wordpress_plugin_stub extends iworks_wordpress_plugin_stub_base {
 	public function plugin_row_meta( $links, $file ) {
 		if ( $this->dir . '/wordpress-plugin-stub.php' == $file ) {
 			if ( ! is_multisite() && current_user_can( $this->capability ) ) {
-				$links[] = '<a href="admin.php?page=' . $this->dir . '/admin/index.php">' . __( 'Settings', 'wordpress-plugin-stub' ) . '</a>';
+				$links[] = sprintf(
+					'<a href="%s">%s</a>',
+					esc_url(
+						add_query_arg(
+							array(
+								'page' => $this->dir . '/admin/index.php',
+							),
+							admin_url( 'admin.php' )
+						)
+					),
+					esc_html__( 'Settings', 'wordpress-plugin-stub' )
+				);
 			}
 			/* start:free */
-			$links[] = '<a href="http://iworks.pl/donate/wordpress-plugin-stub.php">' . __( 'Donate', 'wordpress-plugin-stub' ) . '</a>';
+			$links[] = sprintf(
+				'<a href="%s">%s</a>',
+				esc_url(
+					add_query_arg(
+						array(
+							'utm_source' => 'wordpress-plugin-stub',
+							'utm_medium' => 'plugin-row-donate-link',
+						),
+						'https://ko-fi.com/iworks'
+					)
+				),
+				esc_html__( 'Donate', 'wordpress-plugin-stub' )
+			);
 			/* end:free */
+			$links[] = sprintf(
+				'<a href="%s">%s</a>',
+				esc_url(
+					add_query_arg(
+						array(
+							'utm_source' => 'wordpress-plugin-stub',
+							'utm_medium' => 'plugin-row-donate-link',
+						),
+						'https://github.com/iworks.pl/wordpress-plugin-stub'
+					)
+				),
+				esc_html__( 'GitHub', 'wordpress-plugin-stub' )
+			);
 		}
 		return $links;
 	}
