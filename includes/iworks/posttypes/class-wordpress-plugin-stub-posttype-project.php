@@ -229,8 +229,9 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 			}
 			if ( isset( $one['type'] ) && 'url' === $one['type'] ) {
 				$value = sprintf(
-					'<a href="%1$s" target="_blank">%1$s</a>',
-					esc_url( $value )
+					'<a href="%1$s" target="_blank" class="external" title="%2$s">%1$s</a>',
+					esc_url( $value ),
+					esc_attr__( 'Opens in a new window', 'wordpress-plugin-stub' )
 				);
 			} elseif ( isset( $one['sanitize'] ) ) {
 				$value = $one['sanitize']( $value );
