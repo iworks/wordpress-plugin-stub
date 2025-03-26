@@ -29,6 +29,13 @@ class iworks_wordpress_plugin_stub extends iworks_wordpress_plugin_stub_base {
 
 	private $capability;
 
+	/**
+	 * Plugin Objects
+	 *
+	 * @since 1.0.0
+	 */
+	private array $objects = array();
+
 	public function __construct() {
 		parent::__construct();
 		$this->version    = 'PLUGIN_VERSION';
@@ -95,7 +102,18 @@ class iworks_wordpress_plugin_stub extends iworks_wordpress_plugin_stub_base {
 		/**
 		 * select2
 		 */
-		wp_register_script( 'select2', plugins_url( 'assets/externals/select2/js/select2.full.min.js', $this->base ), array(), '4.0.3' );
+		wp_register_script(
+			'select2',
+			plugins_url(
+				'assets/externals/select2/js/select2.full.min.js',
+				$this->base
+			),
+			array(),
+			'4.0.3',
+			array(
+				'in_footer' => true,
+			)
+		);
 		/**
 		 * Admin scripts
 		 */

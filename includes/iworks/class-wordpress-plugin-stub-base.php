@@ -169,6 +169,7 @@ class iworks_wordpress_plugin_stub_base {
 						'<input type="number" name="%s" value="%d" %s />',
 						esc_attr( $key ),
 						intval( $value ),
+						// data string escaped few lines above
 						$extra
 					);
 					break;
@@ -179,8 +180,8 @@ class iworks_wordpress_plugin_stub_base {
 					}
 					printf(
 						'<input type="text" class="datepicker" name="%s" value="%s" />',
-						$this->get_meta_name( $name ),
-						$date
+						esc_attr( $this->get_meta_name( $name ) ),
+						esc_attr( $date )
 					);
 					break;
 			}

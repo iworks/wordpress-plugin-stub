@@ -78,7 +78,7 @@ function iworks_wordpress_plugin_stub_get_options() {
 	if ( method_exists( $iworks_wordpress_plugin_stub_options, 'set_plugin' ) ) {
 		$iworks_wordpress_plugin_stub_options->set_plugin( basename( __FILE__ ) );
 	}
-	$iworks_wordpress_plugin_stub_options->init();
+	$iworks_wordpress_plugin_stub_options->options_init();
 	return $iworks_wordpress_plugin_stub_options;
 }
 
