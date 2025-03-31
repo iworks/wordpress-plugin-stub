@@ -75,6 +75,13 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 		add_action( 'load-post.php', array( $this, 'action_load_admin_maybe_enqueue_assets' ) );
 		add_action( 'save_post', array( $this, 'action_save_post_meta' ), 10, 3 );
 		/**
+		 * columns
+		 *
+		 * add_filter( "manage_{$post_type}_posts_columns", array( $this, 'filter_manage_post_type_posts_columns' ) );
+		 * add_action( "manage_{$post_type}_posts_custom_column", array( $this, 'action_manage_post_type_posts_custom_column' ), 10, 2 );
+		 * add_filter( "manage_edit-{$post_type}_sortable_columns", array( $this, 'filter_manage_sortable_columns' ) );
+		 */
+		/**
 		 * WordPress Plugin Stub Hooks
 		 */
 		/**
@@ -207,11 +214,19 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 				echo $one['label'];
 				echo '<br />';
 			}
+			$classes = array();
+			switch ( $one['type'] ) {
+				case 'text':
+				case 'url':
+					$classes[] = 'large-text';
+					break;
+			}
 			printf(
-				'<input type="%s" value="%s" name="%s" class="large-text" />',
+				'<input type="%s" value="%s" name="%s" class="%s" />',
 				esc_attr( $one['type'] ),
 				esc_attr( $one['meta']['value'] ),
-				esc_attr( $one['meta']['key'] )
+				esc_attr( $one['meta']['key'] ),
+				esc_attr( implode( ' ', $classes ) )
 			);
 			echo '</label>';
 			if ( isset( $one['description'] ) ) {
@@ -222,6 +237,11 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 		echo '</div>';
 	}
 
+	/**
+	 * Meta Field: main render method: image
+	 *
+	 * @since 1.0.0
+	 */
 	private function render_meta_image( $post, $one ) {
 		if ( is_admin() ) {
 			wp_enqueue_media();
@@ -264,6 +284,38 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 		echo '</p>';
 	}
 
+	/**
+	 * Meta Field: main render method: checkbox
+	 *
+	 * @since 1.0.0
+	 */
+	private function render_meta_checkbox( $post, $one ) {
+		echo '<p>';
+		echo '<label>';
+		$classes = array();
+		printf(
+			'<input type="%s" value="1" name="%s" class="%s" %s />',
+			esc_attr( $one['type'] ),
+			esc_attr( $one['meta']['key'] ),
+			esc_attr( implode( ' ', $classes ) ),
+			( 'yes' === $one['meta']['value'] ) ? 'checked="checked"' : ''
+		);
+		if ( isset( $one['label'] ) ) {
+			echo ' ';
+			echo $one['label'];
+		}
+		echo '</label>';
+		if ( isset( $one['description'] ) ) {
+			printf( '<span class="description">%s</span>', $one['description'] );
+		}
+		echo '</p>';
+	}
+
+	/**
+	 * Meta Field: main render method: select
+	 *
+	 * @since 1.0.0
+	 */
 	private function render_meta_select( $post, $one ) {
 		$value = get_post_meta( $post->ID, $one['name'], true );
 		echo '<p>';
@@ -290,6 +342,11 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 		echo '</p>';
 	}
 
+	/**
+	 * Meta Field: main render method: radio
+	 *
+	 * @since 1.0.0
+	 */
 	private function render_meta_radio( $post, $one ) {
 		$value = get_post_meta( $post->ID, $one['name'], true );
 		echo '<p>';
@@ -374,6 +431,9 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 				switch ( $one['type'] ) {
 					case 'url':
 						$value = filter_input( INPUT_POST, $one['name'], FILTER_SANITIZE_URL );
+						break;
+					case 'checkbox':
+						$value = isset( $_POST[ $one['name'] ] ) ? 'yes' : 'no';
 						break;
 					default:
 						$value = wp_kses_post( filter_input( INPUT_POST, $one['name'], FILTER_UNSAFE_RAW ) );
@@ -474,6 +534,9 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 				$key   = $this->get_post_meta_name( $field['name'], $group );
 				$value = filter_input( INPUT_POST, $key );
 				switch ( $field['type'] ) {
+					case 'checkbox':
+						$value = $value ? 'yes' : 'no';
+						break;
 					case 'image':
 						$value = intval( $value );
 						break;
@@ -485,7 +548,7 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 				if ( $value ) {
 					update_post_meta( $post_id, $key, $value );
 				}
-				do_action( 'iworks/opi-science-portal-support/postmeta/update', $post_id, $field, $key, $value );
+				do_action( 'iworks/wordpress-plugin-stub/postmeta/update', $post_id, $field, $key, $value );
 			}
 		}
 	}
@@ -588,6 +651,93 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 				)
 			)
 		);
+	}
+
+	/**
+	 * get filter name for feature in register_post_type() function.
+	 *
+	 * @since 1.0.0
+	 */
+	protected function get_register_post_filter_name( $feature ) {
+		return sprintf(
+			'iworks/iworks-plugins-management/register-post-type/%s/%s',
+			$this->posttypes_names[ $this->posttype_name ],
+			$feature
+		);
+	}
+
+	/**
+	 * add columns to post type
+	 *
+	 * @since 1.0.0
+	 */
+	public function filter_manage_post_type_posts_columns( $posts_columns ) {
+		$screen = get_current_screen();
+		if ( ! is_a( $screen, 'WP_Screen' ) ) {
+			return $posts_columns;
+		}
+		foreach ( $this->meta_boxes[ $screen->post_type ] as $group => $one ) {
+			foreach ( $one['fields'] as $field_id => $field ) {
+				if ( isset( $field['add_column'] ) ) {
+					$column_name                   = $this->get_post_meta_name( $field['name'], $group );
+					$posts_columns[ $column_name ] = $field['label'];
+				}
+			}
+		}
+		return $posts_columns;
+	}
+
+	public function action_manage_post_type_posts_custom_column( $column_name, $post_id ) {
+		$screen = get_current_screen();
+		if ( ! is_a( $screen, 'WP_Screen' ) ) {
+			return;
+		}
+		foreach ( $this->meta_boxes[ $screen->post_type ] as $group => $one ) {
+			foreach ( $one['fields'] as $field_id => $field ) {
+				if (
+					isset( $field['add_column'] )
+					&& $this->get_post_meta_name( $field['name'], $group ) === $column_name
+				) {
+					echo apply_filters(
+						'iworks/iworks-plugins-management/post/meta',
+						get_post_meta( $post_id, $column_name, true ),
+						$group,
+						$field
+					);
+				}
+			}
+		}
+	}
+
+	/**
+	 * add sortable column
+	 *
+	 * @since 1.0.0
+	 */
+	public function filter_manage_sortable_columns( $sortable_columns ) {
+		$screen = get_current_screen();
+		if ( ! is_a( $screen, 'WP_Screen' ) ) {
+			return $posts_columns;
+		}
+		foreach ( $this->meta_boxes[ $screen->post_type ] as $group => $one ) {
+			foreach ( $one['fields'] as $field_id => $field ) {
+				if (
+					isset( $field['add_column'] )
+					&& is_array( $field['add_column'] )
+					&& 'sortable' === $field['add_column']['type']
+				) {
+					$column_name                      = $this->get_post_meta_name( $field['name'], $group );
+					$sortable_columns[ $column_name ] = array(
+						$column_name,
+						false,
+						$field['label'],
+						$field['add_column']['description'],
+						$field['add_column']['default_order'],
+					);
+				}
+			}
+		}
+		return $sortable_columns;
 	}
 }
 

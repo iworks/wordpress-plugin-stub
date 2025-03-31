@@ -11,6 +11,7 @@ package-lock.json
 
 # Compiled CSS files, needed to release not in repository
 assets/styles/
+assets/scripts/wordpress-plugin-stub-*.js
 
 # release
 release/
