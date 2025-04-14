@@ -65,7 +65,6 @@ class iworks_wordpress_plugin_stub extends iworks_wordpress_plugin_stub_base {
 	}
 
 	public function action_admin_init() {
-		$this->check_option_object();
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
 	}
@@ -167,10 +166,9 @@ class iworks_wordpress_plugin_stub extends iworks_wordpress_plugin_stub_base {
 		/**
 		 * options
 		 */
-		$this->check_option_object();
 		if ( is_admin() ) {
 		} else {
-			$file = 'assets/styles/wordpress_plugin_stub' . $this->dev . '.css';
+			$file = 'assets/styles/wordpress-plugin-stub' . $this->dev . '.css';
 			wp_enqueue_style( 'wordpress-plugin-stub', plugins_url( $file, $this->base ), array(), $this->get_version( $file ) );
 		}
 	}
