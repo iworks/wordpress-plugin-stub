@@ -25,8 +25,29 @@ if ( class_exists( 'iworks_wordpress_plugin_stub_github' ) ) {
 
 class iworks_wordpress_plugin_stub_github {
 
+	/**
+	 * Repository name
+	 *
+	 * @since 1.0.0
+	 */
 	private string $repository = 'iworks/wordpress-plugin-stub';
-	private string $basename   = 'wordpress-plugin-stub';
+	/**
+	 * Plugin base name
+	 *
+	 * @since 1.0.0
+	 */
+	private string $basename = 'wordpress-plugin-stub';
+	/**
+	 * Plugin file name
+	 *
+	 * @since 1.0.0
+	 */
+	private string $plugin_file = 'wordpress-plugin-stub.php';
+	/**
+	 * Github Response
+	 *
+	 * @since 1.0.0
+	 */
 	private $github_response;
 
 	public function __construct() {
@@ -121,7 +142,7 @@ class iworks_wordpress_plugin_stub_github {
 		if ( empty( $repo_info ) ) {
 			return $result;
 		}
-		$details = get_plugin_data( dirname( $this->base ) . '/' . $this->plugin_file );
+		$details = get_plugin_data( dirname( $this->base ) . '/wordpress-plugin-stub.php' );
 		// Create array to hold the plugin data
 		$plugin = array(
 			'name'              => $details['Name'],

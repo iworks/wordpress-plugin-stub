@@ -168,7 +168,7 @@ class iworks_wordpress_plugin_stub extends iworks_wordpress_plugin_stub_base {
 		 */
 		if ( is_admin() ) {
 		} else {
-			$file = 'assets/styles/wordpress-plugin-stub' . $this->dev . '.css';
+			$file = 'assets/styles/wordpress-plugin-stub-frontend' . $this->dev . '.css';
 			wp_enqueue_style( 'wordpress-plugin-stub', plugins_url( $file, $this->base ), array(), $this->get_version( $file ) );
 		}
 	}
