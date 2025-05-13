@@ -15,3 +15,6 @@ assets/scripts/wordpress-plugin-stub-*.js
 
 # release
 release/
+
+# tests
+tests/php/.phpunit.result.cache
