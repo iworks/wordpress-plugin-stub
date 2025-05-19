@@ -1,67 +1,129 @@
 <?php
-/*
-
-Copyright 2025-PLUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
-
-this program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License, version 2, as
-published by the Free Software Foundation.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
+/**
+ * iWorks WordPress Plugin Stub Base Class
+ *
+ * This is the base class for the WordPress Plugin Stub, providing
+ * common functionality and properties for the plugin.
+ *
+ * @package    iWorks
+ * @subpackage WordPress Plugin Stub
+ * @author     Marcin Pietrzak <marcin@iworks.pl>
+ * @copyright  2025-PLUGIN_TILL_YEAR Marcin Pietrzak
+ * @license    http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License v2.0
+ * @version    1.0.0
  */
-
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Prevent multiple class definitions
+ */
 if ( class_exists( 'iworks_wordpress_plugin_stub_base' ) ) {
 	return;
 }
 
+/**
+ * iWorks WordPress Plugin Stub Base Class
+ *
+ * This class provides the foundation for the WordPress Plugin Stub,
+ * offering essential properties and methods used throughout the plugin.
+ *
+ * @since 1.0.0
+ */
 class iworks_wordpress_plugin_stub_base {
 
+	/**
+	 * Developer mode flag
+	 *
+	 * @since 1.0.0
+	 * @var bool $dev Whether developer mode is enabled
+	 */
 	protected $dev;
+
+	/**
+	 * Meta data prefix
+	 *
+	 * @since 1.0.0
+	 * @var string $meta_prefix Prefix for meta data keys
+	 */
 	protected $meta_prefix = '_iw';
+
+	/**
+	 * Base directory path
+	 *
+	 * @since 1.0.0
+	 * @var string $base Absolute path to the plugin directory
+	 */
 	protected $base;
+
+	/**
+	 * Directory path
+	 *
+	 * @since 1.0.0
+	 * @var string $dir Plugin directory path
+	 */
 	protected $dir;
+
+	/**
+	 * URL path
+	 *
+	 * @since 1.0.0
+	 * @var string $url Plugin URL path
+	 */
 	protected $url;
+
+	/**
+	 * Plugin file name
+	 *
+	 * @since 1.0.0
+	 * @var string $plugin_file Name of the plugin file
+	 */
 	protected $plugin_file;
+
+	/**
+	 * Plugin file path
+	 *
+	 * @since 1.0.0
+	 * @var string $plugin_file_path Full path to the plugin file
+	 */
 	protected $plugin_file_path;
 
 	/**
-	 * plugin settings capability
+	 * Plugin capability
+	 *
+	 * @since 1.0.0
+	 * @var string $capability Required capability for plugin settings
 	 */
 	private string $capability = 'manage_options';
 
 	/**
-	 * plugin version
+	 * Plugin version
+	 *
+	 * @since 1.0.0
+	 * @var string $version Current plugin version
 	 */
 	protected string $version = 'PLUGIN_VERSION';
 
 	/**
-	 * plugin includes directory
+	 * Includes directory
 	 *
 	 * @since 1.0.0
+	 * @var string $includes_directory Path to plugin includes directory
 	 */
 	protected string $includes_directory;
 
 	/**
-	 * DEBUG
+	 * Debug mode flag
 	 *
 	 * @since 1.0.0
+	 * @var bool $debug Whether debug mode is enabled
 	 */
 	protected $debug = false;
 
 	/**
-	 * EOL?
+	 * End of line character
 	 *
 	 * @since 1.0.0
+	 * @var string $eol End of line character for output
 	 */
 	protected string $eol = '';
 
@@ -69,9 +131,18 @@ class iworks_wordpress_plugin_stub_base {
 	 * iWorks Options Class Object
 	 *
 	 * @since 1.0.0
+	 * @var iworks_options $options Instance of the options class
 	 */
 	protected $options;
 
+	/**
+	 * Constructor for the base class
+	 *
+	 * Initializes all necessary properties and sets up the plugin environment
+	 * including debug mode, directories, URLs, and WordPress hooks
+	 *
+	 * @since 1.0.0
+	 */
 	public function __construct() {
 		/**
 		 * static settings
@@ -88,8 +159,8 @@ class iworks_wordpress_plugin_stub_base {
 		/**
 		 * directories and urls
 		 */
-		$this->base = dirname( __FILE__ );
-		$this->dir  = basename( dirname( dirname( $this->base ) ) );
+		$this->base = __DIR__;
+		$this->dir  = basename( dirname( $this->base, 2 ) );
 		$this->url  = plugins_url( $this->dir );
 		/**
 		 * plugin ID
@@ -105,6 +176,15 @@ class iworks_wordpress_plugin_stub_base {
 		 */
 	}
 
+	/**
+	 * Get the plugin version
+	 *
+	 * Returns either the current version or a timestamp/file hash in dev mode
+	 *
+	 * @param string|null $file Optional file path for hash generation
+	 * @return string Version string or timestamp/hash
+	 * @since 1.0.0
+	 */
 	public function get_version( $file = null ) {
 		if ( defined( 'IWORKS_DEV_MODE' ) && IWORKS_DEV_MODE ) {
 			if ( null != $file ) {
@@ -118,26 +198,80 @@ class iworks_wordpress_plugin_stub_base {
 		return $this->version;
 	}
 
+	/**
+	 * Generate a meta key name
+	 *
+	 * Creates a properly formatted meta key name using the prefix
+	 *
+	 * @param string $name Base name for the meta key
+	 * @return string Formatted meta key name
+	 * @since 1.0.0
+	 */
 	protected function get_meta_name( $name ) {
 		return sprintf( '%s_%s', $this->meta_prefix, sanitize_title( $name ) );
 	}
 
+	/**
+	 * Get the post type
+	 *
+	 * Returns the current post type being handled
+	 *
+	 * @return string Post type name
+	 * @since 1.0.0
+	 */
 	public function get_post_type() {
 		return $this->post_type;
 	}
 
+	/**
+	 * Get the plugin capability
+	 *
+	 * Returns the required capability for plugin settings
+	 *
+	 * @return string Capability name
+	 * @since 1.0.0
+	 */
 	public function get_this_capability() {
 		return $this->capability;
 	}
 
+	/**
+	 * Generate a slug name
+	 *
+	 * Creates a URL-safe slug from the given name
+	 *
+	 * @param string $name Input name to convert
+	 * @return string URL-safe slug
+	 * @since 1.0.0
+	 */
 	private function slug_name( $name ) {
 		return preg_replace( '/[_ ]+/', '-', strtolower( __CLASS__ . '_' . $name ) );
 	}
 
+	/**
+	 * Get post meta value
+	 *
+	 * Retrieves a post meta value using the plugin's meta prefix
+	 *
+	 * @param int $post_id Post ID to get meta for
+	 * @param string $meta_key Meta key name
+	 * @return mixed Meta value
+	 * @since 1.0.0
+	 */
 	public function get_post_meta( $post_id, $meta_key ) {
 		return get_post_meta( $post_id, $this->get_meta_name( $meta_key ), true );
 	}
 
+	/**
+	 * Print table body for post meta fields
+	 *
+	 * Generates an HTML table with form inputs for post meta fields
+	 *
+	 * @param int $post_id Post ID to display meta for
+	 * @param array $fields Array of field definitions
+	 * @return void Outputs HTML directly
+	 * @since 1.0.0
+	 */
 	protected function print_table_body( $post_id, $fields ) {
 		echo '<table class="widefat striped"><tbody>';
 		foreach ( $fields as $name => $data ) {

@@ -23,7 +23,7 @@ if ( class_exists( 'iworks_wordpress_plugin_stub' ) ) {
 	return;
 }
 
-require_once( dirname( __FILE__ ) . '/class-wordpress-plugin-stub-base.php' );
+require_once __DIR__ . '/class-wordpress-plugin-stub-base.php';
 
 class iworks_wordpress_plugin_stub extends iworks_wordpress_plugin_stub_base {
 
@@ -57,6 +57,16 @@ class iworks_wordpress_plugin_stub extends iworks_wordpress_plugin_stub_base {
 		if ( is_file( $filename ) ) {
 			include_once $filename;
 			new iworks_wordpress_plugin_stub_github();
+		}
+		/**
+		 * admin
+		 */
+		if ( is_admin() ) {
+			$filename = __DIR__ . '/erecruiter/class-erecruiter-wp-admin.php';
+			if ( is_file( $filename ) ) {
+				include_once $filename;
+				new iworks_erecruiter_wp_admin();
+			}
 		}
 		/**
 		 * is active?

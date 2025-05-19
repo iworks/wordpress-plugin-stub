@@ -1,58 +1,110 @@
 <?php
-/*
-
-Copyright 2025-PLUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
-
-this program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License, version 2, as
-published by the Free Software Foundation.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
+/**
+ * WordPress Plugin Stub Post Types Class
+ *
+ * This class handles the loading and management of custom post types
+ * for the WordPress Plugin Stub.
+ *
+ * @package    iWorks
+ * @subpackage WordPress Plugin Stub
+ * @author     Marcin Pietrzak <marcin@iworks.pl>
+ * @copyright  2025-PLUGIN_TILL_YEAR Marcin Pietrzak
+ * @license    http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License v2.0
+ * @version    1.0.0
  */
+
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Prevent multiple class definitions
+ */
 if ( class_exists( 'iworks_wordpress_plugin_posttypes' ) ) {
 	return;
 }
 
+/**
+ * iWorks WordPress Plugin Post Types Class
+ *
+ * This class manages the loading and initialization of custom post types
+ * for the WordPress Plugin Stub.
+ *
+ * @since 1.0.0
+ */
 class iworks_wordpress_plugin_posttypes {
+	/**
+	 * Array of post type objects
+	 *
+	 * Stores instances of all loaded post type classes
+	 *
+	 * @since 1.0.0
+	 * @var array $posttype_objects
+	 */
 	protected $posttype_objects = array();
 
+	/**
+	 * Constructor for the post types class
+	 *
+	 * Automatically loads and initializes all available post type classes
+	 * based on the filter settings.
+	 *
+	 * @since 1.0.0
+	 */
 	public function __construct() {
 		/**
-		 * load post types
+		 * Load post types from the posttypes directory
 		 */
 		$posttypes_classes_dir = __DIR__ . '/posttypes/';
+
+		/**
+		 * Iterate through all PHP files in the posttypes directory
+		 */
 		foreach ( glob( $posttypes_classes_dir . 'class*.php' ) as $filename_with_path ) {
+			/**
+			 * Get the base filename
+			 */
 			$filename = basename( $filename_with_path );
+
+			/**
+			 * Validate the filename format
+			 * Only process files that match the expected pattern
+			 */
 			if ( ! preg_match( '/^class-wordpress-plugin-stub-posttype-([a-z]+).php$/', $filename, $matches ) ) {
 				continue;
 			}
+
+			/**
+			 * Extract the post type name from the filename
+			 */
 			$posttype_name = $matches[1];
-			$filter        = sprintf(
+
+			/**
+			 * Create the filter name for this post type
+			 */
+			$filter = sprintf(
 				'wordpress-plugin-stub/load/posttype/%s',
 				$posttype_name
 			);
+
+			/**
+			 * Check if this post type should be loaded
+			 * Only load if the filter returns true
+			 */
 			if ( apply_filters( $filter, false ) ) {
-				include_once $posttypes_classes_dir . $filename;
 				/**
-				 * Class Name
+				 * Include the post type class file
+				 */
+				include_once $posttypes_classes_dir . $filename;
+
+				/**
+				 * Generate the class name
 				 */
 				$class_name = sprintf( 'iworks_wordpress_plugin_stub_posttype_%s', $posttype_name );
+
 				/**
-				 * Init Class Object
+				 * Initialize the post type class
 				 */
 				$this->posttype_objects[ $posttype_name ] = new $class_name();
 			}
 		}
 	}
-
 }
