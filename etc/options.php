@@ -55,7 +55,7 @@ function iworks_wordpress_plugin_stub_options() {
 		/**
 		 * Title of the options page
 		 */
-		'page_title' => __( 'Configuration', 'wordpress-plugin-stub' ),
+		'page_title' => __( 'WordPress Plugin Stub', 'wordpress-plugin-stub' ),
 
 		/**
 		 * Menu type for the options page
@@ -70,17 +70,45 @@ function iworks_wordpress_plugin_stub_options() {
 		/**
 		 * Array of options fields
 		 */
-		'options'    => array(),
+		'options'    => apply_filters(
+			'wordpress-plugin-stub/etc/config/options',
+			array(
+				array(
+					'type'  => 'heading',
+					'label' => __( 'Example Header', 'wordpress-plugin-stub' ),
+					'since' => '1.0.0',
+				),
+				array(
+					'name'              => 'example_text',
+					'type'              => 'text',
+					'th'                => __( 'Example Text', 'wordpress-plugin-stub' ),
+					'description'       => __( 'Enter some text.', 'wordpress-plugin-stub' ),
+					'classes'           => array( 'small-text' ),
+					'sanitize_callback' => 'esc_html',
+					'since'             => '1.0.0',
+				),
+				array(
+					'name'              => 'example_textarea',
+					'type'              => 'textarea',
+					'th'                => __( 'Example Textarea', 'wordpress-plugin-stub' ),
+					'description'       => __( 'Enter some text.', 'wordpress-plugin-stub' ),
+					'classes'           => array( 'code', 'large-text' ),
+					'sanitize_callback' => 'wp_kses_post',
+					'since'             => '1.0.0',
+					'rows'              => 5,
+				),
+			)
+		),
 
 		/**
 		 * Array of metaboxes
 		 */
-		'metaboxes'  => array(),
+		'metaboxes'  => apply_filters( 'wordpress-plugin-stub/etc/config/metaboxes', array() ),
 
 		/**
 		 * Array of subpages
 		 */
-		'pages'      => array(),
+		'pages'      => apply_filters( 'wordpress-plugin-stub/etc/config/pages', array() ),
 	);
 
 	/**

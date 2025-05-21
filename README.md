@@ -17,4 +17,16 @@
 7. run `grunt phpunit`
 
 
+## Changelog
 
+### 2.0.0 (2025-05-21)
+- **Enhancement**: Added comprehensive DocBlock comments throughout the codebase
+- **Feature**: Implemented plugin metadata retrieval via `get_stub_data()` method
+- **Feature**: Added admin interface with settings and help sections
+- **Feature**: Integrated iWorks Options framework for settings management
+- **Security**: Updated GPL license from v2 to v3
+- **Code Quality**: Improved code organization and documentation
+- **Build**: Updated build process and development dependencies
+
+### 1.0.0 (Initial Release)
+- Initial release of WordPress Plugin Stub

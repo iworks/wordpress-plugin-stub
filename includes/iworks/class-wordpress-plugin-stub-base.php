@@ -352,4 +352,30 @@ class iworks_wordpress_plugin_stub_base {
 		}
 		$this->options = iworks_wordpress_plugin_stub_get_options();
 	}
+
+	/**
+	 * Get plugin stub metadata.
+	 *
+	 * Returns an array containing the plugin's metadata including:
+	 * - Publication date
+	 * - Current version
+	 * - GitHub repository URL
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array {
+	 *     Plugin metadata.
+	 *
+	 *     @type string $published The publication date in 'YYYY-MM-DD' format.
+	 *     @type string $version   The current version of the plugin.
+	 *     @type string $github    The GitHub repository URL.
+	 * }
+	 */
+	public function get_stub_data() {
+		return array(
+			'published' => '2025-05-21',
+			'version'   => '2.0.0',
+			'github'    => 'https://github.com/iworks/wordpress-plugin-stub',
+		);
+	}
 }

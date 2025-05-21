@@ -45,6 +45,7 @@ mv includes/iworks/class-wordpress-plugin-stub.php includes/iworks/class-${SLUG}
 mv includes/iworks/class-wordpress-plugin-stub-base.php includes/iworks/class-${SLUG}-base.php
 mv includes/iworks/class-wordpress-plugin-stub-posttypes.php includes/iworks/class-${SLUG}-posttypes.php
 mv includes/iworks/wordpress-plugin-stub/class-iworks-wordpress-plugin-stub-github.php includes/iworks/wordpress-plugin-stub/class-iworks-${SLUG}-github.php
+mv includes/iworks/wordpress-plugin-stub/class-iworks-wordpress-plugin-stub-wp-admin.php includes/iworks/wordpress-plugin-stub/class-iworks-${SLUG}-wp-admin.php
 #
 # rename directory
 #
