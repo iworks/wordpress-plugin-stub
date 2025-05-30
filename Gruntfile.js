@@ -312,8 +312,8 @@ module.exports = function(grunt) {
 			},
 			scripts: {
 				files: [
-					'assets/scripts/src/**/*.js',
-					'assets/scripts/admin/src/**/*.js',
+					'assets/scripts/src/admin/*.js',
+					'assets/scripts/src/frontend/*.js',
 				],
 				tasks: ['jshint', 'concat', 'uglify'],
 				options: {
