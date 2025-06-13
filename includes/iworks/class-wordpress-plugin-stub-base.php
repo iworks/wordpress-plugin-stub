@@ -165,7 +165,7 @@ class iworks_wordpress_plugin_stub_base {
 		/**
 		 * plugin ID
 		 */
-		$this->plugin_file_path = $this->base . '/simple-consent-mode.php';
+		$this->plugin_file_path = $this->base . '/wordpress-plugin-stub.php';
 		$this->plugin_file      = plugin_basename( $this->plugin_file_path );
 		/**
 		 * plugin includes directory
