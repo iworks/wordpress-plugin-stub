@@ -24,7 +24,7 @@ cd ${SLUG}
 #
 # replace plugin name
 #
-FILES=$(find -type f|grep -E "(txt|php|pot|json|js|md)$"| grep -v "assets/externals")
+FILES=$(find -type f|grep -E "(txt|php|pot|json|js|md|CHANGELOG)$"| grep -v "assets/externals")
 
 perl -pi -e "s/wordpress-plugin-stub/${SLUG}/g"   ${FILES}
 perl -pi -e "s/WORDPRESS_PLUGIN_STUB/${PREFIX}/g" ${FILES}
