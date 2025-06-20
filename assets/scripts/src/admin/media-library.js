@@ -1,3 +1,4 @@
+/* global jQuery, wp */
 jQuery(function($) {
 	// Set all variables to be used in scope
 	var frame;
@@ -25,7 +26,6 @@ jQuery(function($) {
 		frame.on('select', function() {
 			// Get media attachment details from the frame state
 			var attachment = frame.state().get('selection').first().toJSON();
-			l(attachment);
 
 			// Send the attachment URL to our custom image input field.
 			$('img', $container).attr('src', attachment.url);

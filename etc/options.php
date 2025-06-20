@@ -33,7 +33,7 @@ function iworks_wordpress_plugin_stub_options() {
 	/**
 	 * Parent page placeholder (uncomment and set as needed)
 	 */
-	//$parent = SET SOME PAGE;
+	$parent = null;
 
 	/**
 	 * Main settings configuration
@@ -57,15 +57,61 @@ function iworks_wordpress_plugin_stub_options() {
 		 */
 		'page_title' => __( 'WordPress Plugin Stub', 'wordpress-plugin-stub' ),
 
-		/**
-		 * Menu type for the options page
-		 */
-		'menu'       => 'options',
+/**
+ * Menu type for the options page
+ *
+ * Possible values:
+ * - 'options'      - Add as a top-level menu item (default)
+ * - 'submenu'      - Add as a submenu item (requires 'parent' to be set)
+ * - 'management'   - Add under Tools menu
+ * - 'theme'        - Add under Appearance menu
+ * - 'posts'        - Add under Posts menu
+ * - 'pages'        - Add under Pages menu
+ * - 'users'        - Add under Users menu (or Profile for single)
+ * - 'plugins'      - Add under Plugins menu
+ * - 'comments'     - Add under Comments menu
+ * - 'dashboard'    - Add under Dashboard menu
+ * - 'settings'     - Add under Settings menu
+ * - 'media'        - Add under Media menu
+ * - 'custom'       - Custom menu position (requires 'menu_slug' to be set)
+ */
+'menu'       => 'options',
+
+/**
+ * Parent page for submenu items
+ *
+ * Required when 'menu' is set to 'submenu' or when nesting under another menu.
+ * Can be one of the following:
+ * - The file name of a standard WordPress admin page (e.g., 'edit.php' for Posts)
+ * - The value of 'menu_slug' from another options page
+ * - The plugin file if you want to nest under a plugin's main menu
+ *
+ * Common WordPress admin page values:
+ * - 'index.php'                  - Dashboard
+ * - 'edit.php'                   - Posts
+ * - 'upload.php'                 - Media
+ * - 'edit.php?post_type=page'    - Pages
+ * - 'edit-comments.php'          - Comments
+ * - 'themes.php'                 - Appearance
+ * - 'plugins.php'                - Plugins
+ * - 'users.php'                  - Users
+ * - 'tools.php'                  - Tools
+ * - 'options-general.php'        - Settings
+ * - 'options-general.php?page=YOUR_PAGE' - Custom settings page
+ *
+ * Example for nesting under a plugin's main menu:
+ * 'parent' => 'my-plugin-slug',
+ */
+		'parent' => $parent,
 
 		/**
-		 * Parent page (commented out - uncomment and set as needed)
+		 * Use tabs for options page
+		 *
+		 * possible values:
+		 * - true - use tabs
+		 * - false - options will be shown flat on one screen
 		 */
-		// 'parent' => $parent,
+		'use_tabs' => false,
 
 		/**
 		 * Array of options fields

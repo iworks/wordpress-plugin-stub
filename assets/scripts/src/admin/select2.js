@@ -1,3 +1,4 @@
-jQuery( document ).ready(function($) {
-    $('select.iworks-select2').select2();
+/* global jQuery */
+jQuery(document).ready(function($) {
+	$('select.iworks-select2').select2();
 });
