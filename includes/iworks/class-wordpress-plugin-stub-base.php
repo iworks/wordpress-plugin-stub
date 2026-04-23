@@ -101,7 +101,7 @@ class iworks_wordpress_plugin_stub_base {
 	 * @since 1.0.0
 	 * @var string $version Current plugin version
 	 */
-	protected string $version = 'PLUGIN_VERSION';
+	protected string $version = 'PLUGIN_VERSION.BUILDTIMESTAMP';
 
 	/**
 	 * Includes directory
@@ -377,5 +377,61 @@ class iworks_wordpress_plugin_stub_base {
 			'version'   => '2.0.0',
 			'github'    => 'https://github.com/iworks/wordpress-plugin-stub',
 		);
+	}
+
+    /**
+     * Log message using Simple Logger.
+     *
+     * Logs a message using the Simple Logger plugin if available,
+     * including current user information.
+     *
+     * Read more: https://simple-history.com/docs/logging-api/#using-simpleLogger
+     *
+	 * @since 1.0.0
+	 * @access protected
+	 * @param string $message Log message.
+	 * @param array $data Additional log data.
+	 * @return void
+	 */
+	protected function simple_history_logger_helper( $message, $data, $level = 'notice' ) {
+		/**
+		 * Check if Simple History plugin is active
+		 */
+		if ( !function_exists( 'SimpleLogger' ) ) {
+			return;
+		}
+		/**
+		 * add logged in user data to log
+		 */
+		if ( is_user_logged_in() ) {
+			$user = wp_get_current_user();
+			$data = wp_parse_args(
+				$data,
+				array(
+					'username'    => $user->display_name?? $user->user_login,
+					'_user_id'    => get_current_user_id(),
+					'_user_login' => $user->user_login,
+					'_user_email' => $user->user_email,
+				)
+			);
+		}
+		/**
+		 * select level and write log
+		 */
+            switch ( $level ) {
+            case 'debug':
+                SimpleLogger()->debug( $message, $data );
+                break;
+            case 'warning':
+                SimpleLogger()->warning( $message, $data );
+                break;
+            case 'notice':
+                SimpleLogger()->notice( $message, $data );
+                break;
+            default:
+                SimpleLogger()->notice( $message, $data );
+                break;
+            }
+        }
 	}
 }
