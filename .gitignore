@@ -16,5 +16,8 @@ assets/scripts/wordpress-plugin-stub-*.js
 # release
 release/
 
+# i18n
+languages/*.mo
+
 # tests
 tests/php/.phpunit.result.cache
