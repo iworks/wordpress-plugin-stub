@@ -9,7 +9,10 @@ fi
 
 NAME=${1}
 SLUG=${NAME// /-}
-SLUG=${SLUG,,}
+if [ "$2" ]
+then
+    SLUG=${2}
+fi
 CLASS=${SLUG//-/_}
 PREFIX=${CLASS^^}
 
@@ -24,7 +27,13 @@ cd ${SLUG}
 #
 # replace plugin name
 #
-FILES=$(find -type f|grep -E "(txt|php|pot|json|js|md|CHANGELOG)$"| grep -v "assets/externals")
+FILES=$( \
+    find -type f \
+    | grep -E "(txt|php|pot|json|js|md|CHANGELOG|gitignore)$" \
+    | grep -v "assets/externals" \
+    | grep -v ".git/" \
+    | grep -v "node_modules"\
+)
 
 perl -pi -e "s/wordpress-plugin-stub/${SLUG}/g"   ${FILES}
 perl -pi -e "s/WORDPRESS_PLUGIN_STUB/${PREFIX}/g" ${FILES}
