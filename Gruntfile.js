@@ -17,6 +17,7 @@ module.exports = function(grunt) {
 
 	var buildtime = new Date().toISOString();
 	var buildyear = 1900 + new Date().getYear();
+	var buildtimestamp = new Date().getTime();
 
 	/**
 	 * excludes
@@ -92,6 +93,9 @@ module.exports = function(grunt) {
 		}, {
 			match: /AUTHOR_URI/g,
 			replace: '<%= pkg.author[0].uri %>'
+		}, {
+			match: /BUILDTIMESTAMP/g,
+			replace: buildtimestamp
 		}, {
 			match: /BUILDTIME/g,
 			replace: buildtime
