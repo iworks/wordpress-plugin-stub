@@ -36,9 +36,9 @@ define( 'IWORKS_WORDPRESS_PLUGIN_STUB_VERSION', 'PLUGIN_VERSION' );
 // Define prefix for all plugin options and functions
 define( 'IWORKS_WORDPRESS_PLUGIN_STUB_PREFIX', 'iworks_wordpress-plugin-stub_' );
 // Get the base directory path
-$base = __DIR__;
+$wordpress_plugin_stub_base = __DIR__;
 // Set vendor directory path (where core classes are located)
-$vendor = $base . '/includes';
+$wordpress_plugin_stub_vendor = $wordpress_plugin_stub_base . '/includes';
 
 /**
  * Load the main plugin class if it doesn't exist
@@ -46,14 +46,14 @@ $vendor = $base . '/includes';
  */
 if ( ! class_exists( 'iworks_wordpress_plugin_stub' ) ) {
 	// Load the main plugin class from the includes directory
-	require_once $vendor . '/iworks/class-wordpress-plugin-stub.php';
+	require_once $wordpress_plugin_stub_vendor . '/iworks/class-wordpress-plugin-stub.php';
 }
 
 /**
  * Load configuration options
  * This file contains all plugin configuration settings
  */
-require_once $base . '/etc/options.php';
+require_once $wordpress_plugin_stub_base . '/etc/options.php';
 
 /**
  * Load the options class if it doesn't exist
@@ -61,7 +61,7 @@ require_once $base . '/etc/options.php';
  */
 if ( ! class_exists( 'iworks_options' ) ) {
 	// Load the options class from the includes directory
-	require_once $vendor . '/iworks/options/options.php';
+	require_once $wordpress_plugin_stub_vendor . '/iworks/options/options.php';
 }
 
 /**
