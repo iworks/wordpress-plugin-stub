@@ -176,10 +176,10 @@ module.exports = function(grunt) {
 			options: {
 				stripBanners: true,
 				banner: '/*! <%= pkg.title %> - <%= pkg.version %>\n' +
-				' * <%= pkg.homepage %>\n' +
-				' * Copyright (c) <%= grunt.template.today("yyyy") %>\n' +
-				' * Licensed <%= pkg.license %>' +
-				' */\n'
+					' * <%= pkg.homepage %>\n' +
+					' * Copyright (c) <%= grunt.template.today("yyyy") %>\n' +
+					' * Licensed <%= pkg.license %>' +
+					' */\n'
 			},
 			scripts: {
 				files: conf.js_files_concat
@@ -224,10 +224,10 @@ module.exports = function(grunt) {
 				}],
 				options: {
 					banner: '/*! <%= pkg.title %> - <%= pkg.version %>\n' +
-					' * <%= pkg.homepage %>\n' +
-					' * Copyright (c) <%= grunt.template.today("yyyy") %>;\n' +
-					' * Licensed <%= pkg.license %>' +
-					' */\n',
+						' * <%= pkg.homepage %>\n' +
+						' * Copyright (c) <%= grunt.template.today("yyyy") %>;\n' +
+						' * Licensed <%= pkg.license %>' +
+						' */\n',
 					mangle: {
 						except: ['jQuery']
 					}
@@ -285,10 +285,10 @@ module.exports = function(grunt) {
 		cssmin: {
 			options: {
 				banner: '/*! <%= pkg.title %> - <%= pkg.version %>\n' +
-				' * <%= pkg.homepage %>\n' +
-				' * Copyright (c) <%= grunt.template.today("yyyy") %>;\n' +
-				' * Licensed <%= pkg.license %>' +
-				' */\n',
+					' * <%= pkg.homepage %>\n' +
+					' * Copyright (c) <%= grunt.template.today("yyyy") %>;\n' +
+					' * Licensed <%= pkg.license %>' +
+					' */\n',
 				mergeIntoShorthands: false
 			},
 			minify: {
@@ -365,8 +365,8 @@ module.exports = function(grunt) {
 					},
 					exclude: ['node_modules', '.git', '.sass-cache', 'release'],
 					type: 'wp-plugin',
-					updateTimestamp: true,
-					updatePoFiles: true
+					updateTimestamp: true, // Whether the POT-Creation-Date should be updated without other changes.
+					updatePoFiles: true // Whether to update PO files in the same directory as the POT file.
 				}
 			}
 		},
@@ -513,7 +513,7 @@ module.exports = function(grunt) {
 			'compress:github'
 		]
 	);
-	grunt.registerTask('release', ['build:wporg', 'build:github', 'notes' ]);
+	grunt.registerTask('release', ['build:wporg', 'build:github', 'notes']);
 	grunt.registerTask('test', ['phpunit', 'jshint', 'notes']);
 	grunt.util.linefeed = '\n';
 };

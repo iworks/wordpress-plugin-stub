@@ -5,9 +5,16 @@
     "description": "WordPress Plugin Stub",
     "version": "0.0.1",
     "homepage": "http://wordpress-plugin-stub.iworks.pl/",
+    "repository": {
+        "type": "git",
+        "url": "git@github.com:iworks/wordpress-plugin-stub.git",
+        "website": "https://github.com/iworks/wordpress-plugin-stub"
+    },
     "tags": [
     ],
-    "author": [
+    "author": "iworks",
+    "keywords": [],
+    "contributors": [
         {
             "name": "Marcin Pietrzak",
             "email": "marcin@iworks.pl",
@@ -23,7 +30,7 @@
         "PHP": "8.1"
     },
     "tested": {
-        "WordPress": "6.8"
+        "WordPress": "7.0"
     },
     "devDependencies": {
         "grunt": "^1",
@@ -45,12 +52,6 @@
         "grunt-potomo": "^3",
         "grunt-replace": "^1",
         "grunt-wp-i18n": "^1"
-    },
-    "keywords": [],
-    "repository": {
-        "type": "git",
-        "url": "git@github.com:iworks/wordpress-plugin-stub.git",
-        "website": "https://github.com/iworks/wordpress-plugin-stub"
     },
     "license": "GPL-3.0"
 }
