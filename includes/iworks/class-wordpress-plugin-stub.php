@@ -4,7 +4,7 @@
  *
  * @package WordPress_Plugin_Stub
  * @author Marcin Pietrzak <marcin@iworks.pl>
- * @copyright 2025-PLUGIN_TILL_YEAR Marcin Pietrzak
+ * @copyright 2026-PLUGIN_TILL_YEAR Marcin Pietrzak
  * @license GPL-3.0-or-later
  * @link https://iworks.pl/
  *

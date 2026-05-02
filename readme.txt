@@ -67,7 +67,7 @@ You can do it on [Support Threads](https://wordpress.org/support/plugin/wordpres
 
 Project maintained on GitHub at [iworks/wordpress-plugin-stub](https://github.com/iworks/wordpress-plugin-stub/).
 
-= 1.0.0 - 2025-03-14 =
+= 1.0.0 - 2026-03-14 =
 
 * Initial Release
 
