@@ -344,6 +344,11 @@ module.exports = function(grunt) {
 				src: ['**/*.tmp', '**/.afpDeleted*', '**/.DS_Store'],
 				dot: true,
 				filter: 'isFile'
+			},
+			compiled: {
+				src: ['assets/scripts/*.js', 'assets/styles/*.css', 'assets/styles/**/*.css', 'languages/*.mo'],
+				dot: true,
+				filter: 'isFile'
 			}
 		},
 
@@ -444,7 +449,7 @@ module.exports = function(grunt) {
 
 		checktextdomain: {
 			options: {
-				text_domain: ['<%= pkg.name %>', 'IWORKS_RATE_TEXTDOMAIN', 'IWORKS_OPTIONS_TEXTDOMAIN'],
+				text_domain: ['<%= pkg.name %>', 'PLUGIN_NAME', 'IWORKS_RATE_TEXTDOMAIN', 'IWORKS_OPTIONS_TEXTDOMAIN'],
 				keywords: [ //List keyword specifications
 					'__:1,2d',
 					'_e:1,2d',
@@ -499,7 +504,7 @@ module.exports = function(grunt) {
 			'copy:wporg',
 			'replace',
 			'compress:wporg'
-		],
+		]
 	);
 	grunt.registerTask(
 		'build:github',
