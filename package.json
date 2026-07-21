@@ -10,10 +10,9 @@
         "url": "git@github.com:iworks/wordpress-plugin-stub.git",
         "website": "https://github.com/iworks/wordpress-plugin-stub"
     },
+    "author": "iworks",
     "tags": [
     ],
-    "author": "iworks",
-    "keywords": [],
     "contributors": [
         {
             "name": "Marcin Pietrzak",
@@ -30,7 +29,7 @@
         "PHP": "8.1"
     },
     "tested": {
-        "WordPress": "7.0"
+        "WordPress": "7.1"
     },
     "devDependencies": {
         "grunt": "^1",
