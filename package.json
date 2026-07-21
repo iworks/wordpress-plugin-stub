@@ -4,7 +4,7 @@
     "tagline": "WordPress Plugin Stub",
     "description": "WordPress Plugin Stub",
     "version": "0.0.1",
-    "homepage": "http://iworks.pl/plugins/iworks-aquarium-log/",
+    "homepage": "http://iworks.pl/iw_plugin/wordpress-plugin-stub/",
     "repository": {
         "type": "git",
         "url": "git@github.com:iworks/wordpress-plugin-stub.git",
