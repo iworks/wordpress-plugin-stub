@@ -9,9 +9,11 @@ fi
 
 NAME=${1}
 SLUG=${NAME// /-}
+SLUG=${SLUG,,}
 if [ "$2" ]
 then
     SLUG=${2}
+    SLUG=${SLUG,,}
 fi
 CLASS=${SLUG//-/_}
 PREFIX=${CLASS^^}
