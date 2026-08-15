@@ -27,6 +27,19 @@ require_once 'class-wordpress-plugin-stub-posttype.php';
 
 class iworks_wordpress_plugin_stub_posttype_publication extends iworks_wordpress_plugin_stub_posttype {
 
+	/**
+	 * Post type name
+	 *
+	 * @since 1.0.0
+	 * @var string $post_type Post type identifier
+	 */
+	private string $post_type = 'publication';
+
+	/**
+	 * Constructor
+	 *
+	 * @since 1.0.0
+	 */
 	public function __construct() {
 		parent::__construct();
 		/**
@@ -34,24 +47,34 @@ class iworks_wordpress_plugin_stub_posttype_publication extends iworks_wordpress
 		 *
 		 * @since 1.0.0
 		 */
-		$this->post_type_name = preg_replace( '/^iworks_wordpress_plugin_stub_posttype_/', '', __CLASS__ );
-		$this->register_class_custom_posttype_name( $this->post_type_name, 'iw' );
+		$this->register_class_custom_posttype_name( $this->post_type );
 		/**
 		 * WordPress Hooks
 		 */
-		add_action( 'add_meta_boxes_' . $this->post_type_name[ $this->post_type_name ], array( $this, 'add_meta_boxes' ) );
-		add_action( 'save_post', array( $this, 'save' ) );
+		add_action( 'add_meta_boxes_' . $this->post_type_name[ $this->post_type ], array( $this, 'add_meta_boxes' ) );
 		add_filter( 'the_content', array( $this, 'the_content' ) );
 		add_action( 'pre_get_posts', array( $this, 'set_default_order' ) );
 		/**
 		 * WordPress Plugin Stub Hooks
 		 */
-		add_filter( 'opi_pib_get_systems_publications', array( $this, 'get_random' ), 10, 2 );
-		add_filter( 'opi_pib_theme_system_tab_button_more_url', array( $this, 'get_archive_page_url' ), 10, 4 );
-		/**
-		 * settings
-		 */
-		$this->meta_boxes[ $this->post_type_name[ $this->post_type_name ] ] = array(
+		add_filter( 'wordpress_plugin_stub_' . $this->post_type . '_publications', array( $this, 'get_random' ), 10, 2 );
+		add_filter( 'wordpress_plugin_stub_' . $this->post_type . '_tab_button_more_url', array( $this, 'get_archive_page_url' ), 10, 4 );
+	}
+
+	/**
+	 * Register taxonomy
+	 *
+	 * @since 1.0.0
+	 */
+	public function action_init_register_taxonomy() {}
+
+	/**
+	 * class settings
+	 *
+	 * @since 1.0.0
+	 */
+	public function action_init_settings() {
+		$this->meta_boxes[ $this->post_type_name[ $this->post_type ] ] = array(
 			'publication-data' => array(
 				'title'  => __( 'Data', 'wordpress-plugin-stub' ),
 				'fields' => array(
@@ -88,14 +111,6 @@ class iworks_wordpress_plugin_stub_posttype_publication extends iworks_wordpress
 	}
 
 	/**
-	 * class settings
-	 *
-	 * @since 1.0.0
-	 */
-	public function action_init_settings() {
-	}
-
-	/**
 	 * Set default order
 	 *
 	 * @since 1.0.0
@@ -117,18 +132,28 @@ class iworks_wordpress_plugin_stub_posttype_publication extends iworks_wordpress
 		);
 	}
 
+	/**
+	 * Get archive page URL
+	 *
+	 * @since 1.0.0
+	 */
 	public function get_archive_page_url( $url, $type, $id, $language ) {
 		if ( 'publications' !== $type ) {
 			return $url;
 		}
-		return get_post_type_archive_link( $this->post_type_name );
+		return get_post_type_archive_link( $this->post_type_name[ $this->post_type ] );
 	}
 
+	/**
+	 * Get random publication
+	 *
+	 * @since 1.0.0
+	 */
 	public function get_random( $content, $args ) {
 		$args                   = wp_parse_args(
 			$args,
 			array(
-				'post_type'      => $this->post_type_name,
+				'post_type'      => $this->post_type_name[ $this->post_type ],
 				'orderby'        => 'rand',
 				'posts_per_page' => 1,
 				'wp_doing_ajax'  => apply_filters( 'wp_doing_ajax', false ),
@@ -153,8 +178,13 @@ class iworks_wordpress_plugin_stub_posttype_publication extends iworks_wordpress
 		return $content;
 	}
 
+	/**
+	 * Modify post content
+	 *
+	 * @since 1.0.0
+	 */
 	public function the_content( $content ) {
-		if ( get_post_type() !== $this->post_type_name ) {
+		if ( get_post_type() !== $this->post_type_name[ $this->post_type ] ) {
 			return $content;
 		}
 		$post_ID = get_the_ID();
@@ -211,8 +241,6 @@ class iworks_wordpress_plugin_stub_posttype_publication extends iworks_wordpress
 		return $c;
 	}
 
-	public function action_init_register_taxonomy() {}
-
 	/**
 	 * Register Custom Post Type
 	 *
@@ -252,38 +280,12 @@ class iworks_wordpress_plugin_stub_posttype_publication extends iworks_wordpress
 			'menu_icon'           => 'dashicons-businessperson',
 			'public'              => true,
 			'show_in_admin_bar'   => true,
-			'show_in_menu'        => apply_filters( 'opi_post_type_show_in_menu' . $this->post_type_name, 'edit.php' ),
+			'show_in_menu'        => 'edit.php',
 			'show_in_nav_menus'   => true,
 			'show_ui'             => true,
 			'show_in_rest'        => true,
 			'supports'            => array( 'title', 'editor', 'excerpt' ),
 		);
-		register_post_type( $this->post_type_name, $args );
-	}
-
-	/**
-	 * Save Publication data.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param integer $post_id Post ID.
-	 */
-	public function save( $post_ID ) {
-		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-			return;
-		}
-		$nonce = filter_input( INPUT_POST, '_publication_nonce' );
-		if ( ! wp_verify_nonce( $nonce, __CLASS__ ) ) {
-			return;
-		}
-		if ( ! current_user_can( 'edit_post', $post_ID ) ) {
-			return;
-		}
-		$this->update_meta( $post_ID, 'opi_publication_language', filter_input( INPUT_POST, 'opi_publication_language' ) );
-		$this->update_meta( $post_ID, 'opi_publication_year', filter_input( INPUT_POST, 'opi_publication_year', FILTER_SANITIZE_NUMBER_INT ) );
-		$this->update_meta( $post_ID, 'opi_publication_authors', filter_input( INPUT_POST, 'opi_publication_authors' ) );
-		$this->update_meta( $post_ID, 'opi_publication_where', filter_input( INPUT_POST, 'opi_publication_where' ) );
-		$this->update_meta( $post_ID, 'opi_publication_url', filter_input( INPUT_POST, 'opi_publication_url', FILTER_SANITIZE_URL ) );
-		$this->update_meta( $post_ID, 'opi_publication_conference', filter_input( INPUT_POST, 'opi_publication_conference' ) );
+		$this->_register_post_type( $this->post_type, $args );
 	}
 }
