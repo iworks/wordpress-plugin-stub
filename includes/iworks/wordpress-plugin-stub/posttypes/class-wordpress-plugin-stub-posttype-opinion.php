@@ -27,7 +27,12 @@ require_once 'class-wordpress-plugin-stub-posttype.php';
 
 class iworks_wordpress_plugin_stub_posttype_opinion extends iworks_wordpress_plugin_stub_posttype {
 
-	private $list = array();
+	/**
+	 * List of opinions
+	 *
+	 * @var array $list
+	 */
+	private array $list = array();
 
 	/**
 	 * Post type name

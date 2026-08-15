@@ -26,51 +26,22 @@ defined( 'ABSPATH' ) || exit;
 require_once 'class-wordpress-plugin-stub-posttype.php';
 
 class iworks_wordpress_plugin_stub_posttype_page extends iworks_wordpress_plugin_stub_posttype {
+	/**
+	 * Post type name
+	 *
+	 * @since 1.0.0
+	 * @var string $post_type Post type identifier
+	 */
+	private string $post_type = 'page';
+
+	/**
+	 * Constructor
+	 *
+	 * @since 1.0.0
+	 */
 
 	public function __construct() {
 		parent::__construct();
-		/**
-		 * Post Type Name
-		 *
-		 * @since 1.0.0
-		 */
-		$this->post_type_name = preg_replace( '/^iworks_wordpress_plugin_stub_posttype_/', '', __CLASS__ );
-		$this->register_class_custom_posttype_name( $this->post_type_name );
-		/**
-		 * WordPress Hooks
-		 */
-		add_action( 'add_meta_boxes_' . $this->post_type_name[ $this->post_type_name ], array( $this, 'add_meta_boxes' ) );
-		add_action( 'load-post-new.php', array( $this, 'admin_enqueue' ) );
-		add_action( 'load-post.php', array( $this, 'admin_enqueue' ) );
-		add_action( 'init', array( $this, 'add_excerpt_support' ) );
-		/**
-		 * WordPress Plugin Stub Hooks
-		 */
-		/**
-		 * settings
-		 */
-		$this->meta_boxes[ $this->post_type_name[ $this->post_type_name ] ] = array(
-			'page-data' => array(
-				'title'  => __( 'Opinion Data', 'wordpress-plugin-stub' ),
-				'fields' => array(
-					array(
-						'name'  => 'icon',
-						'type'  => 'image',
-						'label' => esc_html__( 'Icon', 'wordpress-plugin-stub' ),
-					),
-					array(
-						'name'  => 'opinion_url',
-						'type'  => 'url',
-						'label' => esc_html__( 'The Opinion URL', 'wordpress-plugin-stub' ),
-					),
-					array(
-						'name'  => 'author_url',
-						'type'  => 'url',
-						'label' => esc_html__( 'The Opinion Author URL', 'wordpress-plugin-stub' ),
-					),
-				),
-			),
-		);
 	}
 
 	/**
@@ -78,17 +49,26 @@ class iworks_wordpress_plugin_stub_posttype_page extends iworks_wordpress_plugin
 	 *
 	 * @since 1.0.0
 	 */
-	public function action_init_settings() {}
-
-	public function action_init_register_post_type() {}
-	public function action_init_register_taxonomy() {}
+	public function action_init_settings() {
+		/**
+		 * Add excerpt support to page post type
+		 *
+		 * @since 1.0.0
+		 */
+		add_post_type_support( $this->post_type, 'excerpt' );
+	}
 
 	/**
-	 * Add excerpt support to page post type
+	 * Register Custom Post Type
 	 *
 	 * @since 1.0.0
 	 */
-	public function add_excerpt_support() {
-		add_post_type_support( 'page', 'excerpt' );
-	}
+	public function action_init_register_post_type() {}
+
+	/**
+	 * Register Custom Taxonomy
+	 *
+	 * @since 1.0.0
+	 */
+	public function action_init_register_taxonomy() {}
 }
