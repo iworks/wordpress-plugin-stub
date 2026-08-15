@@ -728,6 +728,19 @@ abstract class iworks_wordpress_plugin_stub_posttype {
 	}
 
 	/**
+	 * get filter name for feature in register_taxonomy() function.
+	 *
+	 * @since 1.0.0
+	 */
+	protected function get_register_taxonomy_filter_name( $taxonomy, $feature ) {
+		return sprintf(
+			'iworks/wordpress-plugin-stub/register-taxonomy/%s/%s',
+			$this->taxonomy_name[ $taxonomy ],
+			$feature
+		);
+	}
+
+	/**
 	 * add columns to post type
 	 *
 	 * @since 1.0.0
@@ -826,6 +839,7 @@ abstract class iworks_wordpress_plugin_stub_posttype {
 		register_taxonomy(
 			$this->taxonomy_name[ $taxonomy ],
 			apply_filters(
+				$taxonomy,
 				$this->get_register_taxonomy_filter_name( $taxonomy, 'post_types' ),
 				$post_types,
 				$taxonomy,

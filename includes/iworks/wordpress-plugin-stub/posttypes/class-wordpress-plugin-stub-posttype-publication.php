@@ -286,6 +286,6 @@ class iworks_wordpress_plugin_stub_posttype_publication extends iworks_wordpress
 			'show_in_rest'        => true,
 			'supports'            => array( 'title', 'editor', 'excerpt' ),
 		);
-		$this->_register_post_type( $this->post_type, $args );
+		$this->register_post_type( $this->post_type, $args );
 	}
 }

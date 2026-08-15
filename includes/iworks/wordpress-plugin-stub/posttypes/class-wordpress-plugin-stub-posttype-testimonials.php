@@ -1,23 +1,43 @@
 <?php
 
-require_once __DIR__ . '/class-iworks-theme-post-type.php';
+require_once 'class-wordpress-plugin-stub-posttype.php';
 
-class iWorks_Theme_Post_Type_Testimonials extends iWorks_Theme_Post_Type {
+class iworks_wordpress_plugin_stub_posttype_testimonials extends iworks_wordpress_plugin_stub_posttype {
 
+	/**
+	 * Post type name
+	 *
+	 * @since 1.0.0
+	 * @var string $post_type Post type identifier
+	 */
+	private string $post_type = 'testimonial';
+
+	/**
+	 * Constructor
+	 *
+	 * @since 1.0.0
+	 */
 	public function __construct() {
 		parent::__construct();
-		add_action( 'init', array( $this, 'action_init' ) );
-		//      add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
+		/**
+		 * Post Type Name
+		 *
+		 * @since 1.0.0
+		 */
+		$this->register_class_custom_posttype_name( $this->post_type );
+		/**
+		 * WordPress Hooks
+		 */
 		add_shortcode( 'iworks_testimonials', array( $this, 'get_list' ) );
-		add_filter( 'manage_' . $this->post_type_name['testimonial'] . '_posts_columns', array( $this, 'add_admin_columns' ) );
-		add_action( 'manage_' . $this->post_type_name['testimonial'] . '_posts_custom_column', array( $this, 'display_admin_columns' ), 10, 2 );
-		add_action( 'add_meta_boxes', array( $this, 'action_add_meta_boxes_add' ) );
-		add_action( 'save_post_' . $this->post_type_name['testimonial'], array( $this, 'action_save_post_page' ), 10, 3 );
+		add_filter( 'manage_' . $this->post_type_name[ $this->post_type ] . '_posts_columns', array( $this, 'add_admin_columns' ) );
+		add_action( 'manage_' . $this->post_type_name[ $this->post_type ] . '_posts_custom_column', array( $this, 'display_admin_columns' ), 10, 2 );
 	}
 
+	public function action_init_register_taxonomy() {
+	}
 
-	public function action_init() {
-		$this->meta_boxes[ $this->post_type_name['testimonial'] ] = array(
+	public function action_init_settings() {
+		$this->meta_boxes[ $this->post_type_name[ $this->post_type ] ] = array(
 			'testimonial' => array(
 				'title'  => __( 'Testimonial Data', 'THEME_TEXT_DOMAIN' ),
 				'fields' => array(
@@ -188,14 +208,12 @@ class iWorks_Theme_Post_Type_Testimonials extends iWorks_Theme_Post_Type {
 		}
 	}
 
-	public function register_taxonomy() {}
-
 	/**
 	 * Register Custom Post Type
 	 *
 	 * @since 1.0.0
 	 */
-	public function register_post_type() {
+	public function action_init_register_post_type() {
 		$labels = array(
 			'name'                  => _x( 'Testimonials', 'Post Type General Name', 'THEME_TEXT_DOMAIN' ),
 			'singular_name'         => _x( 'Testimonial', 'Post Type Singular Name', 'THEME_TEXT_DOMAIN' ),
@@ -229,84 +247,12 @@ class iWorks_Theme_Post_Type_Testimonials extends iWorks_Theme_Post_Type {
 			'menu_icon'           => 'dashicons-businessperson',
 			'public'              => false,
 			'show_in_admin_bar'   => false,
-			'show_in_menu'        => apply_filters( 'storm_post_type_show_in_menu' . $this->post_type_name['testimonial'], 'edit.php' ),
+			'show_in_menu'        => 'edit.php',
 			'show_in_nav_menus'   => false,
 			'show_ui'             => true,
 			'show_in_rest'        => true,
 			'supports'            => array( 'title', 'editor' ),
 		);
-		register_post_type( $this->post_type_name['testimonial'], $args );
-	}
-
-	/**
-	 * Add meta boxes
-	 *
-	 * @since 1.0.0
-	 */
-	public function x_add_meta_boxes() {
-		add_meta_box(
-			'iworks-testimonials-data',
-			__( 'Testimonial data', 'THEME_TEXT_DOMAIN' ),
-			array( $this, 'html_data' ),
-			$this->post_type_name['testimonial'],
-			'side',
-			'default'
-		);
-	}
-
-	/**
-	 * HTML for metabox
-	 *
-	 * @since 1.0.0
-	 */
-	public function html_data( $post ) {
-		wp_nonce_field( __CLASS__, '_testimonials_nonce' );
-		?>
-<p>
-	<label><?php esc_attr_e( 'Person', 'THEME_TEXT_DOMAIN' ); ?><br />
-		<?php $value = get_post_meta( $post->ID, 'iworks_testimonial_person', true ); ?>
-		<input type="text" class="large-text" value="<?php echo esc_attr( $value ); ?>" name="iworks_testimonial_person" />
-	</label>
-</p>
-<p>
-	<label><?php esc_attr_e( 'Position', 'THEME_TEXT_DOMAIN' ); ?><br />
-		<?php $value = get_post_meta( $post->ID, 'iworks_testimonial_position', true ); ?>
-		<input type="text" class="large-text" value="<?php echo esc_attr( $value ); ?>" name="iworks_testimonial_position" />
-	</label>
-</p>
-		<?php
-	}
-	/**
-	 * Save Testimonial data.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param integer $post_id Post ID.
-	 */
-	public function save( $post_ID ) {
-		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-			return;
-		}
-		$nonce = filter_input( INPUT_POST, '_testimonials_nonce' );
-		if ( ! wp_verify_nonce( $nonce, __CLASS__ ) ) {
-			return;
-		}
-		if ( ! current_user_can( 'edit_post', $post_ID ) ) {
-			return;
-		}
-		$this->update_meta( $post_ID, 'iworks_testimonial_person', filter_input( INPUT_POST, 'iworks_testimonial_person' ) );
-		$this->update_meta( $post_ID, 'iworks_testimonial_position', filter_input( INPUT_POST, 'iworks_testimonial_position' ) );
-	}
-
-	public function action_add_meta_boxes_add( $post_type ) {
-		if ( $post_type !== $this->post_type_name['testimonial'] ) {
-			return;
-		}
-		$this->add_meta_boxes( $this->post_type_name['testimonial'] );
-	}
-
-	public function action_save_post_page( $post_id, $post, $update ) {
-		$this->save_meta( $post_id, $post, $update, $this->post_type_name['testimonial'] );
+		$this->register_post_type( $this->post_type, $args );
 	}
 }
-
