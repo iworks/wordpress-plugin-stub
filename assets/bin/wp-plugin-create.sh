@@ -17,17 +17,21 @@ then
 fi
 CLASS=${SLUG//-/_}
 PREFIX=${CLASS^^}
+YEAR=$(date +%Y)
 
 echo Plugin class:  ${CLASS}
 echo Plugin name:   ${NAME}
 echo Plugin prefix: ${PREFIX}
 echo Plugin slug:   ${SLUG}
 
+#
+# clone repository
+#
 git clone git@github.com:iworks/wordpress-plugin-stub.git ${SLUG}
 cd ${SLUG}
 
 #
-# replace plugin name
+# prepare files
 #
 FILES=$( \
     find -type f \
@@ -36,7 +40,13 @@ FILES=$( \
     | grep -v ".git/" \
     | grep -v "node_modules"\
 )
-
+#
+# update copyright year
+#
+perl -pi -e "s/CURRENT_YEAR/${YEAR}/g"   ${FILES}
+#
+# replace plugin name
+#
 perl -pi -e "s/wordpress-plugin-stub/${SLUG}/g"   ${FILES}
 perl -pi -e "s/WORDPRESS_PLUGIN_STUB/${PREFIX}/g" ${FILES}
 perl -pi -e "s/wordpress_plugin_stub/${CLASS}/g"  ${FILES}
@@ -53,18 +63,14 @@ mkdir -p ./includes/iworks
 #
 mv wordpress-plugin-stub.php ${SLUG}.php
 mv includes/iworks/class-wordpress-plugin-stub.php includes/iworks/class-${SLUG}.php
-mv includes/iworks/class-wordpress-plugin-stub-base.php includes/iworks/class-${SLUG}-base.php
+mv includes/iworks/class-wordpress-plugin-stub-posttype.php includes/iworks/class-${SLUG}-base.php
 mv includes/iworks/class-wordpress-plugin-stub-posttypes.php includes/iworks/class-${SLUG}-posttypes.php
 mv includes/iworks/wordpress-plugin-stub/class-iworks-wordpress-plugin-stub-github.php includes/iworks/wordpress-plugin-stub/class-iworks-${SLUG}-github.php
 mv includes/iworks/wordpress-plugin-stub/class-iworks-wordpress-plugin-stub-wp-admin.php includes/iworks/wordpress-plugin-stub/class-iworks-${SLUG}-wp-admin.php
 #
-# rename directory
-#
-mv includes/iworks/wordpress-plugin-stub includes/iworks/${SLUG}
-#
 # rename files: posttypes
 #
-PDIR=includes/iworks/posttypes
+PDIR=includes/iworks/wordpress-plugin-stub/posttypes
 PCLASS=class-wordpress-plugin-stub-posttype
 mv ${PDIR}/${PCLASS}.php ${PDIR}/class-${SLUG}-posttype.php
 mv ${PDIR}/${PCLASS}-faq.php ${PDIR}/class-${SLUG}-posttype-faq.php
@@ -76,6 +82,10 @@ mv ${PDIR}/${PCLASS}-post.php ${PDIR}/class-${SLUG}-posttype-post.php
 mv ${PDIR}/${PCLASS}-project.php ${PDIR}/class-${SLUG}-posttype-project.php
 mv ${PDIR}/${PCLASS}-promotion.php ${PDIR}/class-${SLUG}-posttype-promotion.php
 mv ${PDIR}/${PCLASS}-publication.php ${PDIR}/class-${SLUG}-posttype-publication.php
+#
+# rename directory
+#
+mv includes/iworks/wordpress-plugin-stub includes/iworks/${SLUG}
 #
 # language
 #
