@@ -810,7 +810,31 @@ abstract class iworks_wordpress_plugin_stub_posttype {
 			$this->post_type_name[ $post_type ],
 			apply_filters(
 				$this->get_register_post_filter_name( $post_type, 'arguments' ),
+				$args,
+				$post_type
+			)
+		);
+	}
+
+	/**
+	 * Register taxonomy
+	 *
+	 * @since 1.0.0
+	 */
+	protected function register_taxonomy( $taxonomy, $post_types, $args ) {
+		register_taxonomy(
+			$this->taxonomy_name[ $taxonomy ],
+			apply_filters(
+				$this->get_register_taxonomy_filter_name( $taxonomy, 'post_types' ),
+				$post_types,
+				$taxonomy,
 				$args
+			),
+			apply_filters(
+				$this->get_register_taxonomy_filter_name( $taxonomy, 'arguments' ),
+				$args,
+				$taxonomy,
+				$post_types
 			)
 		);
 	}

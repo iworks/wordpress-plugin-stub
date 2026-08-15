@@ -27,6 +27,27 @@ require_once 'class-wordpress-plugin-stub-posttype.php';
 
 class iworks_wordpress_plugin_stub_posttype_person extends iworks_wordpress_plugin_stub_posttype {
 
+	/**
+	 * Post type name
+	 *
+	 * @since 1.0.0
+	 * @var string $post_type Post type identifier
+	 */
+	private string $post_type = 'person';
+
+	/**
+	 * Taxonomy name
+	 *
+	 * @since 1.0.0
+	 * @var string $taxonomy Taxonomy identifier
+	 */
+	private string $taxonomy = 'person_role';
+
+	/**
+	 * Constructor
+	 *
+	 * @since 1.0.0
+	 */
 	public function __construct() {
 		parent::__construct();
 		/**
@@ -34,16 +55,15 @@ class iworks_wordpress_plugin_stub_posttype_person extends iworks_wordpress_plug
 		 *
 		 * @since 1.0.0
 		 */
-		$this->register_class_custom_posttype_name( $this->post_type_name, 'iw' );
+		$this->register_class_custom_posttype_name( $this->post_type );
 		/**
 		 * Taxonomy name
 		 */
-		$this->taxonomy_name = preg_replace( '/^iworks_wordpress_plugin_stub_posttype_/', '', __CLASS__ );
-		$this->register_class_custom_taxonomy_name( $this->taxonomy_name, 'iw', 'role' );
+		$this->register_class_custom_taxonomy_name( $this->taxonomy );
 		/**
 		 * WordPress Hooks
 		 */
-		add_action( 'add_meta_boxes_' . $this->post_type_name[ $this->post_type_name ], array( $this, 'add_meta_boxes' ) );
+		add_action( 'add_meta_boxes_' . $this->post_type_name[ $this->post_type ], array( $this, 'add_meta_boxes' ) );
 		add_shortcode( 'iworks_persons_list', array( $this, 'get_list' ) );
 		add_filter( 'og_og_type_value', array( $this, 'filter_og_og_type_value' ) );
 	}
@@ -74,7 +94,7 @@ class iworks_wordpress_plugin_stub_posttype_person extends iworks_wordpress_plug
 				'posts_per_page' => -1,
 			)
 		);
-		$args['post_type']   = $this->post_type_name['person'];
+		$args['post_type']   = $this->post_type_name[ $this->post_type ];
 		$args['post_status'] = 'publish';
 		$the_query           = new WP_Query( $args );
 		/**
@@ -87,7 +107,7 @@ class iworks_wordpress_plugin_stub_posttype_person extends iworks_wordpress_plug
 		 * Content
 		 */
 		ob_start();
-		get_template_part( 'template-parts/heroes/header' );
+		get_template_part( 'template-parts/' . $this->post_type . '/header' );
 		$join = rand( 0, 2 );
 		$i    = 0;
 		while ( $the_query->have_posts() ) {
@@ -96,14 +116,14 @@ class iworks_wordpress_plugin_stub_posttype_person extends iworks_wordpress_plug
 				'join' => $join,
 				'i'    => $i++,
 			);
-			get_template_part( 'template-parts/heroes/one', get_post_type(), $args );
+			get_template_part( 'template-parts/' . $this->post_type . '/one', get_post_type(), $args );
 		}
 		/* Restore original Post Data */
 		wp_reset_postdata();
-		get_template_part( 'template-parts/heroes/footer' );
+		get_template_part( 'template-parts/' . $this->post_type . '/footer' );
 		$content = ob_get_contents();
 		ob_end_clean();
-		return $content;
+		return apply_filters( 'iworks/wordpress-plugin-stub/' . $this->post_type . '/get_list', $content );
 	}
 
 	/**
@@ -151,13 +171,10 @@ class iworks_wordpress_plugin_stub_posttype_person extends iworks_wordpress_plug
 			'show_in_rest'        => false,
 			'supports'            => array( 'title', 'thumbnail', 'editor', 'revisions' ),
 			'rewrite'             => array(
-				'slug' => defined( 'ICL_SITEPRESS_VERSION' ) ? 'person' : _x( 'person', 'iWorks Post Type Person SLUG', 'wordpress-plugin-stub' ),
+				'slug' => defined( 'ICL_SITEPRESS_VERSION' ) ? 'person' : _x( 'person', 'WordPress Plugin Stub Post Type Person SLUG', 'wordpress-plugin-stub' ),
 			),
 		);
-		register_post_type(
-			$this->post_type_name['person'],
-			apply_filters( 'iworks/theme/post_type/' . $this->post_type_name['person'] . '/args', $args )
-		);
+		$this->register_post_type( $this->post_type, $args );
 	}
 
 	/**
@@ -195,10 +212,10 @@ class iworks_wordpress_plugin_stub_posttype_person extends iworks_wordpress_plug
 			'show_admin_column' => true,
 			'show_tagcloud'     => false,
 			'rewrite'           => array(
-				'slug' => defined( 'ICL_SITEPRESS_VERSION' ) ? 'role' : _x( 'role', 'iWorks Post Type Person SLUG', 'wordpress-plugin-stub' ),
+				'slug' => defined( 'ICL_SITEPRESS_VERSION' ) ? 'role' : _x( 'role', 'WordPress Plugin Stub Post Type Person SLUG', 'wordpress-plugin-stub' ),
 			),
 		);
-		register_taxonomy( $this->taxonomy_name['person_role'], array( $this->post_type_name['person'] ), $args );
+		$this->register_taxonomy( $this->taxonomy, array( $this->post_type_name[ $this->post_type ] ), $args );
 	}
 
 	/**

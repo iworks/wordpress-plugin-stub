@@ -51,6 +51,11 @@ class iworks_wordpress_plugin_stub_posttype_faq extends iworks_wordpress_plugin_
 	 */
 	private string $taxonomy = 'faq_group';
 
+	/**
+	 * Constructor
+	 *
+	 * @since 1.0.0
+	 */
 	public function __construct() {
 		parent::__construct();
 		/**
@@ -181,12 +186,7 @@ class iworks_wordpress_plugin_stub_posttype_faq extends iworks_wordpress_plugin_
 				defined( 'ICL_SITEPRESS_VERSION' ) ? 'faq_groups' : __( 'faq_groups', 'wordpress-plugin-stub' )
 			),
 		);
-
-		register_taxonomy(
-			$this->get_taxonomy( $this->post_type_name ),
-			array( $this->post_type_name[ $this->post_type ] ),
-			apply_filters( 'iworks/theme/register_taxonomy/' . $this->post_type . '/arguments', $args )
-		);
+		$this->register_taxonomy( $this->taxonomy, array( $this->post_type_name[ $this->post_type ] ), $args );
 	}
 
 	/**

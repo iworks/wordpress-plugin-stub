@@ -121,7 +121,7 @@ class iworks_wordpress_plugin_stub_posttype_hero extends iworks_wordpress_plugin
 		$content .= '</ul>';
 		$content .= '</div>';
 		$content .= '</div>';
-		return apply_filters( 'iworks/wordpress-plugin-stub/hero/get_list', $content );
+		return apply_filters( 'iworks/wordpress-plugin-stub/' . $this->post_type . '/get_list', $content );
 	}
 
 	/**
