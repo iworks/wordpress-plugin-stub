@@ -1,7 +1,7 @@
 <?php
 /*
 
-Copyright 2026-PLUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
+Copyright CURRENT_YEAR-PLUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
@@ -66,7 +66,7 @@ class iworks_wordpress_plugin_stub_github {
 	 * @since 1.0.0
 	 */
 	public function action_init_load_plugin_textdomain() {
-		$dir = plugin_basename( dirname( dirname( dirname( __DIR__ ) ) ) ) . '/languages';
+		$dir = plugin_basename( dirname( __DIR__, 3 ) ) . '/languages';
 		load_plugin_textdomain( 'wordpress-plugin-stub', false, $dir );
 	}
 
@@ -268,4 +268,3 @@ class iworks_wordpress_plugin_stub_github {
 		return $result;
 	}
 }
-

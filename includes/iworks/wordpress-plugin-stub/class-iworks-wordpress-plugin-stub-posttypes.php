@@ -8,7 +8,7 @@
  * @package    iWorks
  * @subpackage WordPress Plugin Stub
  * @author     Marcin Pietrzak <marcin@iworks.pl>
- * @copyright  2026-PLUGIN_TILL_YEAR Marcin Pietrzak
+ * @copyright  CURRENT_YEAR-PLUGIN_TILL_YEAR Marcin Pietrzak
  * @license    http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License v2.0
  * @version    1.0.0
  */
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Prevent multiple class definitions
  */
-if ( class_exists( 'iworks_wordpress_plugin_posttypes' ) ) {
+if ( class_exists( 'iworks_wordpress_plugin_stub_posttypes' ) ) {
 	return;
 }
 
@@ -30,7 +30,7 @@ if ( class_exists( 'iworks_wordpress_plugin_posttypes' ) ) {
  *
  * @since 1.0.0
  */
-class iworks_wordpress_plugin_posttypes {
+class iworks_wordpress_plugin_stub_posttypes {
 	/**
 	 * Array of post type objects
 	 *
@@ -81,8 +81,15 @@ class iworks_wordpress_plugin_posttypes {
 			 * Create the filter name for this post type
 			 */
 			$filter = sprintf(
-				'wordpress-plugin-stub/load/posttype/%s',
+				'wordpress-plugin-stub/load/post-type/%s',
 				$posttype_name
+			);
+
+			l(
+				array(
+					'filter'        => $filter,
+					'apply_filters' => apply_filters( $filter, false ),
+				)
 			);
 
 			/**

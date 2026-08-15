@@ -4,7 +4,7 @@
  *
  * @since 1.0.0
 
-Copyright 2026-PLUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
+Copyright CURRENT_YEAR-PLUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
 
 require_once 'class-wordpress-plugin-stub-posttype.php';
 
-class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugin_stub_posttype_base {
+class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugin_stub_posttype {
 
 	private $option_name_url               = '_opi_featured_url';
 	private $option_name_button_label_more = '_opi_featured_button_label_more';
@@ -38,18 +38,18 @@ class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugi
 		 *
 		 * @since 1.0.0
 		 */
-		$this->posttype_name = preg_replace( '/^iworks_wordpress_plugin_stub_posttype_/', '', __CLASS__ );
-		$this->register_class_custom_posttype_name( $this->posttype_name, 'iw' );
+		$this->post_type_name = preg_replace( '/^iworks_wordpress_plugin_stub_posttype_/', '', __CLASS__ );
+		$this->register_class_custom_posttype_name( $this->post_type_name, 'iw' );
 		/**
 		 * WordPress Hooks
 		 */
-		add_action( 'add_meta_boxes_' . $this->posttypes_names[ $this->posttype_name ], array( $this, 'add_meta_boxes' ) );
+		add_action( 'add_meta_boxes_' . $this->post_type_name[ $this->post_type_name ], array( $this, 'add_meta_boxes' ) );
 		add_action( 'admin_head', array( $this, 'css' ) );
 		add_action( 'init', array( $this, 'custom_post_type' ), 0 );
-		add_action( 'manage_' . $this->posttypes_names[ $this->posttype_name ] . '_posts_custom_column', array( $this, 'action_add_menu_order_value' ), 10, 2 );
+		add_action( 'manage_' . $this->post_type_name[ $this->post_type_name ] . '_posts_custom_column', array( $this, 'action_add_menu_order_value' ), 10, 2 );
 		add_action( 'pre_get_posts', array( $this, 'admin_set_default_order' ) );
 		add_action( 'save_post', array( $this, 'save' ), PHP_INT_MAX );
-		add_filter( 'manage_' . $this->posttype_name . '_posts_columns', array( $this, 'column_add' ), 10, 2 );
+		add_filter( 'manage_' . $this->post_type_name . '_posts_columns', array( $this, 'column_add' ), 10, 2 );
 		add_filter( 'upload_mimes', array( $this, 'add_mime_types' ) );
 		/**
 		 * WordPress Plugin Stub Hooks
@@ -58,7 +58,7 @@ class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugi
 		/**
 		 * settings
 		 */
-		$this->meta_boxes[ $this->posttypes_names[ $this->posttype_name ] ] = array(
+		$this->meta_boxes[ $this->post_type_name[ $this->post_type_name ] ] = array(
 			'featured-url' => array(
 				'title'  => __( 'URL Configuration', 'wordpress-plugin-stub' ),
 				'fields' => array(
@@ -133,7 +133,7 @@ class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugi
 		if ( ! is_admin() ) {
 			return;
 		}
-		if ( $this->posttype_name !== $query->get( 'post_type' ) ) {
+		if ( $this->post_type_name !== $query->get( 'post_type' ) ) {
 			return;
 		}
 		$query->set( 'orderby', 'menu_order' );
@@ -162,7 +162,7 @@ class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugi
 	 */
 	public function get_list( $content ) {
 		$args      = array(
-			'post_type'      => $this->posttype_name,
+			'post_type'      => $this->post_type_name,
 			'orderby'        => 'menu_order',
 			'order'          => 'ASC',
 			'posts_per_page' => 3,
@@ -269,13 +269,13 @@ class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugi
 			'menu_icon'           => 'dashicons-businessperson',
 			'public'              => false,
 			'show_in_admin_bar'   => false,
-			'show_in_menu'        => apply_filters( 'opi_post_type_show_in_menu' . $this->posttype_name, 'edit.php' ),
+			'show_in_menu'        => apply_filters( 'opi_post_type_show_in_menu' . $this->post_type_name, 'edit.php' ),
 			'show_in_nav_menus'   => false,
 			'show_ui'             => true,
 			'show_in_rest'        => false,
 			'supports'            => array( 'title', 'thumbnail', 'page-attributes' ),
 		);
-		register_post_type( $this->posttype_name, $args );
+		register_post_type( $this->post_type_name, $args );
 	}
 
 	/**
@@ -285,7 +285,7 @@ class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugi
 	 */
 	public function save( $post_id ) {
 		$post_type = get_post_type( $post_id );
-		if ( $post_type !== $this->posttype_name ) {
+		if ( $post_type !== $this->post_type_name ) {
 			return;
 		}
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
@@ -390,6 +390,4 @@ class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugi
 		);
 		echo '</label>';
 	}
-
 }
-

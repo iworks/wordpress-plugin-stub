@@ -4,7 +4,7 @@
  *
  * @since 1.0.0
 
-Copyright 2026-PLUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
+Copyright CURRENT_YEAR-PLUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
 
 require_once 'class-wordpress-plugin-stub-posttype.php';
 
-class iworks_wordpress_plugin_stub_posttype_publication extends iworks_wordpress_plugin_stub_posttype_base {
+class iworks_wordpress_plugin_stub_posttype_publication extends iworks_wordpress_plugin_stub_posttype {
 
 	public function __construct() {
 		parent::__construct();
@@ -34,12 +34,12 @@ class iworks_wordpress_plugin_stub_posttype_publication extends iworks_wordpress
 		 *
 		 * @since 1.0.0
 		 */
-		$this->posttype_name = preg_replace( '/^iworks_wordpress_plugin_stub_posttype_/', '', __CLASS__ );
-		$this->register_class_custom_posttype_name( $this->posttype_name, 'iw' );
+		$this->post_type_name = preg_replace( '/^iworks_wordpress_plugin_stub_posttype_/', '', __CLASS__ );
+		$this->register_class_custom_posttype_name( $this->post_type_name, 'iw' );
 		/**
 		 * WordPress Hooks
 		 */
-		add_action( 'add_meta_boxes_' . $this->posttypes_names[ $this->posttype_name ], array( $this, 'add_meta_boxes' ) );
+		add_action( 'add_meta_boxes_' . $this->post_type_name[ $this->post_type_name ], array( $this, 'add_meta_boxes' ) );
 		add_action( 'save_post', array( $this, 'save' ) );
 		add_filter( 'the_content', array( $this, 'the_content' ) );
 		add_action( 'pre_get_posts', array( $this, 'set_default_order' ) );
@@ -51,7 +51,7 @@ class iworks_wordpress_plugin_stub_posttype_publication extends iworks_wordpress
 		/**
 		 * settings
 		 */
-		$this->meta_boxes[ $this->posttypes_names[ $this->posttype_name ] ] = array(
+		$this->meta_boxes[ $this->post_type_name[ $this->post_type_name ] ] = array(
 			'publication-data' => array(
 				'title'  => __( 'Data', 'wordpress-plugin-stub' ),
 				'fields' => array(
@@ -104,7 +104,7 @@ class iworks_wordpress_plugin_stub_posttype_publication extends iworks_wordpress
 		if ( is_admin() ) {
 			return;
 		}
-		if ( $this->posttype_name !== $query->get( 'post_type' ) ) {
+		if ( $this->post_type_name !== $query->get( 'post_type' ) ) {
 			return;
 		}
 		$query->set( 'meta_key', 'opi_publication_year' );
@@ -121,14 +121,14 @@ class iworks_wordpress_plugin_stub_posttype_publication extends iworks_wordpress
 		if ( 'publications' !== $type ) {
 			return $url;
 		}
-		return get_post_type_archive_link( $this->posttype_name );
+		return get_post_type_archive_link( $this->post_type_name );
 	}
 
 	public function get_random( $content, $args ) {
 		$args                   = wp_parse_args(
 			$args,
 			array(
-				'post_type'      => $this->posttype_name,
+				'post_type'      => $this->post_type_name,
 				'orderby'        => 'rand',
 				'posts_per_page' => 1,
 				'wp_doing_ajax'  => apply_filters( 'wp_doing_ajax', false ),
@@ -154,7 +154,7 @@ class iworks_wordpress_plugin_stub_posttype_publication extends iworks_wordpress
 	}
 
 	public function the_content( $content ) {
-		if ( get_post_type() !== $this->posttype_name ) {
+		if ( get_post_type() !== $this->post_type_name ) {
 			return $content;
 		}
 		$post_ID = get_the_ID();
@@ -252,13 +252,13 @@ class iworks_wordpress_plugin_stub_posttype_publication extends iworks_wordpress
 			'menu_icon'           => 'dashicons-businessperson',
 			'public'              => true,
 			'show_in_admin_bar'   => true,
-			'show_in_menu'        => apply_filters( 'opi_post_type_show_in_menu' . $this->posttype_name, 'edit.php' ),
+			'show_in_menu'        => apply_filters( 'opi_post_type_show_in_menu' . $this->post_type_name, 'edit.php' ),
 			'show_in_nav_menus'   => true,
 			'show_ui'             => true,
 			'show_in_rest'        => true,
 			'supports'            => array( 'title', 'editor', 'excerpt' ),
 		);
-		register_post_type( $this->posttype_name, $args );
+		register_post_type( $this->post_type_name, $args );
 	}
 
 	/**
@@ -287,4 +287,3 @@ class iworks_wordpress_plugin_stub_posttype_publication extends iworks_wordpress
 		$this->update_meta( $post_ID, 'opi_publication_conference', filter_input( INPUT_POST, 'opi_publication_conference' ) );
 	}
 }
-

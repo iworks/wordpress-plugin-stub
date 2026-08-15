@@ -4,7 +4,7 @@
  *
  * @since 1.0.0
 
-Copyright 2026-PLUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
+Copyright CURRENT_YEAR-PLUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
 
 require_once 'class-wordpress-plugin-stub-posttype.php';
 
-class iworks_wordpress_plugin_stub_posttype_hero extends iworks_wordpress_plugin_stub_posttype_base {
+class iworks_wordpress_plugin_stub_posttype_hero extends iworks_wordpress_plugin_stub_posttype {
 
 	public function __construct() {
 		parent::__construct();
@@ -34,13 +34,12 @@ class iworks_wordpress_plugin_stub_posttype_hero extends iworks_wordpress_plugin
 		 *
 		 * @since 1.0.0
 		 */
-		$this->posttype_name = preg_replace( '/^iworks_wordpress_plugin_stub_posttype_/', '', __CLASS__ );
-		$this->register_class_custom_posttype_name( $this->posttype_name, 'iw' );
+		$this->register_class_custom_posttype_name( $this->post_type_name, 'iw' );
 		/**
 		 * WordPress Hooks
 		 */
-		add_action( 'add_meta_boxes_' . $this->posttypes_names[ $this->posttype_name ], array( $this, 'add_meta_boxes' ) );
-		add_shortcode( 'opi_heroes', array( $this, 'get_list' ) );
+		add_action( 'add_meta_boxes_' . $this->post_type_name[ $this->post_type_name ], array( $this, 'add_meta_boxes' ) );
+		add_shortcode( 'iworks_heroes', array( $this, 'get_list' ) );
 	}
 
 	/**
@@ -63,7 +62,7 @@ class iworks_wordpress_plugin_stub_posttype_hero extends iworks_wordpress_plugin
 	 */
 	public function get_list( $atts, $content = '' ) {
 		$args      = array(
-			'post_type'      => $this->posttype_name,
+			'post_type'      => $this->post_type_name,
 			'orderby'        => 'rand',
 			'posts_per_page' => 2,
 			'post_status'    => 'publish',
@@ -153,14 +152,12 @@ class iworks_wordpress_plugin_stub_posttype_hero extends iworks_wordpress_plugin
 			'menu_icon'           => 'dashicons-businessperson',
 			'public'              => false,
 			'show_in_admin_bar'   => false,
-			'show_in_menu'        => apply_filters( 'opi_post_type_show_in_menu' . $this->posttype_name, 'edit.php' ),
+			'show_in_menu'        => apply_filters( 'opi_post_type_show_in_menu' . $this->post_type_name, 'edit.php' ),
 			'show_in_nav_menus'   => false,
 			'show_ui'             => true,
 			'show_in_rest'        => true,
 			'supports'            => array( 'title', 'thumbnail', 'editor', 'excerpt', 'page-attributes' ),
 		);
-		register_post_type( $this->posttype_name, $args );
+		register_post_type( $this->post_type_name['hero'], $args );
 	}
-
 }
-

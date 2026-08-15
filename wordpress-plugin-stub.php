@@ -10,7 +10,7 @@ Author URI: http://iworks.pl/
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Copyright 2026-PLUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
+Copyright CURRENT_YEAR-PLUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 3, as
@@ -70,23 +70,23 @@ if ( ! class_exists( 'iworks_options' ) ) {
  * Each filter returns false by default - change to true to enable the post type
  */
 // FAQ post type
-add_filter( 'wordpress-plugin-stub/load/posttype/faq', '__return_false' );
+add_filter( 'wordpress-plugin-stub/load/post-type/faq', '__return_false' );
 // Hero post type
-add_filter( 'wordpress-plugin-stub/load/posttype/hero', '__return_false' );
+add_filter( 'wordpress-plugin-stub/load/post-type/hero', '__return_false' );
 // Opinion post type
-add_filter( 'wordpress-plugin-stub/load/posttype/opinion', '__return_false' );
+add_filter( 'wordpress-plugin-stub/load/post-type/opinion', '__return_false' );
 // Custom page post type
-add_filter( 'wordpress-plugin-stub/load/posttype/page', '__return_false' );
+add_filter( 'wordpress-plugin-stub/load/post-type/page', '__return_false' );
 // Person post type
-add_filter( 'wordpress-plugin-stub/load/posttype/person', '__return_false' );
+add_filter( 'wordpress-plugin-stub/load/post-type/person', '__return_false' );
 // Custom post post type
-add_filter( 'wordpress-plugin-stub/load/posttype/post', '__return_false' );
+add_filter( 'wordpress-plugin-stub/load/post-type/post', '__return_false' );
 // Project post type
-add_filter( 'wordpress-plugin-stub/load/posttype/project', '__return_false' );
+add_filter( 'wordpress-plugin-stub/load/post-type/project', '__return_false' );
 // Promo post type
-add_filter( 'wordpress-plugin-stub/load/posttype/promo', '__return_false' );
+add_filter( 'wordpress-plugin-stub/load/post-type/promo', '__return_false' );
 // Publication post type
-add_filter( 'wordpress-plugin-stub/load/posttype/publication', '__return_false' );
+add_filter( 'wordpress-plugin-stub/load/post-type/publication', '__return_false' );
 
 /**
  * Initialize and get plugin options

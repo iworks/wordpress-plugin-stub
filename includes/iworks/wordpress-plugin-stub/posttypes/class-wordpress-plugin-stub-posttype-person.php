@@ -4,7 +4,7 @@
  *
  * @since 1.0.0
 
-Copyright 2026-PLUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
+Copyright CURRENT_YEAR-PLUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
 
 require_once 'class-wordpress-plugin-stub-posttype.php';
 
-class iworks_wordpress_plugin_stub_posttype_person extends iworks_wordpress_plugin_stub_posttype_base {
+class iworks_wordpress_plugin_stub_posttype_person extends iworks_wordpress_plugin_stub_posttype {
 
 	public function __construct() {
 		parent::__construct();
@@ -34,8 +34,7 @@ class iworks_wordpress_plugin_stub_posttype_person extends iworks_wordpress_plug
 		 *
 		 * @since 1.0.0
 		 */
-		$this->posttype_name = preg_replace( '/^iworks_wordpress_plugin_stub_posttype_/', '', __CLASS__ );
-		$this->register_class_custom_posttype_name( $this->posttype_name, 'iw' );
+		$this->register_class_custom_posttype_name( $this->post_type_name, 'iw' );
 		/**
 		 * Taxonomy name
 		 */
@@ -44,7 +43,7 @@ class iworks_wordpress_plugin_stub_posttype_person extends iworks_wordpress_plug
 		/**
 		 * WordPress Hooks
 		 */
-		add_action( 'add_meta_boxes_' . $this->posttypes_names[ $this->posttype_name ], array( $this, 'add_meta_boxes' ) );
+		add_action( 'add_meta_boxes_' . $this->post_type_name[ $this->post_type_name ], array( $this, 'add_meta_boxes' ) );
 		add_shortcode( 'iworks_persons_list', array( $this, 'get_list' ) );
 		add_filter( 'og_og_type_value', array( $this, 'filter_og_og_type_value' ) );
 	}
@@ -75,7 +74,7 @@ class iworks_wordpress_plugin_stub_posttype_person extends iworks_wordpress_plug
 				'posts_per_page' => -1,
 			)
 		);
-		$args['post_type']   = $this->posttype_name;
+		$args['post_type']   = $this->post_type_name['person'];
 		$args['post_status'] = 'publish';
 		$the_query           = new WP_Query( $args );
 		/**
@@ -156,8 +155,8 @@ class iworks_wordpress_plugin_stub_posttype_person extends iworks_wordpress_plug
 			),
 		);
 		register_post_type(
-			$this->posttype_name,
-			apply_filters( 'iworks_post_type_person_args', $args )
+			$this->post_type_name['person'],
+			apply_filters( 'iworks/theme/post_type/' . $this->post_type_name['person'] . '/args', $args )
 		);
 	}
 
@@ -199,15 +198,18 @@ class iworks_wordpress_plugin_stub_posttype_person extends iworks_wordpress_plug
 				'slug' => defined( 'ICL_SITEPRESS_VERSION' ) ? 'role' : _x( 'role', 'iWorks Post Type Person SLUG', 'wordpress-plugin-stub' ),
 			),
 		);
-		register_taxonomy( $this->taxonomy_name, array( $this->posttype_name ), $args );
+		register_taxonomy( $this->taxonomy_name['person_role'], array( $this->post_type_name['person'] ), $args );
 	}
 
+	/**
+	 * Filter Open Graph type value
+	*
+	 * @since 1.0.0
+	 */
 	public function filter_og_og_type_value( $value ) {
-		if ( is_singular( $this->posttype_name ) ) {
+		if ( is_singular( $this->post_type_name ) ) {
 			return 'profile';
 		}
 		return $value;
 	}
-
 }
-

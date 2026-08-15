@@ -4,7 +4,7 @@
  *
  * @since 1.0.0
 
-Copyright 2026-PLUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
+Copyright CURRENT_YEAR-PLUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
 
 require_once 'class-wordpress-plugin-stub-posttype.php';
 
-class iworks_wordpress_plugin_stub_posttype_opinion extends iworks_wordpress_plugin_stub_posttype_base {
+class iworks_wordpress_plugin_stub_posttype_opinion extends iworks_wordpress_plugin_stub_posttype {
 
 	private $list = array();
 
@@ -36,13 +36,12 @@ class iworks_wordpress_plugin_stub_posttype_opinion extends iworks_wordpress_plu
 		 *
 		 * @since 1.0.0
 		 */
-		$this->posttype_name = preg_replace( '/^iworks_wordpress_plugin_stub_posttype_/', '', __CLASS__ );
-		$this->register_class_custom_posttype_name( $this->posttype_name, 'iw' );
+		$this->register_class_custom_posttype_name( $this->post_type_name, 'iw' );
 		/**
 		 * WordPress Hooks
 		 */
-		add_action( 'add_meta_boxes_' . $this->posttypes_names[ $this->posttype_name ], array( $this, 'add_meta_boxes' ) );
-		add_action( 'save_post_' . $this->posttypes_names[ $this->posttype_name ], array( $this, 'action_save_post' ), 10, 3 );
+		add_action( 'add_meta_boxes_' . $this->post_type_name[ $this->post_type_name ], array( $this, 'add_meta_boxes' ) );
+		add_action( 'save_post_' . $this->post_type_name[ $this->post_type_name ], array( $this, 'action_save_post' ), 10, 3 );
 		add_filter( 'iworks_post_type_opinion_options_list', array( $this, 'get_options_list_array' ), 10, 2 );
 		/**
 		 * Shortcodes
@@ -51,7 +50,7 @@ class iworks_wordpress_plugin_stub_posttype_opinion extends iworks_wordpress_plu
 		/**
 		 * Settings
 		 */
-		$this->meta_boxes[ $this->posttypes_names[ $this->posttype_name ] ] = array(
+		$this->meta_boxes[ $this->post_type_name[ $this->post_type_name ] ] = array(
 			'opinion-data' => array(
 				'title'  => __( 'Opinion Data', 'wordpress-plugin-stub' ),
 				'fields' => array(
@@ -108,7 +107,7 @@ class iworks_wordpress_plugin_stub_posttype_opinion extends iworks_wordpress_plu
 				'posts_per_page' => 4,
 			)
 		);
-		$args['post_type']   = $this->posttype_name['opinion'];
+		$args['post_type']   = $this->post_type_name['opinion'];
 		$args['post_status'] = 'publish';
 		$the_query           = new WP_Query( $args );
 		/**
@@ -190,7 +189,7 @@ class iworks_wordpress_plugin_stub_posttype_opinion extends iworks_wordpress_plu
 			),
 		);
 		register_post_type(
-			$this->posttypes_names['opinion'],
+			$this->post_type_name['opinion'],
 			apply_filters( 'iworks_post_type_opinion_args', $args )
 		);
 	}
@@ -215,10 +214,8 @@ class iworks_wordpress_plugin_stub_posttype_opinion extends iworks_wordpress_plu
 		if ( ! empty( $this->list ) ) {
 			return $this->list;
 		}
-		$list       = $this->get_select_array( $this->posttype_name['opinion'] );
+		$list       = $this->get_select_array( $this->post_type_name['opinion'] );
 		$this->list = $list;
 		return $list;
 	}
-
 }
-

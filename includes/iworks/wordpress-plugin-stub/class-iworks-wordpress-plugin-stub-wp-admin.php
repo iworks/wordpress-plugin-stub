@@ -16,7 +16,7 @@ if ( class_exists( 'iworks_wordpress_plugin_stub_wp_admin' ) ) {
 	return;
 }
 
-require_once dirname( __DIR__ ) . '/class-wordpress-plugin-stub-base.php';
+require_once dirname( __DIR__ ) . '/class-wordpress-plugin-stub-posttype.php';
 
 /**
  * Admin functionality for WordPress Plugin Stub.

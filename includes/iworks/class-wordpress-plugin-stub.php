@@ -4,7 +4,7 @@
  *
  * @package WordPress_Plugin_Stub
  * @author Marcin Pietrzak <marcin@iworks.pl>
- * @copyright 2026-PLUGIN_TILL_YEAR Marcin Pietrzak
+ * @copyright CURRENT_YEAR-PLUGIN_TILL_YEAR Marcin Pietrzak
  * @license GPL-3.0-or-later
  * @link https://iworks.pl/
  *
@@ -55,7 +55,7 @@ class iworks_wordpress_plugin_stub extends iworks_wordpress_plugin_stub_base {
 		$filename = $this->includes_directory . '/class-iworks-wordpress-plugin-stub-posttypes.php';
 		if ( is_file( $filename ) ) {
 			include_once $filename;
-			new iworks_wordpress_plugin_posttypes();
+			new iworks_wordpress_plugin_stub_posttypes();
 		}
 		/**
 		 * load github class

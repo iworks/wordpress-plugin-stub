@@ -1,8 +1,7 @@
 <?php
 /**
 
-
-Copyright 2026-PLUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
+Copyright CURRENT_YEAR-PLUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
@@ -20,24 +19,42 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 defined( 'ABSPATH' ) || exit;
 
-require_once dirname( ( dirname( __FILE__ ) ) ) . '/class-wordpress-plugin-stub-base.php';
-
-abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpress_plugin_stub_base {
+abstract class iworks_wordpress_plugin_stub_posttype {
 
 	/**
-	 * Post Type Name
+	 * Post type names array
 	 *
 	 * @since 1.0.0
+	 * @var array $post_type_name Array of post type identifiers
 	 */
-	protected string $posttype_name;
+	protected array $post_type_name = array(
+		'faq'         => 'iworks_faq',
+		'opinion'     => 'iworks_opinion',
+		'person'      => 'iworks_person',
+		'testimonial' => 'iworks_testimonial',
+		'hero'        => 'iworks_hero',
+		'publication' => 'iworks_publication',
+	);
 
 	/**
-	 * Taxonomy Name
+	 * Taxonomy names array
 	 *
 	 * @since 1.0.0
+	 * @var array $taxonomy_name Array of taxonomy identifiers
 	 */
-	protected string $taxonomy_name;
+	protected array $taxonomy_name = array(
+		'faq_group'   => 'iworks_faq_group',
+		'person_role' => 'iworks_person_role',
+	);
 
+
+	/**
+	 * Meta boxes configuration
+	 *
+	 * @since 1.0.0
+	 * @var array $meta_boxes Array of meta box configurations
+	 */
+	protected array $meta_boxes = array();
 	/**
 	 * Media Option Name
 	 *
@@ -45,16 +62,13 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 	 */
 	protected string $option_name_media = '_iw_media';
 
-	protected array $posttypes_names = array();
-
-	protected array $taxonomies_names = array();
-
-	protected array $meta_boxes = array();
-
 	/**
-	 * post meta prefix
+	 * Post meta prefix
+	 *
+	 * @since 1.0.0
+	 * @var string $post_meta_prefix Prefix for post meta keys
 	 */
-	protected $post_meta_prefix = '_';
+	protected string $post_meta_prefix = '_';
 
 	/**
 	 * Load admin assets
@@ -63,8 +77,14 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 	 */
 	protected bool $load_plugin_admin_assets = false;
 
+	/**
+	 * Constructor
+	 *
+	 * Sets up WordPress hooks for post type and taxonomy registration.
+	 *
+	 * @since 1.0.0
+	 */
 	public function __construct() {
-		parent::__construct();
 		/**
 		 * WordPress Hooks
 		 */
@@ -87,13 +107,13 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 		/**
 		 * Settings
 		 */
-		$this->posttypes_names  = apply_filters(
-			'iworks/wordpress-plugin-stub/posttypes_names/array',
-			$this->posttypes_names
+		$this->post_type_name = apply_filters(
+			'iworks/wordpress-plugin-stub/post_type_name',
+			$this->post_type_name
 		);
-		$this->taxonomies_names = apply_filters(
-			'iworks/wordpress-plugin-stub/taxonomies_names/array',
-			$this->taxonomies_names
+		$this->taxonomy_name  = apply_filters(
+			'iworks/wordpress-plugin-stub/taxonomy_name',
+			$this->taxonomy_name
 		);
 	}
 
@@ -106,11 +126,14 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 	 *
 	 * @since 1.0.0
 	 */
-	protected function register_class_custom_posttype_name( $posttype_name, $prefix = '' ) {
+	protected function register_class_custom_posttype_name( $posttype_name, $prefix = '', $sufix = '' ) {
 		if ( ! empty( $prefix ) ) {
 			$prefix = sprintf( '%s_', $prefix );
 		}
-		$this->posttypes_names[ $posttype_name ] = $prefix . $posttype_name;
+		if ( ! empty( $sufix ) ) {
+			$sufix = sprintf( '_%s', $sufix );
+		}
+		$this->post_type_name[ $posttype_name ] = $prefix . $this->post_type_name[ $posttype_name ] . $sufix;
 	}
 
 	/**
@@ -125,18 +148,23 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 		if ( ! empty( $sufix ) ) {
 			$sufix = sprintf( '_%s', $sufix );
 		}
-		$this->taxonomies_names[ $taxonomy_name ] = $prefix . $taxonomy_name . $sufix;
+		$this->taxonomy_name[ $taxonomy_name ] = $prefix . $this->taxonomy_name[ $taxonomy_name ] . $sufix;
 	}
 
 	/**
 	 * Save entry action
 	 *
-	 * @since 2.0.0
+	 * @since 1.0.0
 	 */
 	public function action_save_post( $post_id, $post, $update ) {
-		$this->save_meta( $post_id, $post, $update, $this->posttype_name );
+		$this->save_meta( $post_id, $post, $update, $this->post_type_name );
 	}
 
+	/**
+	 * Get select array for dropdowns
+	 *
+	 * @since 1.0.0
+	 */
 	protected function get_select_array( $post_type, $atts = array() ) {
 		$args      = wp_parse_args(
 			$atts,
@@ -156,6 +184,11 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 		return $list;
 	}
 
+	/**
+	 * Add meta boxes to post editor
+	 *
+	 * @since 1.0.0
+	 */
 	public function add_meta_boxes( $post ) {
 		/**
 		 * check available fields
@@ -345,7 +378,12 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 	/**
 	 * Meta Field: main render method: radio
 	 *
+	 * Renders a radio field for meta boxes.
+	 *
 	 * @since 1.0.0
+	 *
+	 * @param WP_Post $post Current post object.
+	 * @param array   $one  Field configuration.
 	 */
 	private function render_meta_radio( $post, $one ) {
 		$value = get_post_meta( $post->ID, $one['name'], true );
@@ -373,11 +411,6 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 		echo '</ul>';
 	}
 
-	/**
-	 * setup one field
-	 *
-	 * @since 1.0.0
-	 */
 	private function setup_post_one_field( $post_id, $field, $meta_box_id ) {
 		$field['meta_box_id'] = $meta_box_id;
 		if ( ! isset( $field['single'] ) ) {
@@ -400,6 +433,16 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 		);
 	}
 
+	/**
+	 * Render meta field
+	 *
+	 * Renders a meta field based on its type configuration.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_Post $post Current post object.
+	 * @param array   $one  Field configuration.
+	 */
 	public function render_meta_box_content( $post, $args ) {
 		$posttype_name = $args['args']['posttype_name'];
 		$meta_box_id   = $args['args']['id'];
@@ -410,6 +453,18 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 		}
 	}
 
+	/**
+	 * Save meta data
+	 *
+	 * Saves meta data for a post when it's saved.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int     $post_id Post ID.
+	 * @param WP_Post $post    Post object.
+	 * @param bool    $update  Whether this is an update.
+	 * @param string  $post_type Post type being saved.
+	 */
 	protected function save_meta( $post_id, $post, $update, $post_type ) {
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 			return;
@@ -459,15 +514,20 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 		}
 	}
 
+	/**
+	 * Get taxonomy name
+	 *
+	 * @since 1.0.0
+	 */
 	protected function get_taxonomy( $taxonomy_name ) {
-		if ( ! isset( $this->taxonomies_names[ $taxonomy_name ] ) ) {
-			$this->taxonomies_names = apply_filters(
-				'iworks/wordpress-plugin-stub/taxonomies_names/array',
-				$this->taxonomies_names
+		if ( ! isset( $this->taxonomy_name[ $taxonomy_name ] ) ) {
+			$this->taxonomy_name = apply_filters(
+				'iworks/wordpress-plugin-stub/taxonomy_name/array',
+				$this->taxonomy_name
 			);
 		}
-		if ( isset( $this->taxonomies_names[ $taxonomy_name ] ) ) {
-			return  $this->taxonomies_names[ $taxonomy_name ];
+		if ( isset( $this->taxonomy_name[ $taxonomy_name ] ) ) {
+			return $this->taxonomy_name[ $taxonomy_name ];
 		}
 		return new WP_Error( 'taxonomy', esc_html__( 'Selected Taxonomy dosn\'t exists.', 'wordpress-plugin-stub' ) );
 	}
@@ -491,7 +551,7 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 		/**
 		 *  If this isn't a correct post, don't update it.
 		 */
-		if ( $this->posttypes_names[ $this->posttype_name ] !== $post_type ) {
+		if ( $this->post_type_name[ $this->post_type_name ] !== $post_type ) {
 			return;
 		}
 		/**
@@ -577,7 +637,7 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 			return;
 		}
 		global $typenow;
-		if ( $typenow !== $this->posttypes_names[ $this->posttype_name ] ) {
+		if ( $typenow !== $this->post_type_name[ $this->post_type_name ] ) {
 			return;
 
 		}
@@ -587,8 +647,8 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 
 	public function action_admin_enqueue_scripts_enqueue_assets() {
 		$translation_array = array(
-			'posttype_name'   => $this->posttype_name,
-			'posttypes_names' => $this->posttypes_names,
+			'posttype_name'   => $this->post_type_name,
+			'posttypes_names' => $this->post_type_name,
 			'l10n'            => array(
 				'wp_media' => array(
 					'title'  => esc_html__( 'Select or Upload Media', 'wordpress-plugin-stub' ),
@@ -645,7 +705,7 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 				file_get_contents(
 					sprintf(
 						'%s/assets/images/%s.svg',
-						dirname( dirname( $this->base ) ),
+						dirname( $this->base, 2 ),
 						sanitize_file_name( $icon )
 					)
 				)
@@ -658,10 +718,10 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 	 *
 	 * @since 1.0.0
 	 */
-	protected function get_register_post_filter_name( $feature ) {
+	protected function get_register_post_filter_name( $post_type, $feature ) {
 		return sprintf(
-			'iworks/iworks-plugins-management/register-post-type/%s/%s',
-			$this->posttypes_names[ $this->posttype_name ],
+			'iworks/wordpress-plugin-stub/register-post-type/%s/%s',
+			$this->post_type_name[ $post_type ],
 			$feature
 		);
 	}
@@ -739,5 +799,14 @@ abstract class iworks_wordpress_plugin_stub_posttype_base extends iworks_wordpre
 		}
 		return $sortable_columns;
 	}
-}
 
+	protected function register_post_type( $post_type, $args ) {
+		register_post_type(
+			$post_type,
+			apply_filters(
+				$this->get_register_post_filter_name( $post_type . '_arguments' ),
+				$args
+			)
+		);
+	}
+}
