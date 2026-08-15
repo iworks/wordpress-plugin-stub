@@ -800,11 +800,16 @@ abstract class iworks_wordpress_plugin_stub_posttype {
 		return $sortable_columns;
 	}
 
+	/**
+	 * Register post type
+	 *
+	 * @since 1.0.0
+	 */
 	protected function register_post_type( $post_type, $args ) {
 		register_post_type(
-			$post_type,
+			$this->post_type_name[ $post_type ],
 			apply_filters(
-				$this->get_register_post_filter_name( $post_type . '_arguments' ),
+				$this->get_register_post_filter_name( $post_type, 'arguments' ),
 				$args
 			)
 		);

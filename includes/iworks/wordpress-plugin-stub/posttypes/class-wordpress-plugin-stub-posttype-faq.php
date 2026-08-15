@@ -136,7 +136,7 @@ class iworks_wordpress_plugin_stub_posttype_faq extends iworks_wordpress_plugin_
 				defined( 'ICL_SITEPRESS_VERSION' ) ? 'faq' : __( 'faqs', 'wordpress-plugin-stub' )
 			),
 		);
-		$this->register_post_type( $this->post_type_name[ $this->post_type ], $args );
+		$this->register_post_type( $this->post_type, $args );
 	}
 
 	/**

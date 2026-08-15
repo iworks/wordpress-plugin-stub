@@ -26,7 +26,19 @@ defined( 'ABSPATH' ) || exit;
 require_once 'class-wordpress-plugin-stub-posttype.php';
 
 class iworks_wordpress_plugin_stub_posttype_hero extends iworks_wordpress_plugin_stub_posttype {
+	/**
+	 * Post type name
+	 *
+	 * @since 1.0.0
+	 * @var string $post_type Post type identifier
+	 */
+	private string $post_type = 'hero';
 
+	/**
+	 * Constructor
+	 *
+	 * @since 1.0.0
+	 */
 	public function __construct() {
 		parent::__construct();
 		/**
@@ -34,11 +46,11 @@ class iworks_wordpress_plugin_stub_posttype_hero extends iworks_wordpress_plugin
 		 *
 		 * @since 1.0.0
 		 */
-		$this->register_class_custom_posttype_name( $this->post_type_name, 'iw' );
+		$this->register_class_custom_posttype_name( $this->post_type, 'iw' );
 		/**
 		 * WordPress Hooks
 		 */
-		add_action( 'add_meta_boxes_' . $this->post_type_name[ $this->post_type_name ], array( $this, 'add_meta_boxes' ) );
+		add_action( 'add_meta_boxes_' . $this->post_type_name[ $this->post_type ], array( $this, 'add_meta_boxes' ) );
 		add_shortcode( 'iworks_heroes', array( $this, 'get_list' ) );
 	}
 
@@ -108,9 +120,14 @@ class iworks_wordpress_plugin_stub_posttype_hero extends iworks_wordpress_plugin
 		$content .= '</ul>';
 		$content .= '</div>';
 		$content .= '</div>';
-		return $content;
+		return apply_filters( 'iworks/wordpress-plugin-stub/hero/get_list', $content );
 	}
 
+	/**
+	 * Register Custom Taxonomy
+	 *
+	 * @since 1.0.0
+	 */
 	public function action_init_register_taxonomy() {}
 
 	/**
@@ -152,12 +169,12 @@ class iworks_wordpress_plugin_stub_posttype_hero extends iworks_wordpress_plugin
 			'menu_icon'           => 'dashicons-businessperson',
 			'public'              => false,
 			'show_in_admin_bar'   => false,
-			'show_in_menu'        => apply_filters( 'opi_post_type_show_in_menu' . $this->post_type_name, 'edit.php' ),
+			'show_in_menu'        => 'edit.php',
 			'show_in_nav_menus'   => false,
 			'show_ui'             => true,
 			'show_in_rest'        => true,
 			'supports'            => array( 'title', 'thumbnail', 'editor', 'excerpt', 'page-attributes' ),
 		);
-		register_post_type( $this->post_type_name['hero'], $args );
+		$this->register_post_type( $this->post_type, $args );
 	}
 }
