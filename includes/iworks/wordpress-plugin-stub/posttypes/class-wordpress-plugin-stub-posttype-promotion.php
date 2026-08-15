@@ -27,10 +27,33 @@ require_once 'class-wordpress-plugin-stub-posttype.php';
 
 class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugin_stub_posttype {
 
-	private $option_name_url               = '_opi_featured_url';
-	private $option_name_button_label_more = '_opi_featured_button_label_more';
-	private $option_name_ukrainian         = '_opi_featured_ukrainian';
+	/**
+	 * Post type name
+	 *
+	 * @since 1.0.0
+	 * @var string $post_type Post type identifier
+	 */
+	private string $post_type = 'promotion';
 
+	/**
+	 * Option names
+	 *
+	 * @since 1.0.0
+	 */
+	private string $option_name_url = '_featured_url';
+
+	/**
+	 * Button label more option name
+	 *
+	 * @since 1.0.0
+	 */
+	private string $option_name_button_label_more = '_featured_button_label_more';
+
+	/**
+	 * Constructor
+	 *
+	 * @since 1.0.0
+	 */
 	public function __construct() {
 		parent::__construct();
 		/**
@@ -38,42 +61,16 @@ class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugi
 		 *
 		 * @since 1.0.0
 		 */
-		$this->post_type_name = preg_replace( '/^iworks_wordpress_plugin_stub_posttype_/', '', __CLASS__ );
-		$this->register_class_custom_posttype_name( $this->post_type_name, 'iw' );
+		$this->register_class_custom_posttype_name( $this->post_type );
 		/**
 		 * WordPress Hooks
 		 */
-		add_action( 'add_meta_boxes_' . $this->post_type_name[ $this->post_type_name ], array( $this, 'add_meta_boxes' ) );
-		add_action( 'admin_head', array( $this, 'css' ) );
+		add_action( 'add_meta_boxes_' . $this->post_type_name[ $this->post_type ], array( $this, 'add_meta_boxes' ) );
 		add_action( 'init', array( $this, 'custom_post_type' ), 0 );
-		add_action( 'manage_' . $this->post_type_name[ $this->post_type_name ] . '_posts_custom_column', array( $this, 'action_add_menu_order_value' ), 10, 2 );
+		add_action( 'manage_' . $this->post_type_name[ $this->post_type ] . '_posts_custom_column', array( $this, 'action_add_menu_order_value' ), 10, 2 );
 		add_action( 'pre_get_posts', array( $this, 'admin_set_default_order' ) );
 		add_action( 'save_post', array( $this, 'save' ), PHP_INT_MAX );
-		add_filter( 'manage_' . $this->post_type_name . '_posts_columns', array( $this, 'column_add' ), 10, 2 );
-		add_filter( 'upload_mimes', array( $this, 'add_mime_types' ) );
-		/**
-		 * WordPress Plugin Stub Hooks
-		 */
-		add_filter( 'opi_pib_theme_main_page_get_promo', array( $this, 'get_list' ) );
-		/**
-		 * settings
-		 */
-		$this->meta_boxes[ $this->post_type_name[ $this->post_type_name ] ] = array(
-			'featured-url' => array(
-				'title'  => __( 'URL Configuration', 'wordpress-plugin-stub' ),
-				'fields' => array(
-					array(
-						'name'  => 'target_button_url',
-						'type'  => 'url',
-						'label' => esc_html__( 'Target Button URL', 'wordpress-plugin-stub' ),
-					),
-					array(
-						'name'  => 'target_button_text',
-						'label' => esc_html__( 'Target Button Text', 'wordpress-plugin-stub' ),
-					),
-				),
-			),
-		);
+		add_filter( 'manage_' . $this->post_type_name[ $this->post_type ] . '_posts_columns', array( $this, 'column_add' ), 10, 2 );
 	}
 
 	/**
@@ -82,15 +79,22 @@ class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugi
 	 * @since 1.0.0
 	 */
 	public function action_init_settings() {
-	}
-
-	/**
-	 * Add colun size
-	 *
-	 * @since 1.0.0
-	 */
-	public function css() {
-		echo '<style type="text/css">#menu_order, td.menu_order { width: 5em; }td.menu_order{text-align: right;}</style>';
+		$this->meta_boxes[ $this->post_type_name[ $this->post_type ] ] = array(
+			'featured-url' => array(
+				'title'  => __( 'URL Configuration', 'wordpress-plugin-stub' ),
+				'fields' => array(
+					array(
+						'name'  => $this->option_name_url,
+						'type'  => 'url',
+						'label' => esc_html__( 'Target Button URL', 'wordpress-plugin-stub' ),
+					),
+					array(
+						'name'  => $this->option_name_button_label_more,
+						'label' => esc_html__( 'Target Button Text', 'wordpress-plugin-stub' ),
+					),
+				),
+			),
+		);
 	}
 
 	/**
@@ -141,17 +145,6 @@ class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugi
 	}
 
 	/**
-	 * Add SVG files to allowed mimetypes
-	 *
-	 * @since 1.0.0
-	 *
-	 */
-	public function add_mime_types( $mimes ) {
-		$mimes['svg'] = 'image/svg+xml';
-		return $mimes;
-	}
-
-	/**
 	 * Get promo post list
 	 *
 	 * @since 1.0.0
@@ -184,17 +177,10 @@ class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugi
 				}
 				$first = false;
 				$the_query->the_post();
-				$url      = get_post_meta( get_the_ID(), $this->option_name_url, true );
-				$url_info = parse_url( $url );
-				$target   = $host === $url_info['host'] ? '' : ' target="_blank"';
-				/**
-				 * add lang?
-				 */
-				if ( 'uk' === get_post_meta( get_the_ID(), $this->option_name_ukrainian, true ) ) {
-					$content .= '<div class="post-inner" lang="uk">';
-				} else {
-					$content .= '<div class="post-inner">';
-				}
+				$url               = get_post_meta( get_the_ID(), $this->option_name_url, true );
+				$url_info          = parse_url( $url );
+				$target            = $host === $url_info['host'] ? '' : ' target="_blank"';
+				$content          .= '<div class="post-inner">';
 				$content          .= '<div class="thumbnail">';
 				$content          .= get_the_post_thumbnail( get_the_ID(), 'full' );
 				$content          .= '</div>';
@@ -236,7 +222,7 @@ class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugi
 	 * @since 1.0.0
 	 */
 	public function action_init_register_post_type() {
-		$labels = array(
+		$labels                   = array(
 			'name'                  => _x( 'Featured', 'Post Type General Name', 'wordpress-plugin-stub' ),
 			'singular_name'         => _x( 'Featured', 'Post Type Singular Name', 'wordpress-plugin-stub' ),
 			'menu_name'             => __( 'Featured', 'wordpress-plugin-stub' ),
@@ -257,7 +243,7 @@ class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugi
 			'items_list_navigation' => __( 'Featured list navigation', 'wordpress-plugin-stub' ),
 			'filter_items_list'     => __( 'Filter items list', 'wordpress-plugin-stub' ),
 		);
-		$args   = array(
+		$args                     = array(
 			'can_export'          => true,
 			'capability_type'     => 'page',
 			'description'         => __( 'Featured', 'wordpress-plugin-stub' ),
@@ -269,23 +255,23 @@ class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugi
 			'menu_icon'           => 'dashicons-businessperson',
 			'public'              => false,
 			'show_in_admin_bar'   => false,
-			'show_in_menu'        => apply_filters( 'opi_post_type_show_in_menu' . $this->post_type_name, 'edit.php' ),
+			'show_in_menu'        => 'edit.php',
 			'show_in_nav_menus'   => false,
 			'show_ui'             => true,
 			'show_in_rest'        => false,
 			'supports'            => array( 'title', 'thumbnail', 'page-attributes' ),
 		);
-		register_post_type( $this->post_type_name, $args );
+		$this->register_post_type = register_post_type( $this->post_type, $args );
 	}
 
 	/**
 	 * Save post meta
-	 *
+	*
 	 * @since 1.0.0
 	 */
 	public function save( $post_id ) {
 		$post_type = get_post_type( $post_id );
-		if ( $post_type !== $this->post_type_name ) {
+		if ( $post_type !== $this->post_type_name[ $this->post_type ] ) {
 			return;
 		}
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
@@ -321,18 +307,6 @@ class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugi
 				$result = update_post_meta( $post_id, $this->option_name_button_label_more, $value );
 				if ( false === $result ) {
 					add_post_meta( $post_id, $this->option_name_button_label_more, $value, true );
-				}
-			}
-			/**
-			 * Ukrainian
-			 */
-			$value = filter_input( INPUT_POST, $this->option_name_ukrainian, FILTER_DEFAULT );
-			if ( empty( $value ) || 'uk' !== $value ) {
-				delete_post_meta( $post_id, $this->option_name_ukrainian );
-			} else {
-				$result = update_post_meta( $post_id, $this->option_name_ukrainian, $value );
-				if ( false === $result ) {
-					add_post_meta( $post_id, $this->option_name_ukrainian, $value, true );
 				}
 			}
 		}
@@ -375,19 +349,5 @@ class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugi
 			'<p class="description">%s</p>',
 			__( 'Leave empty to default', 'wordpress-plugin-stub' )
 		);
-		/**
-		 * is ukrainian text?
-		 */
-		$ukrainian = get_post_meta( $post->ID, $this->option_name_ukrainian, true );
-		echo '<label><h4>';
-		_e( 'Is it Ukrainian language?', 'wordpress-plugin-stub' );
-		echo '</h4><label>';
-		printf(
-			'<input type="checkbox" name="%s" value="uk" %s /> %s',
-			esc_attr( $this->option_name_ukrainian ),
-			checked( 'uk', $ukrainian, false ),
-			esc_html__( 'Yes, it is in Ukrainian!', 'wordpress-plugin-stub' )
-		);
-		echo '</label>';
 	}
 }
