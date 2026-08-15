@@ -26,6 +26,7 @@ defined( 'ABSPATH' ) || exit;
 require_once 'class-wordpress-plugin-stub-posttype.php';
 
 class iworks_wordpress_plugin_stub_posttype_hero extends iworks_wordpress_plugin_stub_posttype {
+
 	/**
 	 * Post type name
 	 *
@@ -46,7 +47,7 @@ class iworks_wordpress_plugin_stub_posttype_hero extends iworks_wordpress_plugin
 		 *
 		 * @since 1.0.0
 		 */
-		$this->register_class_custom_posttype_name( $this->post_type, 'iw' );
+		$this->register_class_custom_posttype_name( $this->post_type );
 		/**
 		 * WordPress Hooks
 		 */
