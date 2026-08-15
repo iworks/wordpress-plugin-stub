@@ -29,14 +29,22 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 
 	// private string $posttype_name;
 
-	private $fields               = array();
-	private $option_name_partners = '_partners';
+	private array $fields                = array();
+	private string $option_name_partners = '_partners';
 	/**
 	 * partners types
 	 *
 	 * @since 1.0.0
 	 */
-	private $partners_types;
+	private array $partners_types;
+	/**
+	 * Post type name
+	 *
+	 * @since 1.0.0
+	 * @var string $post_type Post type identifier
+	 */
+	private string $post_type = 'project';
+
 
 	public function __construct() {
 		parent::__construct();
@@ -45,15 +53,13 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 		 *
 		 * @since 1.0.0
 		 */
-		$this->post_type_name = preg_replace( '/^iworks_wordpress_plugin_stub_posttype_/', '', __CLASS__ );
-		$this->register_class_custom_posttype_name( $this->post_type_name, 'iw' );
+		$this->register_class_custom_posttype_name( $this->post_type, 'iw' );
 		/**
 		 * WordPress Hooks
 		 */
-		add_action( 'add_meta_boxes_' . $this->post_type_name[ $this->post_type_name ], array( $this, 'add_meta_boxes' ) );
+		add_action( 'add_meta_boxes_' . $this->post_type, array( $this, 'add_meta_boxes' ) );
 		add_action( 'pre_get_posts', array( $this, 'set_default_order' ) );
 		add_filter( 'the_content', array( $this, 'the_content' ) );
-		add_action( 'wp_loaded', array( $this, 'setup' ) );
 		/**
 		 * projects tab on main page
 		 */
@@ -68,8 +74,8 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 	 * @since 1.0.0
 	 */
 	public function action_init_settings() {
-		$this->load_plugin_admin_assets                                     = true;
-		$this->meta_boxes[ $this->post_type_name[ $this->post_type_name ] ] = array(
+		$this->load_plugin_admin_assets       = true;
+		$this->meta_boxes[ $this->post_type ] = array(
 			'project-data'  => array(
 				'title'  => __( 'Project Data', 'wordpress-plugin-stub' ),
 				'fields' => array(
@@ -111,11 +117,11 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 				),
 			),
 		);
-	}
-
-	public function action_init_register_taxonomy() {}
-
-	public function setup() {
+		/**
+		 * Partners types
+		 *
+		 * @since 1.0.0
+		 */
 		$this->partners_types = array(
 			'lider'         => __( 'Liders', 'wordpress-plugin-stub' ),
 			'scientific'    => __( 'Scientific Partners', 'wordpress-plugin-stub' ),
@@ -125,12 +131,27 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 		);
 	}
 
+	/**
+	 * Register taxonomy
+	 *
+	 * @since 1.0.0
+	 */
+	public function action_init_register_taxonomy() {}
+
+	/**
+	 * Setup
+	 *
+	 * @since 1.0.0
+	 */
+	public function setup() {
+	}
+
 	public function get_random( $content, $posts_per_page ) {
 		$args      = array(
 			'orderby'        => 'rand',
 			'posts_per_page' => max( 1, intval( $posts_per_page ) ),
 			'post_status'    => 'publish',
-			'post_type'      => $this->post_type_name,
+			'post_type'      => $this->post_type_name[ $this->post_type ],
 		);
 		$the_query = new WP_Query( $args );
 		if ( 'pl_PL' === get_locale() ) {
@@ -159,7 +180,7 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 		if ( is_admin() ) {
 			return;
 		}
-		if ( $this->post_type_name !== $query->get( 'post_type' ) ) {
+		if ( $this->post_type_name[ $this->post_type ] !== $query->get( 'post_type' ) ) {
 			return;
 		}
 		$query->set( 'meta_key', '_project_date_start' );
@@ -181,7 +202,7 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 		$args      = array(
 			'nopaging'    => true,
 			'post_status' => 'publish',
-			'post_type'   => $this->post_type_name,
+			'post_type'   => $this->post_type_name[ $this->post_type ],
 		);
 		$the_query = new WP_Query( $args );
 		if ( $the_query->have_posts() ) {
@@ -194,11 +215,11 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 			$content .= ob_get_contents();
 			ob_end_clean();
 		}
-		$url = get_post_type_archive_link( $this->post_type_name );
+		$url = get_post_type_archive_link( $this->post_type_name[ $this->post_type ] );
 		if ( $url ) {
 			$content .= sprintf(
 				'<p class="more %s"><a href="%s" class="button">%s</a></p>',
-				esc_attr( $this->post_type_name ),
+				esc_attr( $this->post_type_name[ $this->post_type ] ),
 				$url,
 				esc_html__( 'Browse all projects', 'wordpress-plugin-stub' )
 			);
@@ -212,7 +233,7 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 	 * @since 1.0.0
 	 */
 	public function the_content( $content ) {
-		if ( get_post_type() !== $this->post_type_name ) {
+		if ( get_post_type() !== $this->post_type_name[ $this->post_type ] ) {
 			return $content;
 		}
 		$post_ID = get_the_ID();
@@ -265,12 +286,12 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 		 * media
 		 */
 		$c .= $this->get_media_html( $post_ID );
-		return $c;
+		return apply_filters( 'wordpress_plugin_stub_project_content', $c );
 	}
 
 	/**
 	 * Register Custom Post Type
-	 *
+	*
 	 * @since 1.0.0
 	 */
 	public function action_init_register_post_type() {
@@ -306,7 +327,7 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 			'labels'              => $labels,
 			'public'              => true,
 			'show_in_admin_bar'   => true,
-			'show_in_menu'        => apply_filters( 'opi_post_type_show_in_menu' . $this->post_type_name[ $this->post_type_name ], 'edit.php' ),
+			'show_in_menu'        => 'edit.php',
 			'show_in_nav_menus'   => true,
 			'show_ui'             => true,
 			'show_in_rest'        => true,
@@ -318,30 +339,14 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 		if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
 			unset( $args['rewrite'] );
 		}
-		register_post_type( $this->post_type_name[ $this->post_type_name ], $args );
+		$this->register_post_type( $this->post_type, $args );
 	}
 
 	/**
-	 * Add meta boxes
+	 * HTML for partners
 	 *
 	 * @since 1.0.0
 	 */
-	public function x_add_meta_boxes() {
-		/**
-		 * Partners
-		 */
-		foreach ( $this->partners_types as $type => $label ) {
-			add_meta_box(
-				'opi-post-partners-' . $type,
-				$label,
-				array( $this, 'html_post_partners_' . $type ),
-				$this->post_type_name,
-				'normal',
-				'default'
-			);
-		}
-	}
-
 	private function html_partners( $post, $type ) {
 		printf(
 			'<div id="opi-partner-%1$s-container" class="opi-partner-container opi-partner-%1$s-container" data-partner="%1$s" aria-hidden="true">',

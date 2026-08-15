@@ -31,6 +31,7 @@ abstract class iworks_wordpress_plugin_stub_posttype {
 		'faq'         => 'iworks_faq',
 		'opinion'     => 'iworks_opinion',
 		'person'      => 'iworks_person',
+		'project'     => 'iworks_project',
 		'testimonial' => 'iworks_testimonial',
 		'hero'        => 'iworks_hero',
 		'publication' => 'iworks_publication',

@@ -28,22 +28,28 @@ require_once 'class-wordpress-plugin-stub-posttype.php';
 class iworks_wordpress_plugin_stub_posttype_post extends iworks_wordpress_plugin_stub_posttype {
 
 	/**
+	 * Post type name
+	 *
+	 * @since 1.0.0
+	 * @var string $post_type Post type identifier
+	 */
+	private string $post_type = 'post';
+
+	/**
 	 * Option name, used to save data on postmeta table.
 	 *
 	 * @since 1.0.0
 	 * @var string $option_name_post_gallery Option name post_gallery.
 	 */
-	private $option_name_post_gallery = '_opi_post_gallery';
+	private string $option_name_post_gallery = '_opi_post_gallery';
 
+	/**
+	 * Constructor
+	 *
+	 * @since 1.0.0
+	 */
 	public function __construct() {
 		parent::__construct();
-		/**
-		 * Post Type Name
-		 *
-		 * @since 1.0.0
-		 */
-		$this->post_type_name = preg_replace( '/^iworks_wordpress_plugin_stub_posttype_/', '', __CLASS__ );
-		$this->register_class_custom_posttype_name( $this->post_type_name, 'iw' );
 		/**
 		 * WordPress Hooks
 		 */
@@ -57,6 +63,14 @@ class iworks_wordpress_plugin_stub_posttype_post extends iworks_wordpress_plugin
 		 * WordPress Plugin Stub Hooks
 		 */
 		add_filter( 'wordpress_plugiun_stub_related_list', array( $this, 'get_related' ), 10, 2 );
+	}
+
+	/**
+	 * class settings
+	 *
+	 * @since 1.0.0
+	 */
+	public function action_init_settings() {
 		/**
 		 * Settings
 		 */
@@ -82,14 +96,6 @@ class iworks_wordpress_plugin_stub_posttype_post extends iworks_wordpress_plugin
 				),
 			),
 		);
-	}
-
-	/**
-	 * class settings
-	 *
-	 * @since 1.0.0
-	 */
-	public function action_init_settings() {
 	}
 
 	public function action_init_register_post_type() {}
