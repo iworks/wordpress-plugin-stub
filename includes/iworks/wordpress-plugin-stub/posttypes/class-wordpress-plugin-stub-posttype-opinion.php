@@ -68,6 +68,17 @@ class iworks_wordpress_plugin_stub_posttype_opinion extends iworks_wordpress_plu
 	}
 
 	/**
+	 * Get post type
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string
+	 */
+	public function get_post_type() {
+		return $this->post_type;
+	}
+
+	/**
 	 * class settings
 	 *
 	 * @since 1.0.0

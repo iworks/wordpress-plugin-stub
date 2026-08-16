@@ -73,7 +73,6 @@ class iworks_wordpress_plugin_stub_posttype_faq extends iworks_wordpress_plugin_
 		 */
 		add_action( 'add_meta_boxes_' . $this->post_type, array( $this, 'add_meta_boxes' ) );
 		add_action( 'manage_' . $this->post_type . '_posts_custom_column', array( $this, 'action_add_menu_order_value' ), 10, 2 );
-		add_filter( 'iworks_post_type_faq_terms_options_list', array( $this, 'get_options_list_array' ) );
 		add_filter( 'manage_' . $this->post_type . '_posts_columns', array( $this, 'filter_add_menu_order_column' ) );
 		add_filter( 'wp_localize_script_iworks_theme', array( $this, 'filter_wp_localize_script_iworks_theme' ) );
 		add_shortcode( 'iworks-faq-list', array( $this, 'shortcode_list' ) );
@@ -113,14 +112,11 @@ class iworks_wordpress_plugin_stub_posttype_faq extends iworks_wordpress_plugin_
 		$args = array(
 			'label'               => __( 'FAQ', 'wordpress-plugin-stub' ),
 			'description'         => __( 'Frequently Asked Questions', 'wordpress-plugin-stub' ),
-			'labels'              => apply_filters( 'iworks/theme/register_post_type/faq/labels', $labels ),
-			'supports'            => apply_filters(
-				'iworks/theme/register_post_type/faq/subpackage',
-				array(
-					'title',
-					'page-attributes',
-					'editor',
-				),
+			'labels'              => $labels,
+			'supports'            => array(
+				'title',
+				'page-attributes',
+				'editor',
 			),
 			'hierarchical'        => true,
 			'public'              => true,
@@ -137,7 +133,7 @@ class iworks_wordpress_plugin_stub_posttype_faq extends iworks_wordpress_plugin_
 			'capability_type'     => 'post',
 			'show_in_rest'        => true,
 			'rest_base'           => apply_filters(
-				'iworks/theme/register_post_type/' . $this->post_type . '/rest_base',
+				'iworks/wordpress-plugin-stub/register_post_type/' . $this->post_type . '/rest_base',
 				defined( 'ICL_SITEPRESS_VERSION' ) ? 'faq' : __( 'faqs', 'wordpress-plugin-stub' )
 			),
 		);
@@ -145,10 +141,20 @@ class iworks_wordpress_plugin_stub_posttype_faq extends iworks_wordpress_plugin_
 	}
 
 	/**
+	 * Get post type
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string
+	 */
+	public function get_post_type() {
+		return $this->post_type;
+	}
+
+	/**
 	 * Register FAQ Group custom taxonomy
 	 */
 	public function action_init_register_taxonomy() {
-
 		$labels = array(
 			'name'                       => _x( 'FAQ Groups', 'Taxonomy General Name', 'wordpress-plugin-stub' ),
 			'singular_name'              => _x( 'FAQ Group', 'Taxonomy Singular Name', 'wordpress-plugin-stub' ),
@@ -168,9 +174,8 @@ class iworks_wordpress_plugin_stub_posttype_faq extends iworks_wordpress_plugin_
 			'search_items'               => __( 'Search FAQ Groups', 'wordpress-plugin-stub' ),
 			'not_found'                  => __( 'Not Found', 'wordpress-plugin-stub' ),
 		);
-
-		$args = array(
-			'labels'              => apply_filters( 'iworks/theme/register_post_type//labels', $labels ),
+		$args   = array(
+			'labels'              => $labels,
 			'hierarchical'        => true,
 			'public'              => true,
 			'exclude_from_search' => false,
@@ -181,12 +186,9 @@ class iworks_wordpress_plugin_stub_posttype_faq extends iworks_wordpress_plugin_
 			'show_in_nav_menus'   => true,
 			'show_tagcloud'       => false,
 			'show_in_rest'        => true,
-			'rest_base'           => apply_filters(
-				'iworks/theme/register_taxonomy/faq_group/rest_base',
-				defined( 'ICL_SITEPRESS_VERSION' ) ? 'faq_groups' : __( 'faq_groups', 'wordpress-plugin-stub' )
-			),
+			'rest_base'           => defined( 'ICL_SITEPRESS_VERSION' ) ? 'faq_groups' : _x( 'faq_groups', 'register taxonomy rest base', 'wordpress-plugin-stub' ),
 		);
-		$this->register_taxonomy( $this->taxonomy, array( $this->post_type_name[ $this->post_type ] ), $args );
+		register_taxonomy( $this->taxonomy_name[ $this->taxonomy ], $this->post_type_name[ $this->post_type ], $args );
 	}
 
 	/**
@@ -201,11 +203,13 @@ class iworks_wordpress_plugin_stub_posttype_faq extends iworks_wordpress_plugin_
 	public function shortcode_list( $atts, $content = '' ) {
 		$args = shortcode_atts(
 			array(
-				'term_id' => false,
-				'tag'     => 'aside',
-				'header'  => 'show',
-				'dd'      => 'show',
-				'id'      => sprintf( 'iworks-faq-%s', md5( time() + mt_rand( 0, mt_getrandmax() ) ) ),
+				'dd'            => 'show',
+				'description'   => 'hide',
+				'header'        => 'show',
+				'header-button' => 'hide',
+				'id'            => sprintf( 'iworks-faq-%s', md5( time() + mt_rand( 0, mt_getrandmax() ) ) ),
+				'tag'           => 'aside',
+				'term_id'       => false, // required
 			),
 			$atts,
 			'iworks_post_type_faq_shortcode_list'
@@ -213,7 +217,7 @@ class iworks_wordpress_plugin_stub_posttype_faq extends iworks_wordpress_plugin_
 		if ( empty( $args['term_id'] ) ) {
 			return $content;
 		}
-		$term = get_term( $args['term_id'], $this->taxonomy_name['faq'] );
+		$term = get_term( $args['term_id'], $this->taxonomy_name[ $this->taxonomy ] );
 		if ( empty( $term ) ) {
 			return $content;
 		}
@@ -224,7 +228,7 @@ class iworks_wordpress_plugin_stub_posttype_faq extends iworks_wordpress_plugin_
 			'posts_per_page' => -1,
 			'tax_query'      => array(
 				array(
-					'taxonomy' => $this->taxonomy_name['faq'],
+					'taxonomy' => $this->taxonomy_name[ $this->taxonomy ],
 					'field'    => 'slug',
 					'terms'    => $term->slug,
 				),
@@ -344,32 +348,5 @@ class iworks_wordpress_plugin_stub_posttype_faq extends iworks_wordpress_plugin_
 			),
 		);
 		return apply_filters( 'iworks/theme/post_type/faq/wp_localize_script_iworks_theme', $data );
-	}
-
-	/**
-	 * Get taxonomy list
-	 *
-	 * @param array $list options list
-	 *
-	 * @return string $content
-	 */
-	public function get_options_list_array( $list ) {
-		if ( ! empty( $this->list ) ) {
-			return $this->list;
-		}
-		$terms = get_terms(
-			array(
-				'taxonomy'   => $this->taxonomy_name['faq'],
-				'hide_empty' => false,
-			)
-		);
-		$list  = array(
-			'0' => esc_html__( '&mdash; Select &mdash;', 'wordpress-plugin-stub' ),
-		);
-		foreach ( $terms as $term ) {
-			$list[ $term->term_id ] = $term->name;
-		}
-		$this->list = $list;
-		return apply_filters( 'iworks/theme/post_type/faq/get_options_list_array', $list );
 	}
 }

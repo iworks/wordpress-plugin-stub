@@ -69,6 +69,17 @@ class iworks_wordpress_plugin_stub_posttype_person extends iworks_wordpress_plug
 	}
 
 	/**
+	 * Get post type
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string
+	 */
+	public function get_post_type() {
+		return $this->post_type;
+	}
+
+	/**
 	 * class settings
 	 *
 	 * @since 1.0.0
@@ -215,7 +226,7 @@ class iworks_wordpress_plugin_stub_posttype_person extends iworks_wordpress_plug
 				'slug' => defined( 'ICL_SITEPRESS_VERSION' ) ? 'role' : _x( 'role', 'WordPress Plugin Stub Post Type Person SLUG', 'wordpress-plugin-stub' ),
 			),
 		);
-		$this->register_taxonomy( $this->taxonomy, array( $this->post_type_name[ $this->post_type ] ), $args );
+		$this->register_taxonomy( $this->taxonomy, $this->post_type, $args );
 	}
 
 	/**

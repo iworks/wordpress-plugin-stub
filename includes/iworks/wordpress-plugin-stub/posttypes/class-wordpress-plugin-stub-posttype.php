@@ -29,12 +29,14 @@ abstract class iworks_wordpress_plugin_stub_posttype {
 	 */
 	protected array $post_type_name = array(
 		'faq'         => 'iworks_faq',
-		'opinion'     => 'iworks_opinion',
-		'person'      => 'iworks_person',
-		'project'     => 'iworks_project',
-		'testimonial' => 'iworks_testimonial',
 		'hero'        => 'iworks_hero',
+		'opinion'     => 'iworks_opinion',
+		'page'        => 'page', // for WordPress pages
+		'person'      => 'iworks_person',
+		'post'        => 'post', // for WordPress posts
+		'project'     => 'iworks_project',
 		'publication' => 'iworks_publication',
+		'testimonial' => 'iworks_testimonial',
 	);
 
 	/**
@@ -91,7 +93,7 @@ abstract class iworks_wordpress_plugin_stub_posttype {
 		 */
 		add_action( 'init', array( $this, 'action_init_settings' ), 0 );
 		add_action( 'init', array( $this, 'action_init_register_post_type' ), 1 );
-		add_action( 'init', array( $this, 'action_init_register_taxonomy' ), 1 );
+		add_action( 'init', array( $this, 'action_init_register_taxonomy' ), 2 );
 		add_action( 'load-post-new.php', array( $this, 'action_load_admin_maybe_enqueue_assets' ) );
 		add_action( 'load-post.php', array( $this, 'action_load_admin_maybe_enqueue_assets' ) );
 		add_action( 'save_post', array( $this, 'action_save_post_meta' ), 10, 3 );
@@ -121,6 +123,7 @@ abstract class iworks_wordpress_plugin_stub_posttype {
 	abstract public function action_init_register_post_type();
 	abstract public function action_init_register_taxonomy();
 	abstract public function action_init_settings();
+	abstract public function get_post_type();
 
 	/**
 	 * Register the Post Type Name in the Class Parent Class.
@@ -552,7 +555,7 @@ abstract class iworks_wordpress_plugin_stub_posttype {
 		/**
 		 *  If this isn't a correct post, don't update it.
 		 */
-		if ( $this->post_type_name[ $this->post_type_name ] !== $post_type ) {
+		if ( $this->post_type_name[ $this->get_post_type() ] !== $post_type ) {
 			return;
 		}
 		/**
@@ -632,20 +635,26 @@ abstract class iworks_wordpress_plugin_stub_posttype {
 	 * Enqueue plugin assets.
 	 *
 	 * @since 1.0.0
+	 *
+	 * @param string $post_type The post type being edited.
 	 */
 	public function action_load_admin_maybe_enqueue_assets() {
 		if ( ! $this->load_plugin_admin_assets ) {
 			return;
 		}
 		global $typenow;
-		if ( $typenow !== $this->post_type_name[ $this->post_type_name ] ) {
+		if ( $typenow !== $this->post_type_name[ $this->get_post_type() ] ) {
 			return;
-
 		}
 		add_action( 'admin_enqueue_scripts', array( $this, 'action_admin_enqueue_scripts_register_assets' ), 117 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'action_admin_enqueue_scripts_enqueue_assets' ), 118 );
 	}
 
+	/**
+	 * Enqueue plugin assets.
+	 *
+	 * @since 1.0.0
+	 */
 	public function action_admin_enqueue_scripts_enqueue_assets() {
 		$translation_array = array(
 			'posttype_name'   => $this->post_type_name,
@@ -836,12 +845,19 @@ abstract class iworks_wordpress_plugin_stub_posttype {
 	 * @since 1.0.0
 	 */
 	protected function register_taxonomy( $taxonomy, $post_types, $args ) {
+		if ( is_string( $post_types ) ) {
+			$post_types = array( $post_types );
+		}
+		$registered_post_types = array();
+		foreach ( $post_types as $post_type ) {
+			$registered_post_types[] = $this->post_type_name[ $post_type ];
+		}
 		register_taxonomy(
 			$this->taxonomy_name[ $taxonomy ],
 			apply_filters(
 				$taxonomy,
 				$this->get_register_taxonomy_filter_name( $taxonomy, 'post_types' ),
-				$post_types,
+				$registered_post_types,
 				$taxonomy,
 				$args
 			),
@@ -849,7 +865,7 @@ abstract class iworks_wordpress_plugin_stub_posttype {
 				$this->get_register_taxonomy_filter_name( $taxonomy, 'arguments' ),
 				$args,
 				$taxonomy,
-				$post_types
+				$registered_post_types
 			)
 		);
 	}

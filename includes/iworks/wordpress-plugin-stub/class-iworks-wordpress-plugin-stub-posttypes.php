@@ -84,14 +84,6 @@ class iworks_wordpress_plugin_stub_posttypes {
 				'wordpress-plugin-stub/load/post-type/%s',
 				$posttype_name
 			);
-
-			l(
-				array(
-					'filter'        => $filter,
-					'apply_filters' => apply_filters( $filter, false ),
-				)
-			);
-
 			/**
 			 * Check if this post type should be loaded
 			 * Only load if the filter returns true

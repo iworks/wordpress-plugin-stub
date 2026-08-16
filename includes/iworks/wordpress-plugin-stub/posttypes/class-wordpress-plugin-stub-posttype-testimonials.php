@@ -33,9 +33,29 @@ class iworks_wordpress_plugin_stub_posttype_testimonials extends iworks_wordpres
 		add_action( 'manage_' . $this->post_type_name[ $this->post_type ] . '_posts_custom_column', array( $this, 'display_admin_columns' ), 10, 2 );
 	}
 
-	public function action_init_register_taxonomy() {
+	/**
+	 * Get post type
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string
+	 */
+	public function get_post_type() {
+		return $this->post_type;
 	}
 
+	/**
+	 * Register taxonomy
+	 *
+	 * @since 1.0.0
+	 */
+	public function action_init_register_taxonomy() { }
+
+	/**
+	 * class settings
+	 *
+	 * @since 1.0.0
+	 */
 	public function action_init_settings() {
 		$this->meta_boxes[ $this->post_type_name[ $this->post_type ] ] = array(
 			'testimonial' => array(

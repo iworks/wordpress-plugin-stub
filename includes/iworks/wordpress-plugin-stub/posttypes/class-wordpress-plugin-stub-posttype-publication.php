@@ -62,6 +62,17 @@ class iworks_wordpress_plugin_stub_posttype_publication extends iworks_wordpress
 	}
 
 	/**
+	 * Get post type
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string
+	 */
+	public function get_post_type() {
+		return $this->post_type;
+	}
+
+	/**
 	 * Register taxonomy
 	 *
 	 * @since 1.0.0
