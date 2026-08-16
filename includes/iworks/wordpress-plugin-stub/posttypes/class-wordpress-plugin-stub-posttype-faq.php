@@ -212,7 +212,7 @@ class iworks_wordpress_plugin_stub_posttype_faq extends iworks_wordpress_plugin_
 				'term_id'       => false, // required
 			),
 			$atts,
-			'iworks_post_type_faq_shortcode_list'
+			'iworks/wordpress-plugin-stub/faq/list'
 		);
 		if ( empty( $args['term_id'] ) ) {
 			return $content;

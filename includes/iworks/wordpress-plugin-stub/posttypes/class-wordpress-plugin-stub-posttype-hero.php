@@ -51,8 +51,7 @@ class iworks_wordpress_plugin_stub_posttype_hero extends iworks_wordpress_plugin
 		/**
 		 * WordPress Hooks
 		 */
-		add_action( 'add_meta_boxes_' . $this->post_type_name[ $this->post_type ], array( $this, 'add_meta_boxes' ) );
-		add_shortcode( 'iworks_heroes', array( $this, 'get_list' ) );
+		add_shortcode( 'iworks-heroes', array( $this, 'get_list' ) );
 	}
 
 	/**
@@ -85,12 +84,22 @@ class iworks_wordpress_plugin_stub_posttype_hero extends iworks_wordpress_plugin
 	 * @return string $content
 	 */
 	public function get_list( $atts, $content = '' ) {
-		$args      = array(
-			'post_type'      => $this->post_type_name,
-			'orderby'        => 'rand',
-			'posts_per_page' => 2,
-			'post_status'    => 'publish',
+		$args = shortcode_atts(
+			array(
+				'orderby'        => 'rand',
+				'posts_per_page' => 2,
+				'post_status'    => 'publish',
+			),
+			$atts,
+			'iworks/wordpress-plugin-stub/hero/list'
 		);
+		/**
+		 * Post type
+		 */
+		$args['post_type'] = $this->post_type_name[ $this->post_type ];
+		/**
+		 * Query
+		 */
 		$the_query = new WP_Query( $args );
 		/**
 		 * No data!
