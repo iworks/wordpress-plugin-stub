@@ -40,7 +40,7 @@ class iworks_wordpress_plugin_stub_posttype_opinion extends iworks_wordpress_plu
 	 * @since 1.0.0
 	 * @var string $post_type Post type identifier
 	 */
-	private string $post_type = 'opinion';
+	protected string $post_type = 'opinion';
 
 	/**
 	 * Constructor
@@ -59,23 +59,10 @@ class iworks_wordpress_plugin_stub_posttype_opinion extends iworks_wordpress_plu
 		 * WordPress Hooks
 		 */
 		add_action( 'add_meta_boxes_' . $this->post_type_name[ $this->post_type ], array( $this, 'add_meta_boxes' ) );
-		add_action( 'save_post_' . $this->post_type_name[ $this->post_type ], array( $this, 'action_save_post' ), 10, 3 );
-		add_filter( 'iworks_post_type_opinion_options_list', array( $this, 'get_options_list_array' ), 10, 2 );
 		/**
 		 * Shortcodes
 		 */
-		add_shortcode( 'iworks_opinions_list', array( $this, 'get_list' ) );
-	}
-
-	/**
-	 * Get post type
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return string
-	 */
-	public function get_post_type() {
-		return $this->post_type;
+		add_shortcode( 'iworks-opinions', array( $this, 'get_list' ) );
 	}
 
 	/**
@@ -129,16 +116,26 @@ class iworks_wordpress_plugin_stub_posttype_opinion extends iworks_wordpress_plu
 	 * @return string $content
 	 */
 	public function get_list( $atts, $content = '' ) {
-		$args                = wp_parse_args(
-			$atts,
+		$args = shortcode_atts(
 			array(
 				'orderby'        => 'rand',
 				'posts_per_page' => 4,
-			)
+			),
+			$atts,
+			'iworks/wordpress-plugin-stub/opinion/list'
 		);
-		$args['post_type']   = $this->post_type_name[ $this->post_type ];
+		/**
+		 * Post type
+		 */
+		$args['post_type'] = $this->post_type_name[ $this->post_type ];
+		/**
+		 * Post status
+		 */
 		$args['post_status'] = 'publish';
-		$the_query           = new WP_Query( $args );
+		/**
+		 * Query
+		 */
+		$the_query = new WP_Query( $args );
 		/**
 		 * No data!
 		 */
@@ -149,20 +146,29 @@ class iworks_wordpress_plugin_stub_posttype_opinion extends iworks_wordpress_plu
 		 * Content
 		 */
 		ob_start();
-		get_template_part( 'template-parts/opinions/header' );
+		$file = $this->get_module_file( 'header', 'opinions' );
+		if ( $file ) {
+			include_once $file;
+		}
 		$join = rand( 0, 2 );
 		$i    = 0;
+		$file = $this->get_module_file( 'one', 'opinions' );
 		while ( $the_query->have_posts() ) {
 			$the_query->the_post();
-			$args = array(
+			$one_args = array(
 				'join' => $join,
 				'i'    => $i++,
 			);
-			get_template_part( 'template-parts/opinions/one', get_post_type(), $args );
+			if ( $file ) {
+				include_once $file;
+			}
 		}
 		/* Restore original Post Data */
 		wp_reset_postdata();
-		get_template_part( 'template-parts/opinions/footer' );
+		$file = $this->get_module_file( 'footer', 'opinions' );
+		if ( $file ) {
+			include_once $file;
+		}
 		$content = ob_get_contents();
 		ob_end_clean();
 		return apply_filters( 'iworks/wordpress-plugin-stub/opinion/get_list', $content );
@@ -210,11 +216,11 @@ class iworks_wordpress_plugin_stub_posttype_opinion extends iworks_wordpress_plu
 			'menu_position'       => 20,
 			'show_in_nav_menus'   => false,
 			'show_ui'             => true,
-			'show_in_menu'        => 'adjc',
+			'show_in_menu'        => 'edit.php',
 			'show_in_rest'        => false,
 			'supports'            => array( 'title', 'thumbnail', 'editor', 'revisions' ),
 			'rewrite'             => array(
-				'slug' => _x( 'opinion', 'iWorks Post Type Opinion SLUG', 'wordpress-plugin-stub' ),
+				'slug' => defined( 'ICL_SITEPRESS_VERSION' ) ? 'opinion' : _x( 'opinion', 'WordPress Plugin Stub Post Type Opinion SLUG', 'wordpress-plugin-stub' ),
 			),
 		);
 		$this->register_post_type( $this->post_type, $args );
@@ -225,8 +231,7 @@ class iworks_wordpress_plugin_stub_posttype_opinion extends iworks_wordpress_plu
 	 *
 	 * @since 1.0.0
 	 */
-	public function action_init_register_taxonomy() {
-	}
+	public function action_init_register_taxonomy() {}
 
 	/**
 	 * Get post list
