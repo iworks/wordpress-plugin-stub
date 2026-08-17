@@ -85,13 +85,15 @@ class iworks_wordpress_plugin_stub_posttype_hero extends iworks_wordpress_plugin
 			'iworks/wordpress-plugin-stub/hero/list'
 		);
 		/**
-		 * Post type
-		 */
-		$args['post_type'] = $this->post_type_name[ $this->post_type ];
-		/**
 		 * Query
 		 */
-		$the_query = new WP_Query( $args );
+		$wp_query_args = array(
+			'post_type'      => $this->post_type_name[ $this->post_type ],
+			'posts_per_page' => $args['posts_per_page'],
+			'post_status'    => $args['post_status'],
+			'orderby'        => $args['orderby'],
+		);
+		$the_query     = new WP_Query( $wp_query_args );
 		/**
 		 * No data!
 		 */
@@ -102,35 +104,35 @@ class iworks_wordpress_plugin_stub_posttype_hero extends iworks_wordpress_plugin
 		 * Content
 		 */
 		ob_start();
+		/**
+		 * header
+		 */
 		$file = $this->get_module_file( 'header', 'heroes' );
 		if ( $file ) {
 			include_once $file;
 		}
-		$content .= '<div class="wp-block-group alignfull work-with-us work-with-us-heroes">';
-		$content .= '<div class="wp-block-group__inner-container">';
-		$content .= sprintf( '<h2>%s</h2>', $args['title'] );
-		$content .= sprintf( '<p class="become-one-of-them">%s</p>', $args['subtitle'] );
-		$content .= '<ul>';
+		/**
+		 * loop
+		 */
+		$file = $this->get_module_file( 'one', 'heroes' );
 		while ( $the_query->have_posts() ) {
 			$the_query->the_post();
-			$content .= sprintf( '<li class="%s">', implode( ' ', get_post_class() ) );
-			$content .= sprintf( '<h3>%s</h3>', get_the_title() );
-			$content .= '<div class="post-inner">';
-			$content .= '<blockquote class="post-content">';
-			$content .= get_the_content();
-			$content .= '</blockquote>';
-			$content .= '</div>';
-			$content .= get_the_post_thumbnail( get_the_ID(), 'full' );
-			$content .= '<div class="post-excerpt">';
-			$content .= get_the_excerpt();
-			$content .= '</div>';
-			$content .= '</li>';
+			if ( $file ) {
+				include_once $file;
+			}
 		}
-		/* Restore original Post Data */
+		/**
+		 * Restore original Post Data
+		 */
 		wp_reset_postdata();
-		$content .= '</ul>';
-		$content .= '</div>';
-		$content .= '</div>';
+		/**
+		 * footer
+		 */
+		$file = $this->get_module_file( 'footer', 'heroes' );
+		if ( $file ) {
+			include_once $file;
+		}
+		$content .= ob_get_clean();
 		return apply_filters( 'iworks/wordpress-plugin-stub/' . $this->post_type . '/get_list', $content );
 	}
 

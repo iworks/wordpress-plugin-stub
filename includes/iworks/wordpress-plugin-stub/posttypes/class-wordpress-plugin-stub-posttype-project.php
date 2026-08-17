@@ -57,11 +57,11 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 		 *
 		 * @since 1.0.0
 		 */
-		$this->register_class_custom_posttype_name( $this->post_type, 'iw' );
+		$this->register_class_custom_posttype_name( $this->post_type );
 		/**
 		 * WordPress Hooks
 		 */
-		add_action( 'add_meta_boxes_' . $this->post_type, array( $this, 'add_meta_boxes' ) );
+		add_action( 'add_meta_boxes_' . $this->post_type_name[ $this->post_type ], array( $this, 'add_meta_boxes' ) );
 		add_action( 'pre_get_posts', array( $this, 'set_default_order' ) );
 		add_filter( 'the_content', array( $this, 'the_content' ) );
 		/**
@@ -78,25 +78,49 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 	 * @since 1.0.0
 	 */
 	public function action_init_settings() {
-		$this->load_plugin_admin_assets       = true;
-		$this->meta_boxes[ $this->post_type ] = array(
+		$this->load_plugin_admin_assets                                = true;
+		$this->meta_boxes[ $this->post_type_name[ $this->post_type ] ] = array(
 			'project-data'  => array(
 				'title'  => __( 'Project Data', 'wordpress-plugin-stub' ),
 				'fields' => array(
-					array(
-						'name'  => 'icon',
-						'type'  => 'image',
-						'label' => esc_html__( 'Icon', 'wordpress-plugin-stub' ),
+					'_project_date_start'     => array(
+						'label' => __( 'Project start date', 'wordpress-plugin-stub' ),
+						'type'  => 'date',
 					),
-					array(
-						'name'  => 'opinion_url',
-						'type'  => 'url',
-						'label' => esc_html__( 'The Opinion URL', 'wordpress-plugin-stub' ),
+					'_project_date_end'       => array(
+						'label' => __( 'Project end date', 'wordpress-plugin-stub' ),
+						'type'  => 'date',
 					),
-					array(
-						'name'  => 'author_url',
-						'type'  => 'url',
-						'label' => esc_html__( 'The Opinion Author URL', 'wordpress-plugin-stub' ),
+					'_realization_date_start' => array(
+						'label' => __( 'Realization start date', 'wordpress-plugin-stub' ),
+						'type'  => 'date',
+					),
+					'_realization_date_end'   => array(
+						'label' => __( 'Realization end date', 'wordpress-plugin-stub' ),
+						'type'  => 'date',
+					),
+					'_project_cost'           => array(
+						'label'    => __( 'Project cost', 'wordpress-plugin-stub' ),
+						'type'     => 'number',
+						'sanitize' => 'floatval',
+						'sufix'    => __( 'PLN', 'wordpress-plugin-stub' ),
+					),
+					'_project_funding'        => array(
+						'label'    => __( 'Project amount of funding', 'wordpress-plugin-stub' ),
+						'type'     => 'number',
+						'sanitize' => 'floatval',
+						'sufix'    => __( 'PLN', 'wordpress-plugin-stub' ),
+					),
+					'_project_currency'       => array(
+						'label'    => __( 'Project currency', 'wordpress-plugin-stub' ),
+						'type'     => 'text',
+						'sanitize' => 'esc_html',
+						'hide'     => true,
+					),
+					'_project_url'            => array(
+						'label'    => __( 'Project URL', 'wordpress-plugin-stub' ),
+						'type'     => 'url',
+						'sanitize' => 'esc_url',
 					),
 				),
 			),
@@ -242,7 +266,6 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 		}
 		$post_ID = get_the_ID();
 		$c       = '';
-		$this->set_fields();
 		/**
 		 * fields
 		 */
@@ -401,57 +424,12 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 		$this->html_partners( $post, 'subcontractor' );
 	}
 
-	private function set_fields() {
-		$this->fields = array(
-			'_project_date_start'     => array(
-				'label' => __( 'Project start date', 'wordpress-plugin-stub' ),
-				'type'  => 'date',
-			),
-			'_project_date_end'       => array(
-				'label' => __( 'Project end date', 'wordpress-plugin-stub' ),
-				'type'  => 'date',
-			),
-			'_realization_date_start' => array(
-				'label' => __( 'Realization start date', 'wordpress-plugin-stub' ),
-				'type'  => 'date',
-			),
-			'_realization_date_end'   => array(
-				'label' => __( 'Realization end date', 'wordpress-plugin-stub' ),
-				'type'  => 'date',
-			),
-			'_project_cost'           => array(
-				'label'    => __( 'Project cost', 'wordpress-plugin-stub' ),
-				'type'     => 'number',
-				'sanitize' => 'floatval',
-				'sufix'    => __( 'PLN', 'wordpress-plugin-stub' ),
-			),
-			'_project_funding'        => array(
-				'label'    => __( 'Project amount of funding', 'wordpress-plugin-stub' ),
-				'type'     => 'number',
-				'sanitize' => 'floatval',
-				'sufix'    => __( 'PLN', 'wordpress-plugin-stub' ),
-			),
-			'_project_currency'       => array(
-				'label'    => __( 'Project currency', 'wordpress-plugin-stub' ),
-				'type'     => 'text',
-				'sanitize' => 'esc_html',
-				'hide'     => true,
-			),
-			'_project_url'            => array(
-				'label'    => __( 'Project URL', 'wordpress-plugin-stub' ),
-				'type'     => 'url',
-				'sanitize' => 'esc_url',
-			),
-		);
-	}
-
 	/**
 	 * HTML for metabox
 	 *
 	 * @since 1.0.0
 	 */
 	public function html_data( $post ) {
-		$this->set_fields();
 		wp_nonce_field( __CLASS__, '_project_nonce' );
 		foreach ( $this->fields as $key => $one ) {
 			$value = get_post_meta( $post->ID, $key, true );

@@ -1,4 +1,6 @@
-/* global jQuery */
+/* global jQuery, document */
 jQuery(document).ready(function($) {
-	$('select.iworks-select2').select2();
+	if ('undefined' !== typeof $.fn.select2) {
+		$('select.iworks-select2').select2();
+	}
 });

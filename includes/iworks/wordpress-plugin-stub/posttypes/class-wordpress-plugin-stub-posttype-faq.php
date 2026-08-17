@@ -71,7 +71,6 @@ class iworks_wordpress_plugin_stub_posttype_faq extends iworks_wordpress_plugin_
 		/**
 		 * WordPress Hooks
 		 */
-		add_action( 'add_meta_boxes_' . $this->post_type, array( $this, 'add_meta_boxes' ) );
 		add_action( 'manage_' . $this->post_type . '_posts_custom_column', array( $this, 'action_add_menu_order_value' ), 10, 2 );
 		add_filter( 'manage_' . $this->post_type . '_posts_columns', array( $this, 'filter_add_menu_order_column' ) );
 		add_filter( 'wp_localize_script_iworks_theme', array( $this, 'filter_wp_localize_script_iworks_theme' ) );

@@ -173,6 +173,17 @@ class iworks_wordpress_plugin_stub_base {
 	 */
 	protected $options;
 
+
+	/**
+	 * Media option name.
+	 *
+	 * Option name for storing media data.
+	 *
+	 * @since 1.0.0
+	 * @var   string $option_name_media Option name for media data
+	 */
+	protected string $option_name_media = '_wordpress_plugin_stub_media';
+
 	/**
 	 * Constructor.
 	 *
@@ -379,7 +390,6 @@ class iworks_wordpress_plugin_stub_base {
 			$dir,
 			$filename
 		);
-		l( $path );
 		return realpath( $path );
 	}
 
@@ -487,5 +497,41 @@ class iworks_wordpress_plugin_stub_base {
 				SimpleLogger()->notice( $message, $data );
 				break;
 		}
+	}
+	private function get_attachment_data( $attachment_ID ) {
+		$content_type = explode( '/', get_post_mime_type( $attachment_ID ) );
+		if ( ! is_array( $content_type ) ) {
+			$content_type = array(
+				'unknown',
+				'unknown',
+			);
+		}
+		return array(
+			'id'      => $attachment_ID,
+			'caption' => wp_get_attachment_caption( $attachment_ID ),
+			'url'     => wp_get_attachment_url( $attachment_ID ),
+			'type'    => $content_type[0],
+			'subtype' => isset( $content_type[1] ) ? $content_type[1] : '',
+			'icon'    => wp_get_attachment_image_src( $attachment_ID, 'thumbnail', true )[0],
+		);
+	}
+
+	protected function get_media_html( $post_ID ) {
+		$content = '';
+		$value   = get_post_meta( $post_ID, $this->option_name_media );
+		if ( ! empty( $value ) && is_array( $value ) ) {
+			$value = array_unique( $value );
+			foreach ( $value as $attachment_ID ) {
+				$data     = $this->get_attachment_data( $attachment_ID );
+				$content .= sprintf(
+					'<p class="wordpress-plugin-stub-url wordpress-plugin-stub-media-url-%s-%s"><a href="%s" rel="alternate">%s</a></p>',
+					esc_attr( $data['type'] ),
+					esc_attr( $data['subtype'] ),
+					esc_attr( $data['url'] ),
+					esc_html( empty( $data['caption'] ) ? $data['url'] : $data['caption'] )
+				);
+			}
+		}
+		return $content;
 	}
 }

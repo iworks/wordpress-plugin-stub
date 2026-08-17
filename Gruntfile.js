@@ -12,6 +12,12 @@
 
 module.exports = function(grunt) {
 
+	// 1. Declaration of the SASS variable inside the main Grunt function:
+	var sass = require('sass');
+
+	// Show elapsed time at the end.
+	require('time-grunt')(grunt);
+
 	// Load all grunt tasks.
 	require('load-grunt-tasks')(grunt);
 
@@ -82,7 +88,10 @@ module.exports = function(grunt) {
 		},
 
 		// SASS files to process. Resulting CSS files will be minified as well.
-		css_files_compile: {},
+		css_files_compile: {
+			'assets/styles/admin/media.css': ['assets/sass/admin/media.scss'],
+		},
+
 		css_files_concat: {
 			'assets/styles/admin.css': ['assets/styles/admin/*.css']
 		},
@@ -140,10 +149,10 @@ module.exports = function(grunt) {
 			replace: '<%= pkg.title %>'
 		}, {
 			match: /PLUGIN_URI/g,
-			replace: '<%= pkg.homepage %>'
+			replace: '<%= pkg.uri %>'
 		}, {
 			match: /PLUGIN_URL/g,
-			replace: '<%= pkg.homepage %>'
+			replace: '<%= pkg.uri %>'
 		}, {
 			match: /PLUGIN_VERSION/g,
 			replace: '<%= pkg.version %>'
@@ -235,7 +244,7 @@ module.exports = function(grunt) {
 						' * Licensed <%= pkg.license %>' +
 						' */\n',
 					mangle: {
-						except: ['jQuery']
+						reserved: ['jQuery']
 					}
 				}
 			}
@@ -266,12 +275,11 @@ module.exports = function(grunt) {
 
 		// CSS - Compile a .scss file into a normal .css file.
 		sass: {
-			all: {
-				options: {
-					'sourcemap=none': true, // 'sourcemap': 'none' does not work...
-					unixNewlines: true,
-					style: 'expanded'
-				},
+			options: {
+				implementation: sass, // Dart Sass
+				sourceMap: true
+			},
+			dist: {
 				files: conf.css_files_compile
 			}
 		},
@@ -362,9 +370,11 @@ module.exports = function(grunt) {
 		makepot: {
 			target: {
 				options: {
+					cwd: '',
 					domainPath: conf.translation.pot_dir,
 					exclude: conf.translation.ignore_files,
 					mainFile: conf.plugin_file,
+					potComments: '',
 					potFilename: conf.translation.textdomain + '.pot',
 					potHeaders: {
 						poedit: true, // Includes common Poedit headers.
@@ -374,6 +384,7 @@ module.exports = function(grunt) {
 						'report-msgid-bugs-to': 'http://iworks.pl',
 						'x-poedit-keywordslist': true // Include a list of all possible gettext functions.
 					},
+					processPot: null, // A callback function for manipulating the POT file.
 					type: 'wp-plugin',
 					updateTimestamp: true, // Whether the POT-Creation-Date should be updated without other changes.
 					updatePoFiles: true // Whether to update PO files in the same directory as the POT file.

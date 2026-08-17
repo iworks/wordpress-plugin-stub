@@ -290,7 +290,7 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 			echo $one['label'];
 			echo '</p>';
 		}
-		echo '<p class="iworks-field-image-row">';
+		echo '<div class="iworks-field-image-row">';
 		/**
 		 * image
 		 */
@@ -311,6 +311,7 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 			esc_attr( $one['meta']['key'] ),
 			esc_attr( $one['meta']['value'] )
 		);
+		echo '<div class="iworks-field-image-actions">';
 		printf(
 			'<input type="button" class="button button-upload" value="%s" />',
 			esc_attr__( 'Select Image', 'wordpress-plugin-stub' ),
@@ -320,7 +321,8 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 			esc_attr__( 'Delete image', 'wordpress-plugin-stub' ),
 			empty( $value ) ? ' hidden' : ''
 		);
-		echo '</p>';
+		echo '</div>';
+		echo '</div>';
 	}
 
 	/**
@@ -707,14 +709,18 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 	public function action_admin_enqueue_scripts_register_assets() {
 		wp_register_style(
 			strtolower( __CLASS__ ),
-			$this->url . '/assets/css/admin/admin.css',
+			sprintf(
+				'%s/assets/styles/wordpress-plugin-stub-admin%s.css',
+				$this->url,
+				$this->dev
+			),
 			array(),
 			$this->version
 		);
 		wp_register_script(
 			strtolower( __CLASS__ ),
 			sprintf(
-				'%s/assets/scripts/admin/admin%s.js',
+				'%s/assets/scripts/wordpress-plugin-stub-admin%s.js',
 				$this->url,
 				$this->dev
 			),

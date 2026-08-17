@@ -155,7 +155,8 @@ class iworks_wordpress_plugin_stub_posttype_opinion extends iworks_wordpress_plu
 		$file = $this->get_module_file( 'one', 'opinions' );
 		while ( $the_query->have_posts() ) {
 			$the_query->the_post();
-			$one_args = array(
+			$one = array(
+
 				'join' => $join,
 				'i'    => $i++,
 			);
