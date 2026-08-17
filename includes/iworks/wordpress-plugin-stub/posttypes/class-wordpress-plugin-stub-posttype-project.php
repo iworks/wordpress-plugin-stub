@@ -43,9 +43,13 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 	 * @since 1.0.0
 	 * @var string $post_type Post type identifier
 	 */
-	private string $post_type = 'project';
+	protected string $post_type = 'project';
 
-
+	/**
+	 * Constructor
+	 *
+	 * @since 1.0.0
+	 */
 	public function __construct() {
 		parent::__construct();
 		/**
@@ -66,17 +70,6 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 		add_filter( 'iworks_get_projects_random', array( $this, 'get_random' ), 10, 2 );
 		add_filter( 'iworks_get_projects', array( $this, 'get_list' ) );
 		add_filter( 'iworks_get_project_types', array( $this, 'filter_get_partners_types' ) );
-	}
-
-	/**
-	 * Get post type
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return string
-	 */
-	public function get_post_type() {
-		return $this->post_type;
 	}
 
 	/**

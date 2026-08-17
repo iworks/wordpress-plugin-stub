@@ -33,7 +33,7 @@ class iworks_wordpress_plugin_stub_posttype_publication extends iworks_wordpress
 	 * @since 1.0.0
 	 * @var string $post_type Post type identifier
 	 */
-	private string $post_type = 'publication';
+	protected string $post_type = 'publication';
 
 	/**
 	 * Constructor
@@ -59,17 +59,6 @@ class iworks_wordpress_plugin_stub_posttype_publication extends iworks_wordpress
 		 */
 		add_filter( 'wordpress_plugin_stub_' . $this->post_type . '_publications', array( $this, 'get_random' ), 10, 2 );
 		add_filter( 'wordpress_plugin_stub_' . $this->post_type . '_tab_button_more_url', array( $this, 'get_archive_page_url' ), 10, 4 );
-	}
-
-	/**
-	 * Get post type
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return string
-	 */
-	public function get_post_type() {
-		return $this->post_type;
 	}
 
 	/**

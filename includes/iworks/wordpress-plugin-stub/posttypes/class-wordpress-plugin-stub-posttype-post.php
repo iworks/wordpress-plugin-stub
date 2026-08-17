@@ -33,7 +33,7 @@ class iworks_wordpress_plugin_stub_posttype_post extends iworks_wordpress_plugin
 	 * @since 1.0.0
 	 * @var string $post_type Post type identifier
 	 */
-	private string $post_type = 'post';
+	protected string $post_type = 'post';
 
 	/**
 	 * Option name, used to save data on postmeta table.
@@ -63,17 +63,6 @@ class iworks_wordpress_plugin_stub_posttype_post extends iworks_wordpress_plugin
 		 * WordPress Plugin Stub Hooks
 		 */
 		add_filter( 'wordpress_plugiun_stub_related_list', array( $this, 'get_related' ), 10, 2 );
-	}
-
-	/**
-	 * Get post type
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return string
-	 */
-	public function get_post_type() {
-		return $this->post_type;
 	}
 
 	/**

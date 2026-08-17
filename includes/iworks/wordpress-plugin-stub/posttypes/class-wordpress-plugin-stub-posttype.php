@@ -19,7 +19,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 defined( 'ABSPATH' ) || exit;
 
-abstract class iworks_wordpress_plugin_stub_posttype {
+require_once dirname( __DIR__, 2 ) . '/class-wordpress-plugin-stub-base.php';
+
+abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_plugin_stub_base {
 
 	/**
 	 * Post type names array
@@ -88,6 +90,7 @@ abstract class iworks_wordpress_plugin_stub_posttype {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
+		parent::__construct();
 		/**
 		 * WordPress Hooks
 		 */
@@ -123,7 +126,6 @@ abstract class iworks_wordpress_plugin_stub_posttype {
 	abstract public function action_init_register_post_type();
 	abstract public function action_init_register_taxonomy();
 	abstract public function action_init_settings();
-	abstract public function get_post_type();
 
 	/**
 	 * Register the Post Type Name in the Class Parent Class.
@@ -354,7 +356,7 @@ abstract class iworks_wordpress_plugin_stub_posttype {
 	 * @since 1.0.0
 	 */
 	private function render_meta_select( $post, $one ) {
-		$value = get_post_meta( $post->ID, $one['name'], true );
+		$value = get_post_meta( $post->ID, $one['meta']['key'], true );
 		echo '<p>';
 		echo '<label>';
 		if ( isset( $one['label'] ) ) {
@@ -363,7 +365,7 @@ abstract class iworks_wordpress_plugin_stub_posttype {
 		}
 		printf(
 			'<select name="%s">',
-			esc_attr( $one['name'] )
+			esc_attr( $one['meta']['key'] )
 		);
 		printf( '<option value="">%s</option>', __( '&mdash; Select &mdash;', 'wordpress-plugin-stub' ) );
 		foreach ( $one['options'] as $option_value => $option_name ) {
@@ -502,11 +504,28 @@ abstract class iworks_wordpress_plugin_stub_posttype {
 			}
 		}
 	}
+
+	/**
+	 * Add menu order column to posts list
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $columns Columns to display.
+	 * @return array
+	 */
 	public function filter_add_menu_order_column( $columns ) {
 		$columns['menu_order'] = __( 'Order', 'wordpress-plugin-stub' );
 		return $columns;
 	}
 
+	/**
+	 * Display menu order value in posts list
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $column Column name.
+	 * @param int    $post_id Post ID.
+	 */
 	public function action_add_menu_order_value( $column, $post_id ) {
 		switch ( $column ) {
 			case 'menu_order':

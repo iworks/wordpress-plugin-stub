@@ -10,7 +10,7 @@ class iworks_wordpress_plugin_stub_posttype_testimonials extends iworks_wordpres
 	 * @since 1.0.0
 	 * @var string $post_type Post type identifier
 	 */
-	private string $post_type = 'testimonial';
+	protected string $post_type = 'testimonial';
 
 	/**
 	 * Constructor
@@ -31,17 +31,6 @@ class iworks_wordpress_plugin_stub_posttype_testimonials extends iworks_wordpres
 		add_shortcode( 'iworks_testimonials', array( $this, 'get_list' ) );
 		add_filter( 'manage_' . $this->post_type_name[ $this->post_type ] . '_posts_columns', array( $this, 'add_admin_columns' ) );
 		add_action( 'manage_' . $this->post_type_name[ $this->post_type ] . '_posts_custom_column', array( $this, 'display_admin_columns' ), 10, 2 );
-	}
-
-	/**
-	 * Get post type
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return string
-	 */
-	public function get_post_type() {
-		return $this->post_type;
 	}
 
 	/**

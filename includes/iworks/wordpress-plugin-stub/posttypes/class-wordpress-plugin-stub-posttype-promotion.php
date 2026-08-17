@@ -33,7 +33,7 @@ class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugi
 	 * @since 1.0.0
 	 * @var string $post_type Post type identifier
 	 */
-	private string $post_type = 'promotion';
+	protected string $post_type = 'promotion';
 
 	/**
 	 * Option names
@@ -71,17 +71,6 @@ class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugi
 		add_action( 'pre_get_posts', array( $this, 'admin_set_default_order' ) );
 		add_action( 'save_post', array( $this, 'save' ), PHP_INT_MAX );
 		add_filter( 'manage_' . $this->post_type_name[ $this->post_type ] . '_posts_columns', array( $this, 'column_add' ), 10, 2 );
-	}
-
-	/**
-	 * Get post type
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return string
-	 */
-	public function get_post_type() {
-		return $this->post_type;
 	}
 
 	/**

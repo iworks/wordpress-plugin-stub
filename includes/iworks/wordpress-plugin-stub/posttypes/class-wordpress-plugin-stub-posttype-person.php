@@ -33,7 +33,7 @@ class iworks_wordpress_plugin_stub_posttype_person extends iworks_wordpress_plug
 	 * @since 1.0.0
 	 * @var string $post_type Post type identifier
 	 */
-	private string $post_type = 'person';
+	protected string $post_type = 'person';
 
 	/**
 	 * Taxonomy name
@@ -66,17 +66,6 @@ class iworks_wordpress_plugin_stub_posttype_person extends iworks_wordpress_plug
 		add_action( 'add_meta_boxes_' . $this->post_type_name[ $this->post_type ], array( $this, 'add_meta_boxes' ) );
 		add_shortcode( 'iworks_persons_list', array( $this, 'get_list' ) );
 		add_filter( 'og_og_type_value', array( $this, 'filter_og_og_type_value' ) );
-	}
-
-	/**
-	 * Get post type
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return string
-	 */
-	public function get_post_type() {
-		return $this->post_type;
 	}
 
 	/**

@@ -368,21 +368,24 @@ class iworks_wordpress_plugin_stub_base {
 	 * @param string $vendor   Vendor directory name. Default 'iworks'.
 	 * @return string|false Full path to the file or false if not found.
 	 */
-	protected function get_module_file( $filename, $vendor = 'iworks' ) {
-		return realpath(
-			sprintf(
-				'%s/%s/%s/%s.php',
-				$this->base,
-				$vendor,
-				$this->dir,
-				$filename
-			)
+	protected function get_module_file( $filename, $dir = '' ) {
+		if ( $dir ) {
+			$dir = '/' . trim( $dir, '/' );
+		}
+		$path = sprintf(
+			'%s/%s/assets/templates%s/%s.php',
+			WP_PLUGIN_DIR,
+			$this->dir,
+			$dir,
+			$filename
 		);
+		l( $path );
+		return realpath( $path );
 	}
 
 	/**
 	 * Output HTML title.
-	 *
+	*
 	 * Outputs a properly escaped HTML heading element for admin pages.
 	 *
 	 * @since 1.0.0

@@ -33,7 +33,7 @@ class iworks_wordpress_plugin_stub_posttype_hero extends iworks_wordpress_plugin
 	 * @since 1.0.0
 	 * @var string $post_type Post type identifier
 	 */
-	private string $post_type = 'hero';
+	protected string $post_type = 'hero';
 
 	/**
 	 * Constructor
@@ -52,17 +52,6 @@ class iworks_wordpress_plugin_stub_posttype_hero extends iworks_wordpress_plugin
 		 * WordPress Hooks
 		 */
 		add_shortcode( 'iworks-heroes', array( $this, 'get_list' ) );
-	}
-
-	/**
-	 * Get post type
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return string
-	 */
-	public function get_post_type() {
-		return $this->post_type;
 	}
 
 	/**
@@ -89,6 +78,8 @@ class iworks_wordpress_plugin_stub_posttype_hero extends iworks_wordpress_plugin
 				'orderby'        => 'rand',
 				'posts_per_page' => 2,
 				'post_status'    => 'publish',
+				'title'          => esc_html__( 'Learn what our employees are saying.', 'wordpress-plugin-stub' ),
+				'subtitle'       => esc_html__( 'Become one of them!', 'wordpress-plugin-stub' ),
 			),
 			$atts,
 			'iworks/wordpress-plugin-stub/hero/list'
@@ -110,16 +101,15 @@ class iworks_wordpress_plugin_stub_posttype_hero extends iworks_wordpress_plugin
 		/**
 		 * Content
 		 */
+		ob_start();
+		$file = $this->get_module_file( 'header', 'heroes' );
+		if ( $file ) {
+			include_once $file;
+		}
 		$content .= '<div class="wp-block-group alignfull work-with-us work-with-us-heroes">';
 		$content .= '<div class="wp-block-group__inner-container">';
-		$content .= sprintf(
-			'<h2>%s</h2>',
-			esc_html__( 'Learn what our employees are saying.', 'wordpress-plugin-stub' )
-		);
-		$content .= sprintf(
-			'<p class="become-one-of-them">%s</p>',
-			esc_html__( 'Become one of them!', 'wordpress-plugin-stub' )
-		);
+		$content .= sprintf( '<h2>%s</h2>', $args['title'] );
+		$content .= sprintf( '<p class="become-one-of-them">%s</p>', $args['subtitle'] );
 		$content .= '<ul>';
 		while ( $the_query->have_posts() ) {
 			$the_query->the_post();

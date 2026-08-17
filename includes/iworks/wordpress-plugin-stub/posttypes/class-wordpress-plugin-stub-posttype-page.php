@@ -32,7 +32,7 @@ class iworks_wordpress_plugin_stub_posttype_page extends iworks_wordpress_plugin
 	 * @since 1.0.0
 	 * @var string $post_type Post type identifier
 	 */
-	private string $post_type = 'page';
+	protected string $post_type = 'page';
 
 	/**
 	 * Constructor
@@ -42,17 +42,6 @@ class iworks_wordpress_plugin_stub_posttype_page extends iworks_wordpress_plugin
 
 	public function __construct() {
 		parent::__construct();
-	}
-
-	/**
-	 * Get post type
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return string
-	 */
-	public function get_post_type() {
-		return $this->post_type;
 	}
 
 	/**

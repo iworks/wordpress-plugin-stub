@@ -41,7 +41,7 @@ class iworks_wordpress_plugin_stub_posttype_faq extends iworks_wordpress_plugin_
 	 * @since 1.0.0
 	 * @var string $post_type Post type identifier
 	 */
-	private string $post_type = 'faq';
+	protected string $post_type = 'faq';
 
 	/**
 	 * Taxonomy name
@@ -75,7 +75,7 @@ class iworks_wordpress_plugin_stub_posttype_faq extends iworks_wordpress_plugin_
 		add_action( 'manage_' . $this->post_type . '_posts_custom_column', array( $this, 'action_add_menu_order_value' ), 10, 2 );
 		add_filter( 'manage_' . $this->post_type . '_posts_columns', array( $this, 'filter_add_menu_order_column' ) );
 		add_filter( 'wp_localize_script_iworks_theme', array( $this, 'filter_wp_localize_script_iworks_theme' ) );
-		add_shortcode( 'iworks-faq-list', array( $this, 'shortcode_list' ) );
+		add_shortcode( 'iworks-faq', array( $this, 'shortcode_list' ) );
 	}
 
 	/**
@@ -138,17 +138,6 @@ class iworks_wordpress_plugin_stub_posttype_faq extends iworks_wordpress_plugin_
 			),
 		);
 		$this->register_post_type( $this->post_type, $args );
-	}
-
-	/**
-	 * Get post type
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return string
-	 */
-	public function get_post_type() {
-		return $this->post_type;
 	}
 
 	/**
