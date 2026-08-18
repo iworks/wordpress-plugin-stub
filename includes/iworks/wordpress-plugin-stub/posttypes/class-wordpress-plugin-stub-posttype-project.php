@@ -70,6 +70,7 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 		add_filter( 'iworks_get_projects_random', array( $this, 'get_random' ), 10, 2 );
 		add_filter( 'iworks_get_projects', array( $this, 'get_list' ) );
 		add_filter( 'iworks_get_project_types', array( $this, 'filter_get_partners_types' ) );
+		add_shortcode( 'iworks-projects', array( $this, 'shortcode_projects' ) );
 	}
 
 	/**
@@ -167,13 +168,10 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 	public function action_init_register_taxonomy() {}
 
 	/**
-	 * Setup
+	 * Get random projects
 	 *
 	 * @since 1.0.0
 	 */
-	public function setup() {
-	}
-
 	public function get_random( $content, $posts_per_page ) {
 		$args      = array(
 			'orderby'        => 'rand',
@@ -360,7 +358,7 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 			'show_in_rest'        => true,
 			'supports'            => array( 'title', 'editor', 'excerpt', 'thumbnail' ),
 			'rewrite'             => array(
-				'slug' => _x( 'Project', 'slug for single project', 'wordpress-plugin-stub' ),
+				'slug' => _x( 'project', 'slug for single project', 'wordpress-plugin-stub' ),
 			),
 		);
 		if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
@@ -497,5 +495,9 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 	 */
 	public function filter_get_partners_types( $types ) {
 		return $this->partners_types;
+	}
+
+	public function shortcode_projects( $atts, $content = '' ) {
+		return $this->shortcode_list( $atts, $content );
 	}
 }

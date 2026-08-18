@@ -84,56 +84,7 @@ class iworks_wordpress_plugin_stub_posttype_hero extends iworks_wordpress_plugin
 			$atts,
 			'iworks/wordpress-plugin-stub/hero/list'
 		);
-		/**
-		 * Query
-		 */
-		$wp_query_args = array(
-			'post_type'      => $this->post_type_name[ $this->post_type ],
-			'posts_per_page' => $args['posts_per_page'],
-			'post_status'    => $args['post_status'],
-			'orderby'        => $args['orderby'],
-		);
-		$the_query     = new WP_Query( $wp_query_args );
-		/**
-		 * No data!
-		 */
-		if ( ! $the_query->have_posts() ) {
-			return $content;
-		}
-		/**
-		 * Content
-		 */
-		ob_start();
-		/**
-		 * header
-		 */
-		$file = $this->get_module_file( 'header', 'heroes' );
-		if ( $file ) {
-			include_once $file;
-		}
-		/**
-		 * loop
-		 */
-		$file = $this->get_module_file( 'one', 'heroes' );
-		while ( $the_query->have_posts() ) {
-			$the_query->the_post();
-			if ( $file ) {
-				include_once $file;
-			}
-		}
-		/**
-		 * Restore original Post Data
-		 */
-		wp_reset_postdata();
-		/**
-		 * footer
-		 */
-		$file = $this->get_module_file( 'footer', 'heroes' );
-		if ( $file ) {
-			include_once $file;
-		}
-		$content .= ob_get_clean();
-		return apply_filters( 'iworks/wordpress-plugin-stub/' . $this->post_type . '/get_list', $content );
+		return $this->shortcode_list( $args, $content );
 	}
 
 	/**

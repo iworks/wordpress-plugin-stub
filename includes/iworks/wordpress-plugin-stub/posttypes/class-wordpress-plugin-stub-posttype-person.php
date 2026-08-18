@@ -63,7 +63,7 @@ class iworks_wordpress_plugin_stub_posttype_person extends iworks_wordpress_plug
 		/**
 		 * WordPress Hooks
 		 */
-		add_shortcode( 'iworks-persons', array( $this, 'get_list' ) );
+		add_shortcode( 'iworks-persons', array( $this, 'shortcode_persons' ) );
 		add_filter( 'og_og_type_value', array( $this, 'filter_og_og_type_value' ) );
 	}
 
@@ -85,44 +85,8 @@ class iworks_wordpress_plugin_stub_posttype_person extends iworks_wordpress_plug
 	 *
 	 * @return string $content
 	 */
-	public function get_list( $atts, $content = '' ) {
-		$args                = wp_parse_args(
-			$atts,
-			array(
-				'orderby'        => 'rand',
-				'posts_per_page' => -1,
-			)
-		);
-		$args['post_type']   = $this->post_type_name[ $this->post_type ];
-		$args['post_status'] = 'publish';
-		$the_query           = new WP_Query( $args );
-		/**
-		 * No data!
-		 */
-		if ( ! $the_query->have_posts() ) {
-			return $content;
-		}
-		/**
-		 * Content
-		 */
-		ob_start();
-		get_template_part( 'template-parts/' . $this->post_type . '/header' );
-		$join = rand( 0, 2 );
-		$i    = 0;
-		while ( $the_query->have_posts() ) {
-			$the_query->the_post();
-			$args = array(
-				'join' => $join,
-				'i'    => $i++,
-			);
-			get_template_part( 'template-parts/' . $this->post_type . '/one', get_post_type(), $args );
-		}
-		/* Restore original Post Data */
-		wp_reset_postdata();
-		get_template_part( 'template-parts/' . $this->post_type . '/footer' );
-		$content = ob_get_contents();
-		ob_end_clean();
-		return apply_filters( 'iworks/wordpress-plugin-stub/' . $this->post_type . '/get_list', $content );
+	public function shortcode_persons( $atts, $content = '' ) {
+		return $this->shortcode_list( $atts, $content );
 	}
 
 	/**

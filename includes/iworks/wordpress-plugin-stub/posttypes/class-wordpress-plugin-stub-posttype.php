@@ -68,14 +68,6 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 	protected string $option_name_media = '_iw_media';
 
 	/**
-	 * Post meta prefix
-	 *
-	 * @since 1.0.0
-	 * @var string $post_meta_prefix Prefix for post meta keys
-	 */
-	protected string $post_meta_prefix = '_';
-
-	/**
 	 * Load admin assets
 	 *
 	 * @since 1.0.0
@@ -424,7 +416,7 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 		if ( ! isset( $field['single'] ) ) {
 			$field['single'] = true;
 		}
-		$name           = isset( $field['name'] ) ? $field['name'] : $this->prefix . hash( 'crc32', serialize( $field ) );
+		$name           = isset( $field['name'] ) ? $field['name'] : $this->meta_prefix . hash( 'crc32', serialize( $field ) );
 		$post_meta_name = $this->get_post_meta_name( $name, $meta_box_id );
 		$field['meta']  = array(
 			'key'   => $post_meta_name,
@@ -893,5 +885,70 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 				$registered_post_types
 			)
 		);
+	}
+
+	protected function shortcode_list( $atts, $content = '' ) {
+		l($this->post_type);
+		$args                = wp_parse_args(
+			$atts,
+			array(
+				'orderby'        => 'rand',
+				'posts_per_page' => 5,
+			)
+		);
+		$args['post_type']   = $this->post_type_name[ $this->post_type ];
+		$args['post_status'] = 'publish';
+		/**
+		 * Query
+		 */
+		$wp_query_args = array(
+			'post_type'      => $this->post_type_name[ $this->post_type ],
+			'posts_per_page' => $args['posts_per_page'],
+			'post_status'    => $args['post_status'],
+			'orderby'        => $args['orderby'],
+		);
+		$the_query     = new WP_Query( $wp_query_args );
+		l($the_query->posts);
+		/**
+		 * No data!
+		 */
+		if ( ! $the_query->have_posts() ) {
+			return $content;
+		}
+		/**
+		 * Content
+		 */
+		ob_start();
+		/**
+		 * header
+		 */
+		$file = $this->get_module_file( 'header', $this->post_type );
+		l($file);
+		if ( $file ) {
+			include_once $file;
+		}
+		/**
+		 * loop
+		 */
+		$file = $this->get_module_file( 'one', $this->post_type );
+		while ( $the_query->have_posts() ) {
+			$the_query->the_post();
+			if ( $file ) {
+				include_once $file;
+			}
+		}
+		/**
+		 * Restore original Post Data
+		 */
+		wp_reset_postdata();
+		/**
+		 * footer
+		 */
+		$file = $this->get_module_file( 'footer', $this->post_type );
+		if ( $file ) {
+			include_once $file;
+		}
+		$content .= ob_get_clean();
+		return apply_filters( 'iworks/wordpress-plugin-stub/' . $this->post_type . '/get_list', $content );
 	}
 }
