@@ -65,22 +65,21 @@ mv wordpress-plugin-stub.php ${SLUG}.php
 #
 # rename includes files
 #
-mv includes/iworks/class-wordpress-plugin-stub.php includes/iworks/class-${SLUG}.php
-mv includes/iworks/class-wordpress-plugin-stub-base.php includes/iworks/class-${SLUG}-base.php
+PCLASS=class-iworks-wordpress-plugin-stub
+mv includes/iworks/${PCLASS}.php includes/iworks/class-${SLUG}.php
+mv includes/iworks/${PCLASS}-base.php includes/iworks/class-${SLUG}-base.php
 #
 # rename includes files: classes
 #
 PDIR=includes/iworks/wordpress-plugin-stub
-PCLASS=class-iworks-wordpress-plugin-stub
 NAMES=("cron" "github" "posttypes" "wp-admin")
 for name in "${NAMES[@]}"; do
-    mv ${PDIR}/${PCLASS}-${name}.php ${PDIR}/${PCLASS}-${SLUG}-${name}.php
+    mv ${PDIR}/${PCLASS}-${name}.php ${PDIR}/class-${SLUG}-${name}.php
 done
 #
 # rename files: posttypes
 #
 PDIR=includes/iworks/wordpress-plugin-stub/posttypes
-PCLASS=class-wordpress-plugin-stub-posttype
 NAMES=("faq" "hero" "opinion" "page" "person" "post" "project" "promotion" "publication" "testimonials")
 mv ${PDIR}/${PCLASS}.php ${PDIR}/class-${SLUG}-posttype.php
 for name in "${NAMES[@]}"; do
@@ -95,9 +94,12 @@ mv includes/iworks/wordpress-plugin-stub includes/iworks/${SLUG}
 #
 mv languages/wordpress-plugin-stub.pot languages/${SLUG}.pot
 xgettext -D languages/ -o ./languages/pl_PO.po
-
-
+#
+# remove unnecessary files
+#
 rm -rf ./.git ./assets/bin
-
+#
+# submodules - show commands
+#
 echo git submodule add git@github.com:iworks/wordpress-options-class.git includes/iworks/options
 echo git submodule add git@github.com:iworks/iworks-rate.git includes/iworks/rate

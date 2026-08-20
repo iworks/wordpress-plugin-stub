@@ -1,6 +1,6 @@
 <?php
 
-require_once 'class-wordpress-plugin-stub-posttype.php';
+require_once 'class-iworks-wordpress-plugin-stub-posttype.php';
 
 class iworks_wordpress_plugin_stub_posttype_testimonials extends iworks_wordpress_plugin_stub_posttype {
 

@@ -19,7 +19,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 defined( 'ABSPATH' ) || exit;
 
-require_once dirname( __DIR__, 2 ) . '/class-wordpress-plugin-stub-base.php';
+require_once dirname( __DIR__, 2 ) . '/class-iworks-wordpress-plugin-stub-base.php';
 
 abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_plugin_stub_base {
 
@@ -888,7 +888,7 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 	}
 
 	protected function shortcode_list( $atts, $content = '' ) {
-		l($this->post_type);
+		l( $this->post_type );
 		$args                = wp_parse_args(
 			$atts,
 			array(
@@ -908,7 +908,7 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 			'orderby'        => $args['orderby'],
 		);
 		$the_query     = new WP_Query( $wp_query_args );
-		l($the_query->posts);
+		l( $the_query->posts );
 		/**
 		 * No data!
 		 */
@@ -923,7 +923,7 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 		 * header
 		 */
 		$file = $this->get_module_file( 'header', $this->post_type );
-		l($file);
+		l( $file );
 		if ( $file ) {
 			include_once $file;
 		}

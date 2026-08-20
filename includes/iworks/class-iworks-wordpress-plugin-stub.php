@@ -16,7 +16,7 @@ if ( class_exists( 'iworks_wordpress_plugin_stub' ) ) {
 	return;
 }
 
-require_once __DIR__ . '/class-wordpress-plugin-stub-base.php';
+require_once __DIR__ . '/class-iworks-wordpress-plugin-stub-base.php';
 
 /**
  * Main plugin class.

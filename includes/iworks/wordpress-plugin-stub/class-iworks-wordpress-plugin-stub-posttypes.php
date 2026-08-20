@@ -68,7 +68,7 @@ class iworks_wordpress_plugin_stub_posttypes {
 			 * Validate the filename format
 			 * Only process files that match the expected pattern
 			 */
-			if ( ! preg_match( '/^class-wordpress-plugin-stub-posttype-([a-z]+).php$/', $filename, $matches ) ) {
+			if ( ! preg_match( '/^class-iworks-wordpress-plugin-stub-posttype-([a-z]+).php$/', $filename, $matches ) ) {
 				continue;
 			}
 

@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 defined( 'ABSPATH' ) || exit;
 
-require_once 'class-wordpress-plugin-stub-posttype.php';
+require_once 'class-iworks-wordpress-plugin-stub-posttype.php';
 
 class iworks_wordpress_plugin_stub_posttype_opinion extends iworks_wordpress_plugin_stub_posttype {
 

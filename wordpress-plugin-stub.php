@@ -46,7 +46,7 @@ $wordpress_plugin_stub_vendor = $wordpress_plugin_stub_base . '/includes';
  */
 if ( ! class_exists( 'iworks_wordpress_plugin_stub' ) ) {
 	// Load the main plugin class from the includes directory
-	require_once $wordpress_plugin_stub_vendor . '/iworks/class-wordpress-plugin-stub.php';
+	require_once $wordpress_plugin_stub_vendor . '/iworks/class-iworks-wordpress-plugin-stub.php';
 }
 
 /**
