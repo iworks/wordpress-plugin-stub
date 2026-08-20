@@ -81,9 +81,9 @@ done
 #
 PDIR=includes/iworks/wordpress-plugin-stub/posttypes
 NAMES=("faq" "hero" "opinion" "page" "person" "post" "project" "promotion" "publication" "testimonials")
-mv ${PDIR}/${PCLASS}.php ${PDIR}/class-${SLUG}-posttype.php
+mv ${PDIR}/${PCLASS}-posttype.php ${PDIR}/class-${SLUG}-posttype.php
 for name in "${NAMES[@]}"; do
-    mv ${PDIR}/${PCLASS}-${name}.php ${PDIR}/class-${SLUG}-posttype-${name}.php
+    mv ${PDIR}/${PCLASS}-posttype-${name}.php ${PDIR}/class-${SLUG}-posttype-${name}.php
 done
 #
 # rename directory
