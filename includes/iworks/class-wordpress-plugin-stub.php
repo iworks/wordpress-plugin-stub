@@ -66,6 +66,14 @@ class iworks_wordpress_plugin_stub extends iworks_wordpress_plugin_stub_base {
 			new iworks_wordpress_plugin_stub_github();
 		}
 		/**
+		 * load cron class
+		 */
+		$filename = $this->includes_directory . '/class-iworks-wordpress-plugin-stub-cron.php';
+		if ( is_file( $filename ) ) {
+			include_once $filename;
+			new iworks_wordpress_plugin_stub_cron();
+		}
+		/**
 		 * admin
 		 */
 		if ( is_admin() ) {
