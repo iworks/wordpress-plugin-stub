@@ -59,29 +59,33 @@ mkdir -p ./assets/sass/admin
 mkdir -p ./assets/styles/admin
 mkdir -p ./includes/iworks
 #
-# rename files
+# rename plugin file
 #
 mv wordpress-plugin-stub.php ${SLUG}.php
+#
+# rename includes files
+#
 mv includes/iworks/class-wordpress-plugin-stub.php includes/iworks/class-${SLUG}.php
-mv includes/iworks/class-wordpress-plugin-stub-posttype.php includes/iworks/class-${SLUG}-base.php
-mv includes/iworks/class-wordpress-plugin-stub-posttypes.php includes/iworks/class-${SLUG}-posttypes.php
-mv includes/iworks/wordpress-plugin-stub/class-iworks-wordpress-plugin-stub-github.php includes/iworks/wordpress-plugin-stub/class-iworks-${SLUG}-github.php
-mv includes/iworks/wordpress-plugin-stub/class-iworks-wordpress-plugin-stub-wp-admin.php includes/iworks/wordpress-plugin-stub/class-iworks-${SLUG}-wp-admin.php
+mv includes/iworks/class-wordpress-plugin-stub-base.php includes/iworks/class-${SLUG}-base.php
+#
+# rename includes files: classes
+#
+PDIR=includes/iworks/wordpress-plugin-stub
+PCLASS=class-iworks-wordpress-plugin-stub
+NAMES=("cron" "github" "posttypes" "wp-admin")
+for name in "${NAMES[@]}"; do
+    mv ${PDIR}/${PCLASS}-${name}.php ${PDIR}/${PCLASS}-${SLUG}-${name}.php
+done
 #
 # rename files: posttypes
 #
 PDIR=includes/iworks/wordpress-plugin-stub/posttypes
 PCLASS=class-wordpress-plugin-stub-posttype
+NAMES=("faq" "hero" "opinion" "page" "person" "post" "project" "promotion" "publication" "testimonials")
 mv ${PDIR}/${PCLASS}.php ${PDIR}/class-${SLUG}-posttype.php
-mv ${PDIR}/${PCLASS}-faq.php ${PDIR}/class-${SLUG}-posttype-faq.php
-mv ${PDIR}/${PCLASS}-hero.php ${PDIR}/class-${SLUG}-posttype-hero.php
-mv ${PDIR}/${PCLASS}-opinion.php ${PDIR}/class-${SLUG}-posttype-opinion.php
-mv ${PDIR}/${PCLASS}-page.php ${PDIR}/class-${SLUG}-posttype-page.php
-mv ${PDIR}/${PCLASS}-person.php ${PDIR}/class-${SLUG}-posttype-person.php
-mv ${PDIR}/${PCLASS}-post.php ${PDIR}/class-${SLUG}-posttype-post.php
-mv ${PDIR}/${PCLASS}-project.php ${PDIR}/class-${SLUG}-posttype-project.php
-mv ${PDIR}/${PCLASS}-promotion.php ${PDIR}/class-${SLUG}-posttype-promotion.php
-mv ${PDIR}/${PCLASS}-publication.php ${PDIR}/class-${SLUG}-posttype-publication.php
+for name in "${NAMES[@]}"; do
+    mv ${PDIR}/${PCLASS}-${name}.php ${PDIR}/class-${SLUG}-posttype-${name}.php
+done
 #
 # rename directory
 #
