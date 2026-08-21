@@ -80,7 +80,7 @@ done
 # rename files: posttypes
 #
 PDIR=includes/iworks/wordpress-plugin-stub/posttypes
-NAMES=("faq" "hero" "opinion" "page" "person" "post" "project" "promotion" "publication" "testimonials")
+NAMES=("faq" "hero" "opinion" "page" "person" "post" "project" "featured" "publication" "testimonials")
 mv ${PDIR}/${PCLASS}-posttype.php ${PDIR}/class-${SLUG}-posttype.php
 for name in "${NAMES[@]}"; do
     mv ${PDIR}/${PCLASS}-posttype-${name}.php ${PDIR}/class-${SLUG}-posttype-${name}.php

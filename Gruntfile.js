@@ -90,6 +90,7 @@ module.exports = function(grunt) {
 		// SASS files to process. Resulting CSS files will be minified as well.
 		css_files_compile: {
 			'assets/styles/admin/media.css': ['assets/sass/admin/media.scss'],
+			'assets/styles/admin/wp-list-table.css': ['assets/sass/admin/wp-list-table.scss'],
 		},
 
 		css_files_concat: {

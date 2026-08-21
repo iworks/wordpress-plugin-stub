@@ -205,7 +205,7 @@ class iworks_wordpress_plugin_stub_base {
 		$this->dir  = basename( dirname( $this->base, 2 ) );
 		$this->url  = plugins_url( $this->dir );
 		// Plugin ID.
-		$this->plugin_file_path = $this->base . '/wordpress-plugin-stub.php';
+		$this->plugin_file_path = $this->dir . '/wordpress-plugin-stub.php';
 		$this->plugin_file      = plugin_basename( $this->plugin_file_path );
 		// Plugin includes directory.
 		$this->includes_directory = __DIR__ . '/wordpress-plugin-stub';

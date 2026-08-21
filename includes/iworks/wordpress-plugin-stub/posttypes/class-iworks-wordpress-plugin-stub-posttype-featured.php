@@ -1,6 +1,6 @@
 <?php
 /**
- * Class for custom Post Type: PROMOTION
+ * Class for custom Post Type: featured
  *
  * @since 1.0.0
 
@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
 
 require_once 'class-iworks-wordpress-plugin-stub-posttype.php';
 
-class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugin_stub_posttype {
+class iworks_wordpress_plugin_stub_posttype_featured extends iworks_wordpress_plugin_stub_posttype {
 
 	/**
 	 * Post type name
@@ -33,7 +33,7 @@ class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugi
 	 * @since 1.0.0
 	 * @var string $post_type Post type identifier
 	 */
-	protected string $post_type = 'promotion';
+	protected string $post_type = 'featured';
 
 	/**
 	 * Option names
@@ -57,6 +57,10 @@ class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugi
 	public function __construct() {
 		parent::__construct();
 		/**
+		 * settings
+		 */
+		$this->load_plugin_admin_assets = true;
+		/**
 		 * Post Type Name
 		 *
 		 * @since 1.0.0
@@ -66,11 +70,15 @@ class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugi
 		 * WordPress Hooks
 		 */
 		add_action( 'add_meta_boxes_' . $this->post_type_name[ $this->post_type ], array( $this, 'add_meta_boxes' ) );
-		add_action( 'init', array( $this, 'custom_post_type' ), 0 );
-		add_action( 'manage_' . $this->post_type_name[ $this->post_type ] . '_posts_custom_column', array( $this, 'action_add_menu_order_value' ), 10, 2 );
 		add_action( 'pre_get_posts', array( $this, 'admin_set_default_order' ) );
-		add_action( 'save_post', array( $this, 'save' ), PHP_INT_MAX );
-		add_filter( 'manage_' . $this->post_type_name[ $this->post_type ] . '_posts_columns', array( $this, 'column_add' ), 10, 2 );
+		/**
+		 * WordPress Hooks: add column order
+		 */
+		$this->add_column_order( $this->post_type );
+		/**
+		 * shortcode
+		 */
+		add_shortcode( 'iworks-featureds', array( $this, 'shortcode_default_list' ) );
 	}
 
 	/**
@@ -95,37 +103,6 @@ class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugi
 				),
 			),
 		);
-	}
-
-	/**
-	 * Add column order
-	 *
-	 * @since 1.0.0
-	 */
-	public function column_add( $columns ) {
-		$inserted = array(
-			'menu_order' => __( 'Order', 'wordpress-plugin-stub' ),
-		);
-		$columns  = array_merge(
-			array_slice( $columns, 0, 1, true ),
-			$inserted,
-			$columns
-		);
-		return $columns;
-	}
-
-	/**
-	 * add column order value
-	 *
-	 * @since 1.0.0
-	 */
-	public function action_add_menu_order_value( $column, $post_id ) {
-		switch ( $column ) {
-			case 'menu_order':
-				echo get_post_field( 'menu_order', $post_id, true );
-
-				break;
-		}
 	}
 
 	/**
@@ -222,7 +199,7 @@ class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugi
 	 * @since 1.0.0
 	 */
 	public function action_init_register_post_type() {
-		$labels                   = array(
+		$labels = array(
 			'name'                  => _x( 'Featured', 'Post Type General Name', 'wordpress-plugin-stub' ),
 			'singular_name'         => _x( 'Featured', 'Post Type Singular Name', 'wordpress-plugin-stub' ),
 			'menu_name'             => __( 'Featured', 'wordpress-plugin-stub' ),
@@ -243,7 +220,7 @@ class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugi
 			'items_list_navigation' => __( 'Featured list navigation', 'wordpress-plugin-stub' ),
 			'filter_items_list'     => __( 'Filter items list', 'wordpress-plugin-stub' ),
 		);
-		$args                     = array(
+		$args   = array(
 			'can_export'          => true,
 			'capability_type'     => 'page',
 			'description'         => __( 'Featured', 'wordpress-plugin-stub' ),
@@ -261,7 +238,7 @@ class iworks_wordpress_plugin_stub_posttype_promo extends iworks_wordpress_plugi
 			'show_in_rest'        => false,
 			'supports'            => array( 'title', 'thumbnail', 'page-attributes' ),
 		);
-		$this->register_post_type = register_post_type( $this->post_type, $args );
+		$this->register_post_type( $this->post_type, $args );
 	}
 
 	/**

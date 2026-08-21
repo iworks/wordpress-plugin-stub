@@ -73,7 +73,7 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 		/**
 		 * shortcode
 		 */
-		add_shortcode( 'iworks-projects', array( $this, 'shortcode_projects' ) );
+		add_shortcode( 'iworks-projects', array( $this, 'shortcode_default_list' ) );
 	}
 
 	/**
@@ -497,14 +497,5 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 	 */
 	public function filter_get_partners_types( $types ) {
 		return $this->partners_types;
-	}
-
-	/**
-	 * shortcode
-	 *
-	 * @since 1.0.0
-	 */
-	public function shortcode_projects( $atts, $content = '' ) {
-		return $this->shortcode_list( $atts, $content );
 	}
 }

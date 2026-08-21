@@ -162,6 +162,9 @@ class iworks_wordpress_plugin_stub_wp_admin extends iworks_wordpress_plugin_stub
 	 */
 	public function action_admin_enqueue_scripts_register_assets() {
 		$name = $this->options->get_option_name( 'admin' );
+		/**
+		 * Register admin script.
+		 */
 		$file = '/assets/scripts/wordpress-plugin-stub-admin' . $this->dev . '.js';
 		wp_register_script(
 			$name,
@@ -173,11 +176,47 @@ class iworks_wordpress_plugin_stub_wp_admin extends iworks_wordpress_plugin_stub
 				'strategy'  => 'defer',
 			)
 		);
+		$translation_array = array(
+			'l10n' => array(
+				'wp_media' => array(
+					'title'  => esc_html__( 'Select or Upload Media', 'wordpress-plugin-stub' ),
+					'button' => array(
+						'text' => esc_html__( 'Use this Media', 'wordpress-plugin-stub' ),
+					),
+				),
+			),
+		);
+		wp_localize_script(
+			$name,
+			'iworks_wordpress_plugin_stub',
+			apply_filters(
+				'iworks/wordpress-plugin-stub/wp_localize_script/admin',
+				$translation_array
+			)
+		);
+		/**
+		 * Register admin style.
+		 */
+		$file = '/assets/styles/wordpress-plugin-stub-admin' . $this->dev . '.css';
+
+		l(
+			array(
+				$file,
+				$this->plugin_file_path,
+				plugins_url( $file, $this->plugin_file_path ),
+			)
+		);
+		wp_register_style(
+			$name,
+			plugins_url( $file, $this->plugin_file_path ),
+			array(),
+			$this->get_version( $file ),
+		);
 	}
 
 	/**
 	 * Filters the array of row meta for the plugin in the Plugins list table.
-	 *
+	*
 	 * This method adds custom links to the plugin's row in the WordPress admin Plugins page.
 	 * It adds:
 	 * 1. A 'Settings' link (for non-multisite installations with proper capabilities)

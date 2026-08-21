@@ -31,6 +31,7 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 	 */
 	protected array $post_type_name = array(
 		'faq'         => 'iworks_faq',
+		'featured'    => 'iworks_featured',
 		'hero'        => 'iworks_hero',
 		'opinion'     => 'iworks_opinion',
 		'page'        => 'page', // for WordPress pages
@@ -96,6 +97,7 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 		add_action( 'init', array( $this, 'action_init_register_taxonomy' ), 2 );
 		add_action( 'load-post-new.php', array( $this, 'action_load_admin_maybe_enqueue_assets' ) );
 		add_action( 'load-post.php', array( $this, 'action_load_admin_maybe_enqueue_assets' ) );
+		add_action( 'load-edit.php', array( $this, 'action_load_admin_maybe_enqueue_assets' ) );
 		add_action( 'save_post', array( $this, 'action_save_post_meta' ), 10, 3 );
 		/**
 		 * columns
@@ -104,6 +106,10 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 		 * add_action( "manage_{$post_type}_posts_custom_column", array( $this, 'action_manage_post_type_posts_custom_column' ), 10, 2 );
 		 * add_filter( "manage_edit-{$post_type}_sortable_columns", array( $this, 'filter_manage_sortable_columns' ) );
 		 */
+		/**
+		 * own hooks
+		 */
+		add_filter( 'iworks/wordpress-plugin-stub/wp_localize_script/admin', array( $this, 'filter_wp_localize_script_admin' ) );
 		/**
 		 * WordPress Plugin Stub Hooks
 		 */
@@ -123,6 +129,17 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 	abstract public function action_init_register_post_type();
 	abstract public function action_init_register_taxonomy();
 	abstract public function action_init_settings();
+
+	/**
+	 * Filter the wp_localize_script admin.
+	 *
+	 * @since 1.0.0
+	 */
+	public function filter_wp_localize_script_admin( $translation_array ) {
+		$translation_array['post_type_name'] = $this->post_type_name;
+		$translation_array['taxonomy_name']  = $this->taxonomy_name;
+		return $translation_array;
+	}
 
 	/**
 	 * Register the Post Type Name in the Class Parent Class.
@@ -416,14 +433,17 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 		echo '</ul>';
 	}
 
+	/**
+	 * Setup post one field
+	 *
+	 * @since 1.0.0
+	 */
 	private function setup_post_one_field( $post_id, $field, $meta_box_id ) {
+		$field                = $this->set_field_defaults( $field );
 		$field['meta_box_id'] = $meta_box_id;
-		if ( ! isset( $field['single'] ) ) {
-			$field['single'] = true;
-		}
-		$name           = isset( $field['name'] ) ? $field['name'] : $this->meta_prefix . hash( 'crc32', serialize( $field ) );
-		$post_meta_name = $this->get_post_meta_name( $name, $meta_box_id );
-		$field['meta']  = array(
+		$name                 = isset( $field['name'] ) ? $field['name'] : $this->meta_prefix . hash( 'crc32', serialize( $field ) );
+		$post_meta_name       = $this->get_post_meta_name( $name, $meta_box_id );
+		$field['meta']        = array(
 			'key'   => $post_meta_name,
 			'value' => get_post_meta(
 				$post_id,
@@ -486,20 +506,21 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 			if ( ! wp_verify_nonce( $nonce_value, $this->nonce_value ) ) {
 				return;
 			}
-			foreach ( $data['fields'] as $one ) {
+			foreach ( $data['fields'] as $index => $field ) {
+				$field = $this->set_field_defaults( $field );
 				$value = '';
-				switch ( $one['type'] ) {
+				switch ( $field['type'] ) {
 					case 'url':
-						$value = filter_input( INPUT_POST, $one['name'], FILTER_SANITIZE_URL );
+						$value = filter_input( INPUT_POST, $field['name'], FILTER_SANITIZE_URL );
 						break;
 					case 'checkbox':
-						$value = isset( $_POST[ $one['name'] ] ) ? 'yes' : 'no';
+						$value = isset( $_POST[ $field['name'] ] ) ? 'yes' : 'no';
 						break;
 					default:
-						$value = wp_kses_post( filter_input( INPUT_POST, $one['name'], FILTER_UNSAFE_RAW ) );
+						$value = wp_kses_post( filter_input( INPUT_POST, $field['name'], FILTER_UNSAFE_RAW ) );
 						break;
 				}
-				$this->update_meta( $post_id, $one['name'], $value );
+				$this->update_meta( $post_id, $field['name'], $value );
 			}
 		}
 	}
@@ -513,7 +534,14 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 	 * @return array
 	 */
 	public function filter_add_menu_order_column( $columns ) {
-		$columns['menu_order'] = __( 'Order', 'wordpress-plugin-stub' );
+		$inserted = array(
+			'menu_order' => __( 'Order', 'wordpress-plugin-stub' ),
+		);
+		$columns  = array_merge(
+			array_slice( $columns, 0, 1, true ),
+			$inserted,
+			$columns
+		);
 		return $columns;
 	}
 
@@ -612,7 +640,8 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 			/**
 			 * handle fields
 			 */
-			foreach ( $meta_box_data['fields'] as $field ) {
+			foreach ( $meta_box_data['fields'] as $index => $field ) {
+				$field = $this->set_field_defaults( $field );
 				$key   = $this->get_post_meta_name( $field['name'], $group );
 				$value = filter_input( INPUT_POST, $key );
 				switch ( $field['type'] ) {
@@ -663,10 +692,9 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 			return;
 		}
 		global $typenow;
-		if ( $typenow !== $this->post_type_name[ $this->get_post_type() ] ) {
+		if ( ! in_array( $typenow, $this->post_type_name, true ) ) {
 			return;
 		}
-		add_action( 'admin_enqueue_scripts', array( $this, 'action_admin_enqueue_scripts_register_assets' ), 117 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'action_admin_enqueue_scripts_enqueue_assets' ), 118 );
 	}
 
@@ -676,62 +704,17 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 	 * @since 1.0.0
 	 */
 	public function action_admin_enqueue_scripts_enqueue_assets() {
-		$translation_array = array(
-			'posttype_name'   => $this->post_type_name,
-			'posttypes_names' => $this->post_type_name,
-			'l10n'            => array(
-				'wp_media' => array(
-					'title'  => esc_html__( 'Select or Upload Media', 'wordpress-plugin-stub' ),
-					'button' => array(
-						'text' => esc_html__( 'Use this Media', 'wordpress-plugin-stub' ),
-					),
-				),
-			),
-		);
-		wp_localize_script(
-			strtolower( __CLASS__ ),
-			'iworks_wordpress_plugin_stub',
-			apply_filters(
-				'iworks/wordpress-plugin-stub/wp_localize_script/admin',
-				$translation_array
-			)
-		);
-		wp_enqueue_script( strtolower( __CLASS__ ) );
-		wp_enqueue_style( strtolower( __CLASS__ ) );
+		$this->check_option_object();
+		$name = $this->options->get_option_name( 'admin' );
+		wp_enqueue_script( $name );
+		wp_enqueue_style( $name );
 	}
 
 	/**
-	 * Register plugin assets.
+	 * Get icon SVG.
 	 *
 	 * @since 1.0.0
 	 */
-	public function action_admin_enqueue_scripts_register_assets() {
-		wp_register_style(
-			strtolower( __CLASS__ ),
-			sprintf(
-				'%s/assets/styles/wordpress-plugin-stub-admin%s.css',
-				$this->url,
-				$this->dev
-			),
-			array(),
-			$this->version
-		);
-		wp_register_script(
-			strtolower( __CLASS__ ),
-			sprintf(
-				'%s/assets/scripts/wordpress-plugin-stub-admin%s.js',
-				$this->url,
-				$this->dev
-			),
-			array(
-				'jquery',
-				'jquery-ui-sortable',
-			),
-			$this->version,
-			true
-		);
-	}
-
 	protected function get_icon_svg( $icon ) {
 		return sprintf(
 			'data:image/svg+xml;base64,%s',
@@ -966,5 +949,41 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 		}
 		$content .= ob_get_clean();
 		return apply_filters( 'iworks/wordpress-plugin-stub/' . $this->post_type . '/get_list', $content );
+	}
+
+	/**
+	 * shortcode
+	 *
+	 * @since 1.0.0
+	 */
+	public function shortcode_default_list( $atts, $content = '' ) {
+		return $this->shortcode_list( $atts, $content );
+	}
+
+	/**
+	 * Set default values for a field
+	 *
+	 * @since 1.0.0
+	 */
+	private function set_field_defaults( $field ) {
+		return wp_parse_args(
+			$field,
+			array(
+				'name'   => $index,
+				'type'   => 'text',
+				'single' => true,
+			)
+		);
+	}
+
+	/**
+	 * Add column order
+	 *
+	 * @since 1.0.0
+	 */
+	protected function add_column_order( $post_type ) {
+		$post_type_name = $this->post_type_name[ $post_type ];
+		add_action( 'manage_' . $post_type_name . '_posts_custom_column', array( $this, 'action_add_menu_order_value' ), 10, 2 );
+		add_filter( 'manage_' . $post_type_name . '_posts_columns', array( $this, 'filter_add_menu_order_column' ), 10, 2 );
 	}
 }
