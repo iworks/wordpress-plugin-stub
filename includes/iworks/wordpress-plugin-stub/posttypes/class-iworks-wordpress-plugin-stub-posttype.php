@@ -100,13 +100,6 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 		add_action( 'load-edit.php', array( $this, 'action_load_admin_maybe_enqueue_assets' ) );
 		add_action( 'save_post', array( $this, 'action_save_post_meta' ), 10, 3 );
 		/**
-		 * columns
-		 *
-		 * add_filter( "manage_{$post_type}_posts_columns", array( $this, 'filter_manage_post_type_posts_columns' ) );
-		 * add_action( "manage_{$post_type}_posts_custom_column", array( $this, 'action_manage_post_type_posts_custom_column' ), 10, 2 );
-		 * add_filter( "manage_edit-{$post_type}_sortable_columns", array( $this, 'filter_manage_sortable_columns' ) );
-		 */
-		/**
 		 * own hooks
 		 */
 		add_filter( 'iworks/wordpress-plugin-stub/wp_localize_script/admin', array( $this, 'filter_wp_localize_script_admin' ) );
@@ -129,6 +122,26 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 	abstract public function action_init_register_post_type();
 	abstract public function action_init_register_taxonomy();
 	abstract public function action_init_settings();
+
+	/**
+	 * handle load meta boxes
+	 *
+	 * @since 1.0.0
+	 */
+	protected function load_meta_boxes( $post_type ) {
+		add_action( 'add_meta_boxes_' . $this->post_type_name[ $post_type ], array( $this, 'add_meta_boxes' ) );
+	}
+
+	/**
+	 * Handle custom columns for a post type.
+	 *
+	 * @since 1.0.0
+	 */
+	protected function handle_custom_columns( $post_type ) {
+		add_filter( 'manage_' . $this->post_type_name[ $post_type ] . '_posts_columns', array( $this, 'filter_manage_post_type_posts_columns' ) );
+		add_action( 'manage_' . $this->post_type_name[ $post_type ] . '_posts_custom_column', array( $this, 'action_manage_post_type_posts_custom_column' ), 10, 2 );
+		add_filter( 'manage_edit-' . $this->post_type_name[ $post_type ] . '_sortable_columns', array( $this, 'filter_manage_sortable_columns' ) );
+	}
 
 	/**
 	 * Filter the wp_localize_script admin.
@@ -438,8 +451,8 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 	 *
 	 * @since 1.0.0
 	 */
-	private function setup_post_one_field( $post_id, $field, $meta_box_id ) {
-		$field                = $this->set_field_defaults( $field );
+	private function setup_post_one_field( $post_id, $field, $meta_box_id, $index ) {
+		$field                = $this->set_field_defaults( $field, $index );
 		$field['meta_box_id'] = $meta_box_id;
 		$name                 = isset( $field['name'] ) ? $field['name'] : $this->meta_prefix . hash( 'crc32', serialize( $field ) );
 		$post_meta_name       = $this->get_post_meta_name( $name, $meta_box_id );
@@ -472,8 +485,8 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 		$posttype_name = $args['args']['posttype_name'];
 		$meta_box_id   = $args['args']['id'];
 		wp_nonce_field( $meta_box_id, $this->get_post_meta_name( $meta_box_id ) );
-		foreach ( $this->meta_boxes[ $posttype_name ][ $meta_box_id ]['fields'] as $one ) {
-			$one = $this->setup_post_one_field( $post->ID, $one, $meta_box_id );
+		foreach ( $this->meta_boxes[ $posttype_name ][ $meta_box_id ]['fields'] as $index => $one ) {
+			$one = $this->setup_post_one_field( $post->ID, $one, $meta_box_id, $index );
 			$this->render( $post, $one );
 		}
 	}
@@ -507,7 +520,7 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 				return;
 			}
 			foreach ( $data['fields'] as $index => $field ) {
-				$field = $this->set_field_defaults( $field );
+				$field = $this->set_field_defaults( $field, $index );
 				$value = '';
 				switch ( $field['type'] ) {
 					case 'url':
@@ -641,7 +654,7 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 			 * handle fields
 			 */
 			foreach ( $meta_box_data['fields'] as $index => $field ) {
-				$field = $this->set_field_defaults( $field );
+				$field = $this->set_field_defaults( $field, $index );
 				$key   = $this->get_post_meta_name( $field['name'], $group );
 				$value = filter_input( INPUT_POST, $key );
 				switch ( $field['type'] ) {
@@ -768,7 +781,10 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 		}
 		foreach ( $this->meta_boxes[ $screen->post_type ] as $group => $one ) {
 			foreach ( $one['fields'] as $field_id => $field ) {
-				if ( isset( $field['add_column'] ) ) {
+				if (
+					isset( $field['column'] )
+					&& preg_match( '/^(show|sortable)$/', $field['column'] )
+				) {
 					$column_name                   = $this->get_post_meta_name( $field['name'], $group );
 					$posts_columns[ $column_name ] = $field['label'];
 				}
@@ -785,7 +801,8 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 		foreach ( $this->meta_boxes[ $screen->post_type ] as $group => $one ) {
 			foreach ( $one['fields'] as $field_id => $field ) {
 				if (
-					isset( $field['add_column'] )
+					isset( $field['column'] )
+					&& preg_match( '/^(show|sortable)$/', $field['column'] )
 					&& $this->get_post_meta_name( $field['name'], $group ) === $column_name
 				) {
 					echo apply_filters(
@@ -812,9 +829,8 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 		foreach ( $this->meta_boxes[ $screen->post_type ] as $group => $one ) {
 			foreach ( $one['fields'] as $field_id => $field ) {
 				if (
-					isset( $field['add_column'] )
-					&& is_array( $field['add_column'] )
-					&& 'sortable' === $field['add_column']['type']
+					isset( $field['column'] )
+					&& preg_match( '/^sortable$/', $field['column'] )
 				) {
 					$column_name                      = $this->get_post_meta_name( $field['name'], $group );
 					$sortable_columns[ $column_name ] = array(
@@ -933,7 +949,7 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 		while ( $the_query->have_posts() ) {
 			$the_query->the_post();
 			if ( $file ) {
-				include_once $file;
+				include $file;
 			}
 		}
 		/**
@@ -965,7 +981,7 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 	 *
 	 * @since 1.0.0
 	 */
-	private function set_field_defaults( $field ) {
+	private function set_field_defaults( $field, $index ) {
 		return wp_parse_args(
 			$field,
 			array(

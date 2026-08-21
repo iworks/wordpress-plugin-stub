@@ -198,14 +198,6 @@ class iworks_wordpress_plugin_stub_wp_admin extends iworks_wordpress_plugin_stub
 		 * Register admin style.
 		 */
 		$file = '/assets/styles/wordpress-plugin-stub-admin' . $this->dev . '.css';
-
-		l(
-			array(
-				$file,
-				$this->plugin_file_path,
-				plugins_url( $file, $this->plugin_file_path ),
-			)
-		);
 		wp_register_style(
 			$name,
 			plugins_url( $file, $this->plugin_file_path ),

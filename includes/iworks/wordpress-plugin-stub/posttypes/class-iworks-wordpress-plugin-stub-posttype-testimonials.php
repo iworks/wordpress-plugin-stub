@@ -28,9 +28,15 @@ class iworks_wordpress_plugin_stub_posttype_testimonials extends iworks_wordpres
 		/**
 		 * WordPress Hooks
 		 */
-		add_shortcode( 'iworks_testimonials', array( $this, 'get_list' ) );
-		add_filter( 'manage_' . $this->post_type_name[ $this->post_type ] . '_posts_columns', array( $this, 'add_admin_columns' ) );
-		add_action( 'manage_' . $this->post_type_name[ $this->post_type ] . '_posts_custom_column', array( $this, 'display_admin_columns' ), 10, 2 );
+		add_shortcode( 'iworks-testimonials', array( $this, 'shortcode_default_list' ) );
+		/**
+		 * Custom Columns
+		 */
+		$this->handle_custom_columns( $this->post_type );
+		/**
+		 * load meta boxes
+		 */
+		$this->load_meta_boxes( $this->post_type );
 	}
 
 	/**
@@ -48,17 +54,19 @@ class iworks_wordpress_plugin_stub_posttype_testimonials extends iworks_wordpres
 	public function action_init_settings() {
 		$this->meta_boxes[ $this->post_type_name[ $this->post_type ] ] = array(
 			'testimonial' => array(
-				'title'  => __( 'Testimonial Data', 'THEME_TEXT_DOMAIN' ),
+				'title'  => __( 'Testimonial Data', 'wordpress-plugin-stub' ),
 				'fields' => array(
 					array(
-						'name'  => 'iworks_testimonial_person',
-						'type'  => 'text',
-						'label' => esc_html__( 'Person', 'THEME_TEXT_DOMAIN' ),
+						'name'   => 'person',
+						'type'   => 'text',
+						'label'  => esc_html__( 'Person', 'wordpress-plugin-stub' ),
+						'column' => 'show',
 					),
 					array(
-						'name'  => 'iworks_testimonial_position',
-						'type'  => 'text',
-						'label' => esc_html__( 'Position', 'THEME_TEXT_DOMAIN' ),
+						'name'   => 'position',
+						'type'   => 'text',
+						'label'  => esc_html__( 'Position', 'wordpress-plugin-stub' ),
+						'column' => 'show',
 					),
 				),
 			),
@@ -166,7 +174,7 @@ class iworks_wordpress_plugin_stub_posttype_testimonials extends iworks_wordpres
 				'<li class="%1$s"><a href="#iworks-testimonial-item-%2$d" data-id="%2$d"><span class="sr-only">%3$s</span></a></li>',
 				esc_attr( implode( ' ', $classes ) ),
 				esc_attr( get_the_ID() ),
-				sprintf( __( 'Show Testimonial %s', 'THEME_TEXT_DOMAIN' ), esc_html( get_the_title() ) )
+				sprintf( __( 'Show Testimonial %s', 'wordpress-plugin-stub' ), esc_html( get_the_title() ) )
 			);
 
 		}
@@ -191,8 +199,8 @@ class iworks_wordpress_plugin_stub_posttype_testimonials extends iworks_wordpres
 	 * @return array Modified columns
 	 */
 	public function add_admin_columns( $columns ) {
-		$columns['person']   = __( 'Person', 'THEME_TEXT_DOMAIN' );
-		$columns['position'] = __( 'Position', 'THEME_TEXT_DOMAIN' );
+		$columns['person']   = __( 'Person', 'wordpress-plugin-stub' );
+		$columns['position'] = __( 'Position', 'wordpress-plugin-stub' );
 		return $columns;
 	}
 
@@ -224,34 +232,34 @@ class iworks_wordpress_plugin_stub_posttype_testimonials extends iworks_wordpres
 	 */
 	public function action_init_register_post_type() {
 		$labels = array(
-			'name'                  => _x( 'Testimonials', 'Post Type General Name', 'THEME_TEXT_DOMAIN' ),
-			'singular_name'         => _x( 'Testimonial', 'Post Type Singular Name', 'THEME_TEXT_DOMAIN' ),
-			'menu_name'             => __( 'Testimonials', 'THEME_TEXT_DOMAIN' ),
-			'name_admin_bar'        => __( 'Testimonials', 'THEME_TEXT_DOMAIN' ),
-			'archives'              => __( 'Testimonials', 'THEME_TEXT_DOMAIN' ),
-			'all_items'             => __( 'Testimonials', 'THEME_TEXT_DOMAIN' ),
-			'add_new_item'          => __( 'Add New Testimonial', 'THEME_TEXT_DOMAIN' ),
-			'add_new'               => __( 'Add New', 'THEME_TEXT_DOMAIN' ),
-			'new_item'              => __( 'New Testimonial', 'THEME_TEXT_DOMAIN' ),
-			'edit_item'             => __( 'Edit Testimonial', 'THEME_TEXT_DOMAIN' ),
-			'update_item'           => __( 'Update Testimonial', 'THEME_TEXT_DOMAIN' ),
-			'view_item'             => __( 'View Testimonial', 'THEME_TEXT_DOMAIN' ),
-			'view_items'            => __( 'View Testimonials', 'THEME_TEXT_DOMAIN' ),
-			'search_items'          => __( 'Search Testimonials', 'THEME_TEXT_DOMAIN' ),
-			'not_found'             => __( 'Not found', 'THEME_TEXT_DOMAIN' ),
-			'not_found_in_trash'    => __( 'Not found in Trash', 'THEME_TEXT_DOMAIN' ),
-			'items_list'            => __( 'Testimonials list', 'THEME_TEXT_DOMAIN' ),
-			'items_list_navigation' => __( 'Testimonials list navigation', 'THEME_TEXT_DOMAIN' ),
-			'filter_items_list'     => __( 'Filter items list', 'THEME_TEXT_DOMAIN' ),
+			'name'                  => _x( 'Testimonials', 'Post Type General Name', 'wordpress-plugin-stub' ),
+			'singular_name'         => _x( 'Testimonial', 'Post Type Singular Name', 'wordpress-plugin-stub' ),
+			'menu_name'             => __( 'Testimonials', 'wordpress-plugin-stub' ),
+			'name_admin_bar'        => __( 'Testimonials', 'wordpress-plugin-stub' ),
+			'archives'              => __( 'Testimonials', 'wordpress-plugin-stub' ),
+			'all_items'             => __( 'Testimonials', 'wordpress-plugin-stub' ),
+			'add_new_item'          => __( 'Add New Testimonial', 'wordpress-plugin-stub' ),
+			'add_new'               => __( 'Add New', 'wordpress-plugin-stub' ),
+			'new_item'              => __( 'New Testimonial', 'wordpress-plugin-stub' ),
+			'edit_item'             => __( 'Edit Testimonial', 'wordpress-plugin-stub' ),
+			'update_item'           => __( 'Update Testimonial', 'wordpress-plugin-stub' ),
+			'view_item'             => __( 'View Testimonial', 'wordpress-plugin-stub' ),
+			'view_items'            => __( 'View Testimonials', 'wordpress-plugin-stub' ),
+			'search_items'          => __( 'Search Testimonials', 'wordpress-plugin-stub' ),
+			'not_found'             => __( 'Not found', 'wordpress-plugin-stub' ),
+			'not_found_in_trash'    => __( 'Not found in Trash', 'wordpress-plugin-stub' ),
+			'items_list'            => __( 'Testimonials list', 'wordpress-plugin-stub' ),
+			'items_list_navigation' => __( 'Testimonials list navigation', 'wordpress-plugin-stub' ),
+			'filter_items_list'     => __( 'Filter items list', 'wordpress-plugin-stub' ),
 		);
 		$args   = array(
 			'can_export'          => true,
 			'capability_type'     => 'page',
-			'description'         => __( 'Testimonial', 'THEME_TEXT_DOMAIN' ),
+			'description'         => __( 'Testimonial', 'wordpress-plugin-stub' ),
 			'exclude_from_search' => true,
 			'has_archive'         => false,
 			'hierarchical'        => false,
-			'label'               => __( 'Testimonials', 'THEME_TEXT_DOMAIN' ),
+			'label'               => __( 'Testimonials', 'wordpress-plugin-stub' ),
 			'labels'              => $labels,
 			'menu_icon'           => 'dashicons-businessperson',
 			'public'              => false,

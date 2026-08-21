@@ -67,9 +67,12 @@ class iworks_wordpress_plugin_stub_posttype_featured extends iworks_wordpress_pl
 		 */
 		$this->register_class_custom_posttype_name( $this->post_type );
 		/**
+		 * load meta boxes
+		 */
+		$this->load_meta_boxes( $this->post_type );
+		/**
 		 * WordPress Hooks
 		 */
-		add_action( 'add_meta_boxes_' . $this->post_type_name[ $this->post_type ], array( $this, 'add_meta_boxes' ) );
 		add_action( 'pre_get_posts', array( $this, 'admin_set_default_order' ) );
 		/**
 		 * WordPress Hooks: add column order
@@ -78,7 +81,7 @@ class iworks_wordpress_plugin_stub_posttype_featured extends iworks_wordpress_pl
 		/**
 		 * shortcode
 		 */
-		add_shortcode( 'iworks-featureds', array( $this, 'shortcode_default_list' ) );
+		add_shortcode( 'iworks-featured', array( $this, 'shortcode_default_list' ) );
 	}
 
 	/**
@@ -239,92 +242,5 @@ class iworks_wordpress_plugin_stub_posttype_featured extends iworks_wordpress_pl
 			'supports'            => array( 'title', 'thumbnail', 'page-attributes' ),
 		);
 		$this->register_post_type( $this->post_type, $args );
-	}
-
-	/**
-	 * Save post meta
-	*
-	 * @since 1.0.0
-	 */
-	public function save( $post_id ) {
-		$post_type = get_post_type( $post_id );
-		if ( $post_type !== $this->post_type_name[ $this->post_type ] ) {
-			return;
-		}
-		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-			return;
-		}
-		if ( ! current_user_can( 'edit_post', $post_id ) ) {
-			return;
-		}
-		/**
-		 * URL
-		 */
-		$nonce = filter_input( INPUT_POST, 'featured_nonce', FILTER_DEFAULT );
-		if ( wp_verify_nonce( $nonce, '_featured' ) ) {
-			/**
-			 * url
-			 */
-			$value = filter_input( INPUT_POST, $this->option_name_url, FILTER_SANITIZE_URL );
-			if ( empty( $value ) ) {
-				delete_post_meta( $post_id, $this->option_name_url );
-			} else {
-				$result = update_post_meta( $post_id, $this->option_name_url, $value );
-				if ( false === $result ) {
-					add_post_meta( $post_id, $this->option_name_url, $value, true );
-				}
-			}
-			/**
-			 * button_label_more
-			 */
-			$value = filter_input( INPUT_POST, $this->option_name_button_label_more, FILTER_DEFAULT );
-			if ( empty( $value ) ) {
-				delete_post_meta( $post_id, $this->option_name_button_label_more );
-			} else {
-				$result = update_post_meta( $post_id, $this->option_name_button_label_more, $value );
-				if ( false === $result ) {
-					add_post_meta( $post_id, $this->option_name_button_label_more, $value, true );
-				}
-			}
-		}
-	}
-
-	/**
-	 * HTML for URL metabox
-	 *
-	 * @since 1.0.0
-	 */
-	public function html_url( $post ) {
-		wp_nonce_field( '_featured', 'featured_nonce' );
-		/**
-		 * url
-		 */
-		$url = get_post_meta( $post->ID, $this->option_name_url, true );
-		echo '<label><h4>';
-		_e( 'Target URL', 'wordpress-plugin-stub' );
-		echo '</h4>';
-		printf(
-			'<input class="large-text code" type="url" name="%s" value="%s" />',
-			esc_attr( $this->option_name_url ),
-			esc_url( $url )
-		);
-		echo '</label>';
-		/**
-		 * button more label
-		 */
-		$button_label_more = get_post_meta( $post->ID, $this->option_name_button_label_more, true );
-		echo '<label><h4>';
-		_e( 'Target Button Label', 'wordpress-plugin-stub' );
-		echo '</h4>';
-		printf(
-			'<input class="large-text " type="text" name="%s" value="%s" />',
-			esc_attr( $this->option_name_button_label_more ),
-			esc_attr( $button_label_more )
-		);
-		echo '</label>';
-		printf(
-			'<p class="description">%s</p>',
-			__( 'Leave empty to default', 'wordpress-plugin-stub' )
-		);
 	}
 }
