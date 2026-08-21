@@ -67,9 +67,12 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 		/**
 		 * projects tab on main page
 		 */
-		add_filter( 'iworks_get_projects_random', array( $this, 'get_random' ), 10, 2 );
-		add_filter( 'iworks_get_projects', array( $this, 'get_list' ) );
-		add_filter( 'iworks_get_project_types', array( $this, 'filter_get_partners_types' ) );
+		add_filter( 'iworks/wordpress-plugin-stub/project/get_random', array( $this, 'get_random' ), 10, 2 );
+		add_filter( 'iworks/wordpress-plugin-stub/project/get_list', array( $this, 'get_list' ) );
+		add_filter( 'iworks/wordpress-plugin-stub/project/partner/get_types', array( $this, 'filter_get_partners_types' ) );
+		/**
+		 * shortcode
+		 */
 		add_shortcode( 'iworks-projects', array( $this, 'shortcode_projects' ) );
 	}
 
@@ -81,67 +84,65 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 	public function action_init_settings() {
 		$this->load_plugin_admin_assets                                = true;
 		$this->meta_boxes[ $this->post_type_name[ $this->post_type ] ] = array(
-			'project-data'  => array(
+			'data'  => array(
 				'title'  => __( 'Project Data', 'wordpress-plugin-stub' ),
 				'fields' => array(
 					'_project_date_start'     => array(
 						'label' => __( 'Project start date', 'wordpress-plugin-stub' ),
 						'type'  => 'date',
+						'name'  => 'date_start',
 					),
 					'_project_date_end'       => array(
 						'label' => __( 'Project end date', 'wordpress-plugin-stub' ),
 						'type'  => 'date',
+						'name'  => 'date_end',
 					),
 					'_realization_date_start' => array(
 						'label' => __( 'Realization start date', 'wordpress-plugin-stub' ),
 						'type'  => 'date',
+						'name'  => 'realization_date_start',
 					),
 					'_realization_date_end'   => array(
 						'label' => __( 'Realization end date', 'wordpress-plugin-stub' ),
 						'type'  => 'date',
+						'name'  => 'realization_date_end',
 					),
 					'_project_cost'           => array(
 						'label'    => __( 'Project cost', 'wordpress-plugin-stub' ),
 						'type'     => 'number',
 						'sanitize' => 'floatval',
 						'sufix'    => __( 'PLN', 'wordpress-plugin-stub' ),
+						'name'     => 'cost',
 					),
 					'_project_funding'        => array(
 						'label'    => __( 'Project amount of funding', 'wordpress-plugin-stub' ),
 						'type'     => 'number',
 						'sanitize' => 'floatval',
 						'sufix'    => __( 'PLN', 'wordpress-plugin-stub' ),
+						'name'     => 'funding',
 					),
 					'_project_currency'       => array(
 						'label'    => __( 'Project currency', 'wordpress-plugin-stub' ),
 						'type'     => 'text',
 						'sanitize' => 'esc_html',
 						'hide'     => true,
+						'name'     => 'currency',
 					),
 					'_project_url'            => array(
 						'label'    => __( 'Project URL', 'wordpress-plugin-stub' ),
 						'type'     => 'url',
 						'sanitize' => 'esc_url',
+						'name'     => 'url',
 					),
 				),
 			),
-			'project-media' => array(
+			'media' => array(
 				'title'  => __( 'Project Media', 'wordpress-plugin-stub' ),
 				'fields' => array(
 					array(
 						'name'  => 'icon',
 						'type'  => 'image',
 						'label' => esc_html__( 'Icon', 'wordpress-plugin-stub' ),
-					),
-					array(
-						'name'  => 'opinion_url',
-						'type'  => 'url',
-						'label' => esc_html__( 'The Opinion URL', 'wordpress-plugin-stub' ),
-					),
-					array(
-						'name'  => 'author_url',
-						'type'  => 'url',
-						'label' => esc_html__( 'The Opinion Author URL', 'wordpress-plugin-stub' ),
 					),
 				),
 			),
@@ -180,11 +181,7 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 			'post_type'      => $this->post_type_name[ $this->post_type ],
 		);
 		$the_query = new WP_Query( $args );
-		if ( 'pl_PL' === get_locale() ) {
-			$content .= '<span class="section-title">Publikacje OPI PIB</span>';
-		} else {
-			$content .= sprintf( '<span class="section-title">%s</span>', esc_html__( 'Projects of OPI PIB', 'wordpress-plugin-stub' ) );
-		}
+		$content  .= sprintf( '<span class="section-title">%s</span>', esc_html__( 'Projects', 'wordpress-plugin-stub' ) );
 		if ( $the_query->have_posts() ) {
 			ob_start();
 			while ( $the_query->have_posts() ) {
@@ -209,7 +206,7 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 		if ( $this->post_type_name[ $this->post_type ] !== $query->get( 'post_type' ) ) {
 			return;
 		}
-		$query->set( 'meta_key', '_project_date_start' );
+		$query->set( 'meta_key', $this->get_post_meta_name( 'date_start', 'data' ) );
 		$query->set(
 			'orderby',
 			array(
@@ -444,6 +441,11 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 		}
 	}
 
+	/**
+	 * Get source for media
+	 *
+	 * @since 1.0.0
+	 */
 	private function get_src( $post_id ) {
 		$src = null;
 		if ( isset( $this->images[ $post_id ] ) ) {
@@ -497,6 +499,11 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 		return $this->partners_types;
 	}
 
+	/**
+	 * shortcode
+	 *
+	 * @since 1.0.0
+	 */
 	public function shortcode_projects( $atts, $content = '' ) {
 		return $this->shortcode_list( $atts, $content );
 	}

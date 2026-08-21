@@ -60,12 +60,13 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 	 * @var array $meta_boxes Array of meta box configurations
 	 */
 	protected array $meta_boxes = array();
+
 	/**
 	 * Media Option Name
 	 *
 	 * @since 1.0.0
 	 */
-	protected string $option_name_media = '_iw_media';
+	protected string $option_name_media = 'media';
 
 	/**
 	 * Load admin assets
@@ -83,6 +84,10 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 	 */
 	public function __construct() {
 		parent::__construct();
+		/**
+		 * set option name media
+		 */
+		$this->option_name_media = $this->get_post_meta_name( $this->option_name_media );
 		/**
 		 * WordPress Hooks
 		 */
@@ -633,13 +638,15 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 	protected function get_post_meta_name( $name, $group = '' ) {
 		if ( ! empty( $group ) ) {
 			return sprintf(
-				'_iw_%s_%s',
+				'%s_%s_%s',
+				esc_attr( $this->meta_prefix ),
 				esc_attr( $group ),
 				esc_attr( $name )
 			);
 		}
 		return sprintf(
-			'_iw_%s',
+			'%s_%s',
+			esc_attr( $this->meta_prefix ),
 			esc_attr( $name )
 		);
 	}
@@ -799,7 +806,7 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 					&& $this->get_post_meta_name( $field['name'], $group ) === $column_name
 				) {
 					echo apply_filters(
-						'iworks/iworks-plugins-management/post/meta',
+						'iworks/wordpress-plugin-stub/post/meta',
 						get_post_meta( $post_id, $column_name, true ),
 						$group,
 						$field
@@ -888,7 +895,6 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 	}
 
 	protected function shortcode_list( $atts, $content = '' ) {
-		l( $this->post_type );
 		$args                = wp_parse_args(
 			$atts,
 			array(
@@ -907,8 +913,19 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 			'post_status'    => $args['post_status'],
 			'orderby'        => $args['orderby'],
 		);
-		$the_query     = new WP_Query( $wp_query_args );
-		l( $the_query->posts );
+		/**
+		 * Tax query
+		 */
+		if ( isset( $args['tax_query'] ) ) {
+			$wp_query_args['tax_query'] = $args['tax_query'];
+		}
+		/**
+		 * Meta query
+		 */
+		if ( isset( $args['meta_query'] ) ) {
+			$wp_query_args['meta_query'] = $args['meta_query'];
+		}
+		$the_query = new WP_Query( $wp_query_args );
 		/**
 		 * No data!
 		 */
@@ -923,7 +940,6 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 		 * header
 		 */
 		$file = $this->get_module_file( 'header', $this->post_type );
-		l( $file );
 		if ( $file ) {
 			include_once $file;
 		}
