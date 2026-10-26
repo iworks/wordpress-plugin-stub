@@ -74,6 +74,14 @@ class iworks_wordpress_plugin_stub extends iworks_wordpress_plugin_stub_base {
 			new iworks_wordpress_plugin_stub_cron();
 		}
 		/**
+		 * load db class
+		 */
+		$filename = $this->includes_directory . '/class-iworks-wordpress-plugin-stub-db.php';
+		if ( is_file( $filename ) ) {
+			include_once $filename;
+			new iworks_wordpress_plugin_stub_db();
+		}
+		/**
 		 * admin
 		 */
 		if ( is_admin() ) {
