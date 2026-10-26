@@ -72,7 +72,7 @@ mv includes/iworks/${PCLASS}-base.php includes/iworks/class-${SLUG}-base.php
 # rename includes files: classes
 #
 PDIR=includes/iworks/wordpress-plugin-stub
-NAMES=("cron" "github" "posttypes" "wp-admin")
+NAMES=("cron" "db" "github" "posttypes" "wp-admin")
 for name in "${NAMES[@]}"; do
     mv ${PDIR}/${PCLASS}-${name}.php ${PDIR}/class-${SLUG}-${name}.php
 done
