@@ -19,7 +19,7 @@
 
 | File                | Role                                                                                          |
 | ------------------- | --------------------------------------------------------------------------------------------- |
-| `index.js`          | Modes: `dev` (default) / `compile` / `build` / `build:github` / `make-pot` / `test`            |
+| `index.js`          | Modes: `dev` (default) / `compile` / `build` / `build:wporg` / `build:github` / `make-pot` / `test` |
 | `config.mjs`        | Paths, names (from `package.json`), placeholder patterns, release copy rules per flavor        |
 | `pipelines.mjs`     | CSS (sass → concat → clean-css) and JS (concat → terser) pipelines, prettier pass, clean       |
 | `tools.mjs`         | In-process APIs (prettier, sass, terser, clean-css), atomic writes, glob helpers               |
@@ -37,13 +37,14 @@ script renames the plugin and the bundler follows automatically.
 | ---------------------- | -------------------------------------------------------------------------------------------- |
 | `bun run dev`          | Watcher: `.scss` → CSS pipeline, `assets/scripts/src/**` → prettier + JS pipeline (200 ms debounce); no ZIP, no i18n, no auto browser reload |
 | `bun run compile`      | One-shot asset compile with source maps (old `grunt` default task)                            |
-| `bun run build`        | Production → `release/wporg/{name}.zip`                                                       |
+| `bun run build`        | Both flavors back-to-back: wporg + github                                                     |
+| `bun run build:wporg`  | Production → `release/wporg/{name}.zip`                                                       |
 | `bun run build:github` | Production + `.mo` → `release/github/{name}.zip`                                              |
 | `bun run make-pot`     | Translations only (`.pot` + `.po` update)                                                     |
 | `bun run test`         | PHPUnit (`tests/php/phpunit.xml`); jshint was dropped with Grunt                              |
 | (env) `DEV_EXIT_AFTER_MS` | Dev mode exits itself after N ms — headless testing (put it in `.env`, see `.env.example`) |
 
-## Build pipeline (`bun run build`, 7 steps)
+## Build pipeline (`bun run build:wporg`, 7 steps)
 
 1. **clean** — remove built JS (`assets/scripts/*.js`), built CSS
    (`assets/styles/*.css`, `assets/styles/**/*.css`, `*.map`), `languages/*.mo`
@@ -86,7 +87,7 @@ replaced at build (grunt parity) — the scaffolding script bakes it in once.
 
 ## Release ZIPs
 
-- **WordPress.org** (`bun run build`) → `release/wporg/{version}/{name}/`. Excludes:
+- **WordPress.org** (`bun run build:wporg`) → `release/wporg/{version}/{name}/`. Excludes:
   repo meta (`.git*`, `.editorconfig`, `.opencode/`, `bundler/`, lock files,
   `wp-cli.phar`, `package.json`, `README.md`, `LICENSE`, `contributing.md`,
   tests, `release/`, `.sass-cache`, `**/*.map`), asset sources

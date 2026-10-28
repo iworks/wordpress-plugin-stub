@@ -5,7 +5,8 @@
  * Modes:
  *   dev (default) — watcher, compile on change (no ZIP, no i18n)
  *   compile       — one-shot asset compile (old `grunt` default task)
- *   build         — production build → release/wporg/{name}.zip
+ *   build         — both flavors: build:wporg + build:github
+ *   build:wporg   — production build → release/wporg/{name}.zip
  *   build:github  — production build + .mo → release/github/{name}.zip
  *   make-pot      — translations only (.pot + .po update)
  *   test          — PHPUnit (tests/php/phpunit.xml)
@@ -191,7 +192,11 @@ const modes = {
     executionTime("compile", () =>
       compileAssets({ maps: true, strip: false, format: false }),
     ),
-  build: () => build("wporg"),
+  build: async () => {
+    await build("wporg");
+    await build("github");
+  },
+  "build:wporg": () => build("wporg"),
   "build:github": () => build("github"),
   "make-pot": () => executionTime("make-pot", () => makePot(false)),
   test: () => test(),
