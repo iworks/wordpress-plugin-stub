@@ -8,18 +8,16 @@ When a task that changed code (PHP, JS, SCSS) is finished, **before reporting su
 ## 1. Sanity-check diffs
 
 - `git diff --stat` — compare the changes against the list of files you actually edited. **Any changed file you did not edit is an alarm signal** (a stray build/formatter step overwriting sources).
+- The build's prettier step rewrites JS sources in place — formatting-only diffs in `assets/scripts/src/**` right after `bun run build` are expected, anything else is not.
 - Compiled files (`assets/styles/`, `assets/scripts/wordpress-plugin-stub-*.js`, `languages/*.mo`) are gitignored — they should never appear in a diff at all.
 
 ## 2. Verification with a full build
 
-Do not declare success based on a single quick command — run the **full task set** for the changed asset type (each must pass end-to-end):
+Do not declare success based on a single quick command — run the **full pipeline** for the changed asset type (each must pass end-to-end):
 
-- **JS (`assets/scripts/src/**`)**: `grunt js` (jshint → concat → uglify).
-- **SCSS (`assets/sass/**`)**: `grunt css` (sass → concat_css → cssmin).
-- **PHP (`includes/**`, `etc/`, main file)**: `php -l` on every changed file (new files included) — there is no phpcs setup in this repo, so do not claim WPCS compliance, just match the surrounding style. If a WordPress test env is available, `grunt test` (PHPUnit) is a bonus.
-- **Mixed types or release-relevant changes (headers, `readme.txt`, `package.json`)**: full `grunt build` — must pass end-to-end (compile → i18n → wporg ZIP). `grunt build:github` when the GitHub release path is affected.
-
-Note: the Grunt pipeline never modifies source files (formatting is manual) — a build that rewrites your working tree means something is wrong.
+- **JS (`assets/scripts/src/**`) and SCSS (`assets/sass/**`)**: full `bun run build` — must pass end-to-end (prettier → css → js → i18n → wporg ZIP). Use `bun run build:github` when the GitHub release path is affected.
+- **PHP (`includes/**`, `etc/`, main file, `bundler/`)**: `php -l` on every changed file (new files included) — there is no phpcs setup in this repo, so do not claim WPCS compliance, just match the surrounding style. If a WordPress test env is available, `bun run test` (PHPUnit) is a bonus.
+- **Bundler changes (`bundler/**`)**: `bun run compile` + both `bun run build` and `bun run build:github`, and check the staged ZIP contents (rules order is load-bearing — see `build.md`).
 
 ## 3. Report
 

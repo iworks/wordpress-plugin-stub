@@ -6,7 +6,7 @@
 
 A WordPress plugin stub — a boilerplate for WordPress plugins:
 main file + PHP classes (`/includes/iworks`) + options config (`/etc/options.php`)
-+ assets (`/assets`), built with Grunt → release ZIPs (`/release`).
++ assets (`/assets`), built with a bun bundler (`/bundler` → `release/` ZIPs).
 New plugins are scaffolded from this stub (`assets/bin/wp-plugin-create.sh`);
 sources contain build-time placeholders (`PLUGIN_VERSION`, `CURRENT_YEAR`, …).
 
@@ -15,7 +15,7 @@ sources contain build-time placeholders (`PLUGIN_VERSION`, `CURRENT_YEAR`, …).
 | Task | Read first |
 | --- | --- |
 | PHP classes, admin layer, post types, options, new class | `.opencode/docs/classes.md` |
-| Grunt build, dev watcher, ZIPs, placeholders, translations (.pot/.po) | `.opencode/docs/build.md` |
+| Bun bundler, build, dev watcher, ZIPs, placeholders, translations (.pot/.po) | `.opencode/docs/build.md` |
 | Loading flow, assets, enqueue, i18n, dependencies, project conventions | `.opencode/docs/project.md` |
 | After any task that changed code | skill `verify` (`.opencode/skills/verify/SKILL.md`) |
 
@@ -32,11 +32,11 @@ sources contain build-time placeholders (`PLUGIN_VERSION`, `CURRENT_YEAR`, …).
 - Naming: kebab-case files (`class-iworks-wordpress-plugin-stub-{name}.php`);
   PHP classes `iworks_wordpress_plugin_stub_` prefix, snake_case, lowercase.
 - Version lives only in `package.json` — placeholders (`PLUGIN_VERSION`,
-  `BUILDTIMESTAMP`) are replaced by Grunt during build; never hardcode real values in sources.
+  `BUILDTIMESTAMP`) are replaced by the bundler during build; never hardcode real values in sources.
 - Do not fix known typos/pitfalls without approval (see topic docs).
 
 ## Commands
 
-`grunt` (default: compile JS + CSS) · `grunt js` / `grunt css` (single asset type) ·
-`grunt i18n` (checktextdomain + make-pot) · `grunt build` (production → wp.org ZIP) ·
-`grunt build:github` (GitHub ZIP) · `grunt test` (phpunit + jshint) · `grunt watch` (dev)
+`bun run dev` (watcher) · `bun run compile` (one-shot assets) ·
+`bun run build` (production → wp.org ZIP) · `bun run build:github` (GitHub ZIP) ·
+`bun run make-pot` (translations) · `bun run test` (phpunit)

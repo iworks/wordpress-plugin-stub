@@ -35,7 +35,7 @@ cd ${SLUG}
 #
 FILES=$( \
     find -type f \
-    | grep -E "(txt|php|pot|json|js|md|CHANGELOG|gitignore)$" \
+    | grep -E "(txt|php|pot|json|js|mjs|md|CHANGELOG|gitignore)$" \
     | grep -v "assets/externals" \
     | grep -v ".git/" \
     | grep -v "node_modules"\
@@ -59,7 +59,7 @@ perl -0pi -e 's/New plugins are scaffolded from this stub \(`assets\/bin\/wp-plu
 #
 # make dirs
 #
-mkdir -p ./assets/scripts/admin/src
+mkdir -p ./assets/scripts/src/admin
 mkdir -p ./assets/sass/admin
 mkdir -p ./assets/styles/admin
 mkdir -p ./includes/iworks
@@ -108,3 +108,4 @@ rm -rf ./.git ./assets/bin
 #
 echo git submodule add git@github.com:iworks/wordpress-options-class.git includes/iworks/options
 echo git submodule add git@github.com:iworks/iworks-rate.git includes/iworks/rate
+echo "next: bun install && bun run build"

@@ -9,7 +9,7 @@ A WordPress plugin boilerplate ("stub") in the iWorks style. It is a template:
 new plugins are created from it with `assets/bin/wp-plugin-create.sh`, which
 renames the slug, class names, prefixes and placeholders. Source files contain
 **literal placeholders** (`PLUGIN_VERSION`, `PLUGIN_TITLE`, `CURRENT_YEAR`,
-`BUILDTIMESTAMP`, …) — they are replaced by Grunt at build time (see
+`BUILDTIMESTAMP`, …) — they are replaced by the bun bundler at build time (see
 `build.md`), never in the source.
 
 The version lives only in `package.json` (`"version"`); the main file header
@@ -43,7 +43,7 @@ and the version constant both use the `PLUGIN_VERSION` placeholder.
 │   └── bin/wp-plugin-create.sh  # Scaffolding script for new plugins
 ├── languages/                   # wordpress-plugin-stub.pot (+ .po/.mo built)
 ├── tests/php/                   # PHPUnit (phpunit.xml, bootstrap.php, test-sample.php)
-├── Gruntfile.js                 # Build system — see build.md
+├── bundler/                     # Bun build system — see build.md
 ├── package.json                 # Version + release metadata (single source of truth)
 └── readme.txt                   # WordPress.org readme
 ```
@@ -110,7 +110,7 @@ and the version constant both use the `PLUGIN_VERSION` placeholder.
   There is no frontend SCSS entry yet.
 - **JS**: `assets/scripts/src/admin/*.js` → concatenated to
   `assets/scripts/wordpress-plugin-stub-admin.js` → uglified to `.min.js`.
-  The `assets/scripts/src/frontend/` directory does not exist yet (Grunt expects
+  The `assets/scripts/src/frontend/` directory does not exist yet (the bundler expects
   it for the frontend bundle — create it when needed).
 - **Enqueue**: `action_init_settings()` enqueues
   `assets/styles/wordpress-plugin-stub{dev}.css` on non-admin requests, where
@@ -125,11 +125,9 @@ and the version constant both use the `PLUGIN_VERSION` placeholder.
 ## Translations (i18n)
 
 - Textdomain: `wordpress-plugin-stub`; `languages/wordpress-plugin-stub.pot`.
-- `grunt i18n` runs `checktextdomain` (validates gettext keywords, also checks
-  the placeholder domains `PLUGIN_NAME`, `IWORKS_RATE_TEXTDOMAIN`,
-  `IWORKS_OPTIONS_TEXTDOMAIN` used by vendored code) and `makepot`
-  (creates/updates the `.pot` and `.po` files).
-- `.mo` files are built by `potomo` only in `grunt build:github`.
+- `bun run make-pot` runs wp-cli `i18n make-pot` (creates/updates the `.pot`)
+  and `i18n update-po` for every existing `.po` file.
+- `.mo` files are compiled (`i18n make-mo`) only in `bun run build:github`.
 - The GitHub updater class loads the textdomain on `init`.
 
 ## GitHub self-updater
@@ -151,7 +149,7 @@ WordPress.org ZIP** (wporg releases must not self-update from GitHub).
 ## Tests
 
 - PHPUnit in `tests/php/` (`phpunit.xml`, `bootstrap.php`, `test-sample.php`),
-  run via `grunt test` (see `build.md`).
+  run via `bun run test` (see `build.md`).
 
 ## General conventions
 

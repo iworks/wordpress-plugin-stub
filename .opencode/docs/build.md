@@ -1,126 +1,123 @@
-# Build — Grunt
+# Build — Bun bundler
 
-> Toolchain, tasks, placeholders, release ZIPs, translations, tests.
+> Toolchain, modes, pipeline, placeholders, release ZIPs, translations, tests.
 > Read only when working on the build.
 
 ## Toolchain
 
-- Grunt (tasks loaded by `load-grunt-tasks`), Node/npm; `npm install` sets up
-  `node_modules`. Dart Sass is required directly in `Gruntfile.js` (`require('sass')`).
-- No Composer, no Bun — the build is pure Grunt. PHP ≥ 8.1 for the plugin itself;
-  PHPUnit for tests.
-- `time-grunt` prints per-task timings. `grunt.util.linefeed = '\n'`.
+- Bun (>= 1.3) — package manager, script runner and the bundler runtime
+  (`bundler/index.js` modes). `bun.lock` is committed; `package-lock.json` is
+  gitignored. Node is not required (no wp-scripts — this plugin has no blocks).
+- PHP ≥ 8.1; `wp-cli.phar` (downloaded by the `postinstall` script, gitignored)
+  for translations; PHPUnit for tests.
+- Prettier, sass, terser and clean-css run **in-process** (`bundler/tools.mjs`) —
+  no CLI spawns per file. Only wp-cli and PHPUnit are child processes.
+- All dist writes are atomic (temp + rename); tool failures print as friendly
+  one-liners (`tool — file` + message, no stack trace) and fail the build.
 
-## Tasks (`grunt ...`)
+## Files (`bundler/`)
 
-| Command            | What it does                                                                                                     |
-| ------------------ | ---------------------------------------------------------------------------------------------------------------- |
-| `grunt` (default)  | `clean:temp` → `concat` (JS) → `uglify` (JS min) → `sass` → `concat_css` → `cssmin` — compile assets only          |
-| `grunt js`         | `concat` + `uglify` only                                                                                          |
-| `grunt css`        | `sass` + `concat_css` + `cssmin` only                                                                             |
-| `grunt i18n`       | `checktextdomain` + `makepot`                                                                                     |
-| `grunt build`      | default + `i18n` + `clean:wporg` + `copy:wporg` + `replace` + `compress:wporg` → WordPress.org ZIP                 |
-| `grunt build:github` | default + `i18n` + `potomo` + `clean:github` + `copy:github` + `replace` + `compress:github` → GitHub ZIP        |
-| `grunt release`    | meant to run both builds + release notes — **broken** (see pitfalls)                                              |
-| `grunt test`       | `phpunit` (`tests/php/phpunit.xml`) + `jshint` + release notes                                                    |
-| `grunt watch`      | dev watcher: `.scss` → `sass`+`concat_css`+`cssmin`; `assets/scripts/src/{admin,frontend}/*.js` → `jshint`+`concat`+`uglify` (500 ms debounce) |
+| File                | Role                                                                                          |
+| ------------------- | --------------------------------------------------------------------------------------------- |
+| `index.js`          | Modes: `dev` (default) / `compile` / `build` / `build:github` / `make-pot` / `test`            |
+| `config.mjs`        | Paths, names (from `package.json`), placeholder patterns, release copy rules per flavor        |
+| `pipelines.mjs`     | CSS (sass → concat → clean-css) and JS (concat → terser) pipelines, prettier pass, clean       |
+| `tools.mjs`         | In-process APIs (prettier, sass, terser, clean-css), atomic writes, glob helpers               |
+| `makeZip.mjs`       | Staging copy → placeholder replacement → ZIP (archiver, level 9)                               |
+| `makePot.mjs`       | wp-cli i18n: `make-pot` → `update-po` (→ `make-mo` for github)                                 |
+| `spawnAsync.mjs`    | `child_process.spawn` wrapper with captured output                                             |
+| `consoleHelpers.mjs`, `progressBar.mjs` | Logging, timing, build progress bar                                        |
 
-## Inputs → outputs (assets)
+Bundle names are derived from `package.json` `name` at runtime — the scaffolding
+script renames the plugin and the bundler follows automatically.
 
-- JS concat (`conf.js_files_concat`):
-    - `assets/scripts/src/frontend/*.js` → `assets/scripts/wordpress-plugin-stub-frontend.js`
-    - `assets/scripts/src/admin/*.js` → `assets/scripts/wordpress-plugin-stub-admin.js`
-  then `uglify` minifies every `assets/scripts/*.js` to `*.min.js`
-  (`mangle` keeps `jQuery`; banner from `package.json` metadata).
-- SCSS (`conf.css_files_compile`): `assets/sass/admin/media.scss` →
-  `assets/styles/admin/media.css`, `assets/sass/admin/wp-list-table.scss` →
-  `assets/styles/admin/wp-list-table.css` (source maps on).
-- CSS concat: `assets/styles/admin/*.css` → `assets/styles/wordpress-plugin-stub-admin.css`;
-  `cssmin` produces `.min.css` copies of all `assets/styles/*.css`.
-- `clean:compiled` removes all built JS/CSS and `languages/*.mo`; compiled
-  files are gitignored — rebuild after clone, never edit them directly.
+## Modes (`bun run ...`)
 
-## Placeholders (replace step)
+| Command                | Description                                                                                  |
+| ---------------------- | -------------------------------------------------------------------------------------------- |
+| `bun run dev`          | Watcher: `.scss` → CSS pipeline, `assets/scripts/src/**` → prettier + JS pipeline (200 ms debounce); no ZIP, no i18n, no auto browser reload |
+| `bun run compile`      | One-shot asset compile with source maps (old `grunt` default task)                            |
+| `bun run build`        | Production → `release/wporg/{name}.zip`                                                       |
+| `bun run build:github` | Production + `.mo` → `release/github/{name}.zip`                                              |
+| `bun run make-pot`     | Translations only (`.pot` + `.po` update)                                                     |
+| `bun run test`         | PHPUnit (`tests/php/phpunit.xml`); jshint was dropped with Grunt                              |
+| (env) `DEV_EXIT_AFTER_MS` | Dev mode exits itself after N ms — headless testing (put it in `.env`, see `.env.example`) |
 
-`conf.replace_patterns` are applied **only to the copies inside `release/`**
-(never to the working tree; binary types and `.mo` are skipped):
+## Build pipeline (`bun run build`, 7 steps)
 
-| Placeholder              | Replaced with                                |
-| ------------------------ | -------------------------------------------- |
-| `PLUGIN_VERSION`         | `package.json` `version`                     |
-| `PLUGIN_TITLE` / `PLUGIN_NAME` | package `title` / `name` (slug)        |
-| `PLUGIN_TAGLINE` / `PLUGIN_DESCRIPTION` | package `tagline` / `description` |
-| `PLUGIN_URI` / `PLUGIN_URL` / `PLUGIN_GITHUB_WEBSITE` | package `uri` / repository `website` |
-| `PLUGIN_TAGS`            | comma-joined package `tags`                  |
-| `AUTHOR_NAME` / `AUTHOR_URI` / `AUTHOR_URL` | first `contributors` entry |
-| `PLUGIN_REQUIRES_PHP` / `PLUGIN_REQUIRES_WORDPRESS` / `PLUGIN_TESTED_WORDPRESS` | package `requires` / `tested` |
-| `PLUGIN_TILL_YEAR`       | current year (copyright range end)           |
-| `BUILDTIMESTAMP` / `BUILDTIME` | build time (ms timestamp / ISO string) |
-| `IWORKS_RATE_TEXTDOMAIN` / `IWORKS_OPTIONS_TEXTDOMAIN` | package `name` (domains used by vendored frameworks) |
-| `^Version: .+$` (main file header) | `Version: {package version}`       |
+1. **clean** — remove built JS (`assets/scripts/*.js`), built CSS
+   (`assets/styles/*.css`, `assets/styles/**/*.css`, `*.map`), `languages/*.mo`
+   (grunt `clean:compiled` semantics; `assets/styles/` and built JS are gitignored);
+2. **prettier** — format sources in place (`assets/scripts/src/**/*.js`,
+   `bundler/**/*.{js,mjs}`, root `*.js`) — the build rewrites sources by design;
+3. **css** — sass compiles every non-`_` entry under `assets/sass/` (parallel,
+   no maps in build) → `assets/styles/{path}.css`; per-variant concat:
+   `admin/*.css` → `{name}-admin.css`, `frontend/settings.css` first + rest →
+   `{name}-frontend.css` (missing dir → empty bundle + warning); `# sourceMappingURL`
+   comments stripped; clean-css (level 1, no shorthand merge) → `.min.css`;
+4. **js** — concat `assets/scripts/src/{admin,frontend}/*.js` with the concat
+   banner → `{name}-{variant}.js`; terser (mangle, `jQuery` reserved) +
+   min banner → `.min.js`; missing frontend sources → banner-only bundle + warning;
+5. **i18n** — wp-cli `i18n make-pot` → `languages/{name}.pot`, then
+   `i18n update-po` per existing `.po`; `make-mo` only in `build:github`;
+6. **zip** — staging copy → placeholder replacement → `release/{flavor}/{version}/{name}/`
+   → `release/{flavor}/{name}.zip`;
+7. done — progress bar + total time; any failure prints `BUILD FAILED` and exits 1.
 
-The version lives **only** in `package.json`; the base class stores the literal
-`'PLUGIN_VERSION.BUILDTIMESTAMP'` and the main class `'PLUGIN_VERSION'` — both
-are replaced in the release copies.
+Banners (grunt parity): concat = `/*! {title} - {version}\n * {website}\n *
+Copyright (c) {year}\n * Licensed {license} */`; minified JS uses the same with
+`Copyright (c) {year};` (note the `;`). Minified CSS has no banner. The website
+line uses `repository.website` (grunt printed an empty line because `pkg.homepage`
+never existed).
 
-## Release ZIPs (copy → replace → compress)
+## Placeholders (release copies only)
 
-Two flavors, both packed with a **wrapper folder** `{plugin-name}/` inside the ZIP:
+Applied to every staged text file (binary extensions and `.mo` skipped):
+`AUTHOR_NAME/URI/URL`, `BUILDTIMESTAMP`, `BUILDTIME`,
+`IWORKS_RATE_TEXTDOMAIN`, `IWORKS_OPTIONS_TEXTDOMAIN`, `PLUGIN_DESCRIPTION`,
+`PLUGIN_GITHUB_WEBSITE`, `PLUGIN_NAME`, `PLUGIN_REQUIRES_PHP`,
+`PLUGIN_REQUIRES_WORDPRESS`, `PLUGIN_TESTED_WORDPRESS`, `PLUGIN_TAGLINE`,
+`PLUGIN_TAGS`, `PLUGIN_TILL_YEAR`, `PLUGIN_TITLE`, `PLUGIN_URI`, `PLUGIN_URL`,
+`PLUGIN_VERSION`, and the `^Version: .*$` header line — all sourced from
+`package.json` + build time (`bundler/config.mjs`).
 
-- **WordPress.org** (`grunt build`) → `release/wporg/{version}/{name}/`, ZIP at
-  `release/wporg/{name}.zip`. Excludes (see `excludeCopyFilesWPorg`): repo
-  meta (`.git*`, `Gruntfile.js`, `package*.json`, `README.md`, `LICENSE`,
-  `.editorconfig`, tests, `node_modules`, `release/`, `.sass-cache`),
-  asset sources (`assets/sass`, `assets/scripts/src`, `assets/scss`,
-  `assets/styles/frontend`, `**/img/src`, `**/js/src`), the GitHub updater
-  class, `includes/pro`, `languages/*.po|*.mo` and `*.map` files. `readme.txt`
+The version lives **only** in `package.json`. `CURRENT_YEAR` is **not**
+replaced at build (grunt parity) — the scaffolding script bakes it in once.
+
+## Release ZIPs
+
+- **WordPress.org** (`bun run build`) → `release/wporg/{version}/{name}/`. Excludes:
+  repo meta (`.git*`, `.editorconfig`, `.opencode/`, `bundler/`, lock files,
+  `wp-cli.phar`, `package.json`, `README.md`, `LICENSE`, `contributing.md`,
+  tests, `release/`, `.sass-cache`, `**/*.map`), asset sources
+  (`assets/sass`, `assets/scripts/src`, `assets/scss`, `assets/styles/frontend`,
+  legacy `**/img/src`, `**/js/src`, `**/css/{less,sass,src}`), the GitHub
+  self-updater class, `includes/pro`, `languages/*.po|*.mo`. `readme.txt`
   **is** included (required by wp.org).
-- **GitHub** (`grunt build:github`) → `release/github/{version}/{name}/`, ZIP at
-  `release/github/{name}.zip`. Base excludes (same repo-meta list) plus
-  `readme.txt` and `includes/pro`; asset sources (`assets/sass`,
-  `assets/scripts/src`) and `.po` files **are** included, and `.mo` files are
-  built by `potomo` before packing. Pairs with the GitHub self-updater class.
-- A missing/empty source (e.g. `assets/scripts/src/frontend/`) makes the
-  matching concat/compile step produce nothing or warn — create the source
-  directory before relying on its output.
-
-## i18n
-
-- `checktextdomain` — validates gettext keywords in `{name}.php` and
-  `includes/**/*.php` against the domains `wordpress-plugin-stub`,
-  `PLUGIN_NAME`, `IWORKS_RATE_TEXTDOMAIN`, `IWORKS_OPTIONS_TEXTDOMAIN`
-  (the placeholder domains exist because vendored framework code still carries
-  them until `replace` runs on the release copy).
-- `makepot` — builds `languages/wordpress-plugin-stub.pot` (wp-plugin type,
-  iWorks headers) and updates existing `.po` files in the same directory.
-- `potomo` (only `build:github`) — compiles `languages/*.po` → `*.mo`.
+- **GitHub** (`bun run build:github`) → `release/github/{version}/{name}/`.
+  Base excludes plus `readme.txt` and `includes/pro`; asset sources and `.po`
+  **are** included, `.mo` compiled by `make-mo` when `.po` files exist. Pairs
+  with the GitHub self-updater class.
+- Copy rules are ordered and evaluated **first match wins** (grunt semantics) —
+  the catch-all `**/*` include must stay last (`bundler/config.mjs`).
+- A missing main plugin file logs a warning; staging proceeds.
 
 ## Tests
 
-- `grunt test` → PHPUnit with `tests/php/phpunit.xml` (bootstrap:
-  `tests/php/bootstrap.php`) + `jshint` over `Gruntfile.js`,
-  `assets/scripts/src/**`, `assets/scripts/test/**`.
-- PHPUnit needs a WordPress test environment (see `tests/php/bootstrap.php`);
-  `jshint` runs standalone.
-
-## Scaffolding — assets/bin/wp-plugin-create.sh
-
-Turns this stub into a new plugin: clones the repo, then runs `perl -pi -e`
-replacements over all text files — `CURRENT_YEAR` → current year,
-`wordpress-plugin-stub` → new slug (lowercased name, or `$2`),
-`WORDPRESS_PLUGIN_STUB` → uppercase prefix, `wordpress_plugin_stub` → class
-prefix, `WordPress Plugin Stub` → display name. Because of this, every literal
-occurrence of the stub's names in source is a rename target — keep the
-placeholders/naming exact so the script keeps working.
+- `bun run test` → `phpunit --configuration tests/php/phpunit.xml`
+  (bootstrap: `tests/php/bootstrap.php`). Needs a WordPress test environment.
+- Dropped with Grunt: jshint (dead tooling) and `checktextdomain` (no bun-era
+  equivalent; gettext usage is covered by `make-pot` output review).
 
 ## Runtime quirks / pitfalls (do not fix without approval)
 
-- `grunt release` calls the task `build:wporg`, which is **not registered**
-  (only `build` and `build:github` exist) — run the two build tasks instead.
-- The `watch` SCSS glob still references `include/modules/**/*.scss`
-  (no `include/` directory exists) — harmless leftover.
-- `excludeCopyFiles` lists negations after `'**'`; with grunt's minimatch
-  ordering the later `!` rules win — keep that order when editing.
-- `clean:compiled` deletes `assets/scripts/*.js` (top level only — the built
-  bundles, not `src/`) plus built CSS and `languages/*.mo`; never keep source
-  JS at the `assets/scripts/` root.
+- The build's prettier step **rewrites source files** — that is intended
+  (formatting is part of the pipeline, like the theme bundler). A diff after
+  `bun run build` containing only formatting is expected.
+- `CURRENT_YEAR` stays literal in built ZIPs (scaffold-only replacement).
+- Copy rules: negations must precede the catch-all `**/*` include — reordering
+  silently leaks sources into the ZIPs.
+- Terser mangles variable names differently than grunt-uglify (e.g. `t` vs `e`)
+  — minified bundles are not byte-identical to old artifacts, only equivalent.
+- `bun run make-pot` needs network on the first run (wp-cli.phar download) —
+  `postinstall` retries it on every `bun install`.

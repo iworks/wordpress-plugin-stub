@@ -24,3 +24,7 @@ tests/php/.phpunit.result.cache
 
 # scratch files (OpenCode)
 .opencode/tmp/
+
+# bun / local tools
+wp-cli.phar
+.env
