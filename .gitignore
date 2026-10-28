@@ -21,3 +21,6 @@ languages/*.mo
 
 # tests
 tests/php/.phpunit.result.cache
+
+# scratch files (OpenCode)
+.opencode/tmp/

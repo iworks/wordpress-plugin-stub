@@ -52,6 +52,11 @@ perl -pi -e "s/WORDPRESS_PLUGIN_STUB/${PREFIX}/g" ${FILES}
 perl -pi -e "s/wordpress_plugin_stub/${CLASS}/g"  ${FILES}
 perl -pi -e "s/WordPress Plugin Stub/${NAME}/g"   ${FILES}
 #
+# docs - drop stub-only fragments (assets/bin is removed below)
+#
+perl -0pi -e 's/## Scaffolding[^\n]*\n.*?\n\n(?=## )//s' .opencode/docs/build.md
+perl -0pi -e 's/New plugins are scaffolded from this stub \(`assets\/bin\/wp-plugin-create\.sh`\);\ns/S/' AGENTS.md
+#
 # make dirs
 #
 mkdir -p ./assets/scripts/admin/src
@@ -66,24 +71,24 @@ mv wordpress-plugin-stub.php ${SLUG}.php
 # rename includes files
 #
 PCLASS=class-iworks-wordpress-plugin-stub
-mv includes/iworks/${PCLASS}.php includes/iworks/class-${SLUG}.php
-mv includes/iworks/${PCLASS}-base.php includes/iworks/class-${SLUG}-base.php
+mv includes/iworks/${PCLASS}.php includes/iworks/class-iworks-${SLUG}.php
+mv includes/iworks/${PCLASS}-base.php includes/iworks/class-iworks-${SLUG}-base.php
 #
 # rename includes files: classes
 #
 PDIR=includes/iworks/wordpress-plugin-stub
 NAMES=("cron" "db" "github" "posttypes" "wp-admin")
 for name in "${NAMES[@]}"; do
-    mv ${PDIR}/${PCLASS}-${name}.php ${PDIR}/class-${SLUG}-${name}.php
+    mv ${PDIR}/${PCLASS}-${name}.php ${PDIR}/class-iworks-${SLUG}-${name}.php
 done
 #
 # rename files: posttypes
 #
 PDIR=includes/iworks/wordpress-plugin-stub/posttypes
 NAMES=("faq" "hero" "opinion" "page" "person" "post" "project" "featured" "publication" "testimonials")
-mv ${PDIR}/${PCLASS}-posttype.php ${PDIR}/class-${SLUG}-posttype.php
+mv ${PDIR}/${PCLASS}-posttype.php ${PDIR}/class-iworks-${SLUG}-posttype.php
 for name in "${NAMES[@]}"; do
-    mv ${PDIR}/${PCLASS}-posttype-${name}.php ${PDIR}/class-${SLUG}-posttype-${name}.php
+    mv ${PDIR}/${PCLASS}-posttype-${name}.php ${PDIR}/class-iworks-${SLUG}-posttype-${name}.php
 done
 #
 # rename directory
