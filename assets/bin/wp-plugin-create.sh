@@ -103,6 +103,7 @@ xgettext -D languages/ -o ./languages/pl_PO.po
 # remove unnecessary files
 #
 rm -rf ./.git ./assets/bin
+rm -f bun.lock bun.lockb
 #
 # submodules - show commands
 #
