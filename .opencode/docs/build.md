@@ -41,6 +41,7 @@ script renames the plugin and the bundler follows automatically.
 | `bun run build:wporg`  | Production → `release/wporg/{name}.zip`                                                       |
 | `bun run build:github` | Production + `.mo` → `release/github/{name}.zip`                                              |
 | `bun run make-pot`     | Translations only (`.pot` + `.po` update)                                                     |
+| `bun run update-libs`  | `git pull` on the vendored iWorks libraries (`includes/iworks/options`, `includes/iworks/rate`) |
 | `bun run test`         | PHPUnit (`tests/php/phpunit.xml`); jshint was dropped with Grunt                              |
 | (env) `DEV_EXIT_AFTER_MS` | Dev mode exits itself after N ms — headless testing (put it in `.env`, see `.env.example`) |
 
@@ -88,7 +89,7 @@ replaced at build (grunt parity) — the scaffolding script bakes it in once.
 ## Release ZIPs
 
 - **WordPress.org** (`bun run build:wporg`) → `release/wporg/{version}/{name}/`. Excludes:
-  repo meta (`.git*`, `.editorconfig`, `.opencode/`, `bundler/`, lock files,
+  repo meta (`.git*`, `.editorconfig`, `phpcs.xml.dist`, `.opencode/`, `bundler/`, lock files,
   `wp-cli.phar`, `package.json`, `README.md`, `LICENSE`, `contributing.md`,
   tests, `release/`, `.sass-cache`, `**/*.map`), asset sources
   (`assets/sass`, `assets/scripts/src`, `assets/scss`, `assets/styles/frontend`,

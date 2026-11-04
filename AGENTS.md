@@ -39,5 +39,5 @@ sources contain build-time placeholders (`PLUGIN_VERSION`, `CURRENT_YEAR`, …).
 
 `bun run dev` (watcher) · `bun run compile` (one-shot assets) ·
 `bun run build` (both ZIPs) · `bun run build:wporg` (wp.org ZIP) ·
-`bun run build:github` (GitHub ZIP) · `bun run make-pot` (translations) ·
+`bun run build:github` (GitHub ZIP) · `bun run make-pot` (translations) · `bun run update-libs` (iWorks submodules) ·
 `bun run test` (phpunit)

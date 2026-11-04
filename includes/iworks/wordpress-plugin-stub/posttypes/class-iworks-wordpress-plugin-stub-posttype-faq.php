@@ -18,7 +18,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -283,12 +282,14 @@ class iworks_wordpress_plugin_stub_posttype_faq extends iworks_wordpress_plugin_
 					esc_attr( $id ),
 					esc_attr(
 						sprintf(
+							/* translators: %s: FAQ entry title. */
 							__( 'Expand %s', 'wordpress-plugin-stub' ),
 							get_the_title()
 						)
 					),
 					esc_html(
 						sprintf(
+							/* translators: %s: FAQ entry title. */
 							__( 'Expand %s', 'wordpress-plugin-stub' ),
 							get_the_title()
 						)

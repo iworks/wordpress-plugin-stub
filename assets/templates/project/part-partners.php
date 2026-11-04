@@ -42,4 +42,3 @@ foreach ( apply_filters( 'opi_pib_get_opi_project_types', array() ) as $type => 
 	echo '</ul>';
 }
 echo '</section>';
-

@@ -16,7 +16,7 @@ When a task that changed code (PHP, JS, SCSS) is finished, **before reporting su
 Do not declare success based on a single quick command — run the **full pipeline** for the changed asset type (each must pass end-to-end):
 
 - **JS (`assets/scripts/src/**`) and SCSS (`assets/sass/**`)**: full `bun run build:wporg` — must pass end-to-end (prettier → css → js → i18n → wporg ZIP). Use `bun run build:github` when the GitHub release path is affected.
-- **PHP (`includes/**`, `etc/`, main file, `bundler/`)**: `php -l` on every changed file (new files included) — there is no phpcs setup in this repo, so do not claim WPCS compliance, just match the surrounding style. If a WordPress test env is available, `bun run test` (PHPUnit) is a bonus.
+- **PHP (`includes/iworks/wordpress-plugin-stub/`, `etc/`, main file, `assets/templates/`)**: `php -l` on every changed file (new files included), plus `~/.config/composer/vendor/bin/phpcs` (config: `phpcs.xml.dist`) — must not introduce *new* WPCS errors (security/escaping/i18n sniffs are hard requirements; remaining Squiz.Commenting style items are tracked debt). If a WordPress test env is available, `bun run test` (PHPUnit) is a bonus.
 - **Bundler changes (`bundler/**`)**: `bun run compile` + `bun run build` (both flavors) and check the staged ZIP contents (rules order is load-bearing — see `build.md`).
 
 ## 3. Report

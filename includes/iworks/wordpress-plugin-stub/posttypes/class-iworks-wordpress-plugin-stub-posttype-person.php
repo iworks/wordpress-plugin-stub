@@ -18,7 +18,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -80,7 +79,7 @@ class iworks_wordpress_plugin_stub_posttype_person extends iworks_wordpress_plug
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $atts Shortcode attributes
+	 * @param array  $atts Shortcode attributes
 	 * @param string $content current content
 	 *
 	 * @return string $content
@@ -183,7 +182,7 @@ class iworks_wordpress_plugin_stub_posttype_person extends iworks_wordpress_plug
 
 	/**
 	 * Filter Open Graph type value
-	*
+	 *
 	 * @since 1.0.0
 	 */
 	public function filter_og_og_type_value( $value ) {

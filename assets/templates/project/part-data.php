@@ -33,11 +33,9 @@ foreach ( $args['fields'] as $key => $one ) {
 		esc_attr( $key ),
 		esc_html( $one['label'] ),
 		esc_attr( isset( $one['type'] ) ? $one['type'] : 'default' ),
-		/**
-		 * $value should be already escaped or contain HTML
-		 */
-		$one['value'],
-		$sufix
+		// $value should be already escaped or contain HTML.
+		$one['value'], // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		$sufix // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	);
 }
 ?>

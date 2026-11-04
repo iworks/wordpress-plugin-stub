@@ -208,7 +208,7 @@ class iworks_wordpress_plugin_stub_wp_admin extends iworks_wordpress_plugin_stub
 
 	/**
 	 * Filters the array of row meta for the plugin in the Plugins list table.
-	*
+	 *
 	 * This method adds custom links to the plugin's row in the WordPress admin Plugins page.
 	 * It adds:
 	 * 1. A 'Settings' link (for non-multisite installations with proper capabilities)
@@ -220,12 +220,12 @@ class iworks_wordpress_plugin_stub_wp_admin extends iworks_wordpress_plugin_stub
 	 *
 	 * @param string[] $links An array of the plugin's metadata, including the version, author,
 	 *                       author URI, and plugin name.
-	 * @param string  $file  Path to the plugin file relative to the plugins directory.
+	 * @param string   $file  Path to the plugin file relative to the plugins directory.
 	 *
 	 * @return string[] Array of plugin row links with our custom links added.
 	 */
 	public function plugin_row_meta( $links, $file ) {
-		if ( $this->dir . '/wordpress-plugin-stub.php' == $file ) {
+		if ( $this->dir . '/wordpress-plugin-stub.php' === $file ) {
 			if ( ! is_multisite() && current_user_can( $this->capability ) ) {
 				$links[] = sprintf(
 					'<a href="%s">%s</a>',

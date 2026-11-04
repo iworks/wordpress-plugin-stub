@@ -146,6 +146,24 @@ WordPress.org ZIP** (wporg releases must not self-update from GitHub).
   and `rate/` (rate-it / "love" admin notices). Both are separate git repos —
   treat them as vendor code: do not refactor their internals.
 
+## Coding standards (WPCS)
+
+- Config: `phpcs.xml.dist` (WordPress standard). Run:
+  `~/.config/composer/vendor/bin/phpcs` / `phpcbf` (global composer install).
+- Scope: plugin's own PHP only — vendored `includes/iworks/options/` +
+  `includes/iworks/rate/`, `tests/`, `release/`, `node_modules/` are excluded.
+- Waived sniffs (project conventions, do not "fix"):
+  `PEAR.NamingConventions.ValidClassName` (iWorks lowercase `iworks_*` names),
+  `WordPress.WP.CapitalPDangit` ("wordpress" in text domain/option names),
+  `WordPress.NamingConventions.ValidHookName` (hyphenated iWorks hook API),
+  part of `Squiz.Commenting` (see ruleset).
+- Hard requirements (never regress): `WordPress.Security.EscapeOutput`,
+  `WordPress.Security.NonceVerification`, `WordPress.WP.I18n` translators
+  comments, strict comparisons.
+- Known remaining debt (~250 violations): Squiz.Commenting style items
+  (missing `@param` tags, inline comment endings, doc capitalization) —
+  tracked, low priority.
+
 ## Tests
 
 - PHPUnit in `tests/php/` (`phpunit.xml`, `bootstrap.php`, `test-sample.php`),

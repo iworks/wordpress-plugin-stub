@@ -78,7 +78,7 @@ class iworks_wordpress_plugin_stub_posttype_testimonials extends iworks_wordpres
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $atts Shortcode attributes
+	 * @param array  $atts Shortcode attributes
 	 * @param string $content current content
 	 *
 	 * @return string $content
@@ -174,7 +174,11 @@ class iworks_wordpress_plugin_stub_posttype_testimonials extends iworks_wordpres
 				'<li class="%1$s"><a href="#iworks-testimonial-item-%2$d" data-id="%2$d"><span class="sr-only">%3$s</span></a></li>',
 				esc_attr( implode( ' ', $classes ) ),
 				esc_attr( get_the_ID() ),
-				sprintf( __( 'Show Testimonial %s', 'wordpress-plugin-stub' ), esc_html( get_the_title() ) )
+				sprintf(
+					/* translators: %s: testimonial title. */
+					__( 'Show Testimonial %s', 'wordpress-plugin-stub' ),
+					esc_html( get_the_title() )
+				)
 			);
 
 		}

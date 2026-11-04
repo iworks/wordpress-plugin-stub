@@ -347,7 +347,7 @@ class iworks_wordpress_plugin_stub_base {
 						esc_attr( $key ),
 						intval( $value ),
 						// Data string escaped few lines above.
-						$extra
+						$extra // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped earlier in this method
 					);
 					break;
 				case 'date':
@@ -395,7 +395,7 @@ class iworks_wordpress_plugin_stub_base {
 
 	/**
 	 * Output HTML title.
-	*
+	 *
 	 * Outputs a properly escaped HTML heading element for admin pages.
 	 *
 	 * @since 1.0.0
@@ -498,8 +498,8 @@ class iworks_wordpress_plugin_stub_base {
 				break;
 		}
 	}
-	private function get_attachment_data( $attachment_ID ) {
-		$content_type = explode( '/', get_post_mime_type( $attachment_ID ) );
+	private function get_attachment_data( $attachment_id ) {
+		$content_type = explode( '/', get_post_mime_type( $attachment_id ) );
 		if ( ! is_array( $content_type ) ) {
 			$content_type = array(
 				'unknown',
@@ -507,22 +507,22 @@ class iworks_wordpress_plugin_stub_base {
 			);
 		}
 		return array(
-			'id'      => $attachment_ID,
-			'caption' => wp_get_attachment_caption( $attachment_ID ),
-			'url'     => wp_get_attachment_url( $attachment_ID ),
+			'id'      => $attachment_id,
+			'caption' => wp_get_attachment_caption( $attachment_id ),
+			'url'     => wp_get_attachment_url( $attachment_id ),
 			'type'    => $content_type[0],
 			'subtype' => isset( $content_type[1] ) ? $content_type[1] : '',
-			'icon'    => wp_get_attachment_image_src( $attachment_ID, 'thumbnail', true )[0],
+			'icon'    => wp_get_attachment_image_src( $attachment_id, 'thumbnail', true )[0],
 		);
 	}
 
-	protected function get_media_html( $post_ID ) {
+	protected function get_media_html( $post_id ) {
 		$content = '';
-		$value   = get_post_meta( $post_ID, $this->option_name_media );
+		$value   = get_post_meta( $post_id, $this->option_name_media );
 		if ( ! empty( $value ) && is_array( $value ) ) {
 			$value = array_unique( $value );
-			foreach ( $value as $attachment_ID ) {
-				$data     = $this->get_attachment_data( $attachment_ID );
+			foreach ( $value as $attachment_id ) {
+				$data     = $this->get_attachment_data( $attachment_id );
 				$content .= sprintf(
 					'<p class="wordpress-plugin-stub-url wordpress-plugin-stub-media-url-%s-%s"><a href="%s" rel="alternate">%s</a></p>',
 					esc_attr( $data['type'] ),

@@ -9,11 +9,12 @@
  *   build:wporg   — production build → release/wporg/{name}.zip
  *   build:github  — production build + .mo → release/github/{name}.zip
  *   make-pot      — translations only (.pot + .po update)
+ *   update-libs   — git pull on the vendored iWorks libraries (submodules)
  *   test          — PHPUnit (tests/php/phpunit.xml)
  */
 
 import { dirname, join, resolve } from "node:path";
-import { watch } from "node:fs";
+import { existsSync, watch } from "node:fs";
 import { executionTime, log } from "./consoleHelpers.mjs";
 import { ProgressBar } from "./progressBar.mjs";
 import { spawnAsync } from "./spawnAsync.mjs";
@@ -160,6 +161,36 @@ function dev() {
 }
 
 /**
+ * Update vendored iWorks libraries (git submodules).
+ */
+async function updateLibs() {
+  const libs = [
+    ["includes/iworks/options", "iWorks Options"],
+    ["includes/iworks/rate", "iWorks Rate"],
+  ];
+  let failed = 0;
+  for (const [dir, label] of libs) {
+    if (!existsSync(join(root, dir))) {
+      log(`${label} — ${dir} not found, skipped (git submodule add?)`, "w");
+      continue;
+    }
+    const result = await spawnAsync("git", ["pull"], `git pull ${dir}`, false);
+    if (result.stdout.trim()) {
+      console.log(result.stdout.trim());
+    }
+    if (result.code !== 0) {
+      failed++;
+    }
+  }
+  if (failed) {
+    const err = new Error(`${failed} library update(s) failed`);
+    err.friendly = true;
+    throw err;
+  }
+  log("update-libs — all iWorks libraries updated", "s");
+}
+
+/**
  * PHPUnit (grunt `test` parity, jshint dropped).
  */
 async function test() {
@@ -199,6 +230,7 @@ const modes = {
   "build:wporg": () => build("wporg"),
   "build:github": () => build("github"),
   "make-pot": () => executionTime("make-pot", () => makePot(false)),
+  "update-libs": () => executionTime("update-libs", () => updateLibs()),
   test: () => test(),
 };
 

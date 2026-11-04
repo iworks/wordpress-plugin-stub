@@ -18,7 +18,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -39,7 +38,6 @@ class iworks_wordpress_plugin_stub_posttype_page extends iworks_wordpress_plugin
 	 *
 	 * @since 1.0.0
 	 */
-
 	public function __construct() {
 		parent::__construct();
 	}

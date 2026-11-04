@@ -7,7 +7,6 @@
  * @copyright CURRENT_YEAR-PLUGIN_TILL_YEAR Marcin Pietrzak
  * @license GPL-3.0-or-later
  * @link https://iworks.pl/
- *
  */
 
 defined( 'ABSPATH' ) || exit;

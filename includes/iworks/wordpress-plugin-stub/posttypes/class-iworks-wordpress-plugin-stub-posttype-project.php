@@ -18,7 +18,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -313,7 +312,7 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 
 	/**
 	 * Register Custom Post Type
-	*
+	 *
 	 * @since 1.0.0
 	 */
 	public function action_init_register_post_type() {
@@ -436,7 +435,7 @@ class iworks_wordpress_plugin_stub_posttype_project extends iworks_wordpress_plu
 				$one['type']
 			);
 			if ( method_exists( $this, $method ) ) {
-				echo $this->$method( $key, $value, $one['label'] );
+				echo $this->$method( $key, $value, $one['label'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- render_* methods escape their own output
 			}
 		}
 	}

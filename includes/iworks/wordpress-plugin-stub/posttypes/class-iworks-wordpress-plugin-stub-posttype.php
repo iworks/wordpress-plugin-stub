@@ -15,7 +15,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
  */
 defined( 'ABSPATH' ) || exit;
 
@@ -277,7 +276,7 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 			echo '<p>';
 			echo '<label>';
 			if ( isset( $one['label'] ) ) {
-				echo $one['label'];
+				echo esc_html( $one['label'] );
 				echo '<br />';
 			}
 			$classes = array();
@@ -296,7 +295,7 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 			);
 			echo '</label>';
 			if ( isset( $one['description'] ) ) {
-				printf( '<span class="description">%s</span>', $one['description'] );
+				printf( '<span class="description">%s</span>', esc_html( $one['description'] ) );
 			}
 			echo '</p>';
 		}
@@ -314,7 +313,7 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 		}
 		if ( isset( $one['label'] ) ) {
 			echo '<p>';
-			echo $one['label'];
+			echo esc_html( $one['label'] );
 			echo '</p>';
 		}
 		echo '<div class="iworks-field-image-row">';
@@ -330,8 +329,8 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 		printf(
 			'<img src="%s" alt="" style="%s%sclear:right;display:block;margin-bottom:10px;" />',
 			esc_attr( $src ? $src : '' ),
-			array_key_exists( 'max-width', $one ) && is_integer( $one['max-width'] ) ? sprintf( 'max-width: %dpx;', $one['max-width'] ) : '',
-			array_key_exists( 'max-height', $one ) && is_integer( $one['max-height'] ) ? sprintf( 'max-height: %dpx;', $one['max-height'] ) : ''
+			array_key_exists( 'max-width', $one ) && is_integer( $one['max-width'] ) ? sprintf( 'max-width: %dpx;', $one['max-width'] ) : '', // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- int only
+			array_key_exists( 'max-height', $one ) && is_integer( $one['max-height'] ) ? sprintf( 'max-height: %dpx;', $one['max-height'] ) : '' // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- int only
 		);
 		printf(
 			'<input class="attachment-id" type="hidden" name="%s" value="%s">',
@@ -370,11 +369,11 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 		);
 		if ( isset( $one['label'] ) ) {
 			echo ' ';
-			echo $one['label'];
+			echo esc_html( $one['label'] );
 		}
 		echo '</label>';
 		if ( isset( $one['description'] ) ) {
-			printf( '<span class="description">%s</span>', $one['description'] );
+			printf( '<span class="description">%s</span>', esc_html( $one['description'] ) );
 		}
 		echo '</p>';
 	}
@@ -389,20 +388,20 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 		echo '<p>';
 		echo '<label>';
 		if ( isset( $one['label'] ) ) {
-			echo $one['label'];
+			echo esc_html( $one['label'] );
 			echo '<br />';
 		}
 		printf(
 			'<select name="%s">',
 			esc_attr( $one['meta']['key'] )
 		);
-		printf( '<option value="">%s</option>', __( '&mdash; Select &mdash;', 'wordpress-plugin-stub' ) );
+		printf( '<option value="">%s</option>', esc_html__( '&mdash; Select &mdash;', 'wordpress-plugin-stub' ) );
 		foreach ( $one['options'] as $option_value => $option_name ) {
 			printf(
 				'<option value="%s" %s>%s</option>',
 				esc_attr( $option_value ),
 				selected( $option_value, $value, false ),
-				$option_name
+				esc_html( $option_name )
 			);
 		}
 		echo '</select>';
@@ -425,7 +424,7 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 		echo '<p>';
 		if ( isset( $one['label'] ) ) {
 			echo '<label>';
-			echo $one['label'];
+			echo esc_html( $one['label'] );
 			echo '<br />';
 			echo '</label>';
 		}
@@ -440,7 +439,7 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 				esc_attr( $one['name'] ),
 				esc_attr( $option_value ),
 				checked( $option_value, $value, false ),
-				$option_name
+				esc_html( $option_name )
 			);
 		}
 		echo '</ul>';
@@ -516,7 +515,7 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 		foreach ( $this->meta_boxes[ $post_type ] as $id => $data ) {
 			$nonce_name  = $this->get_post_meta_name( $id );
 			$nonce_value = filter_input( INPUT_POST, $nonce_name );
-			if ( ! wp_verify_nonce( $nonce_value, $this->nonce_value ) ) {
+			if ( ! wp_verify_nonce( $nonce_value, $id ) ) {
 				return;
 			}
 			foreach ( $data['fields'] as $index => $field ) {
@@ -571,7 +570,7 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 			case 'menu_order':
 				printf(
 					'<span class="alignright">%d</span>',
-					get_post_field( $column, $post_id )
+					intval( get_post_field( $column, $post_id ) )
 				);
 				return;
 		}
@@ -598,7 +597,7 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 	/**
 	 * Save post metadata when a post is saved.
 	 *
-	 * @param int $post_id The post ID.
+	 * @param int  $post_id The post ID.
 	 * @param post $post The post object.
 	 * @param bool $update Whether this is an existing post being updated or not.
 	 */
@@ -805,11 +804,13 @@ abstract class iworks_wordpress_plugin_stub_posttype extends iworks_wordpress_pl
 					&& preg_match( '/^(show|sortable)$/', $field['column'] )
 					&& $this->get_post_meta_name( $field['name'], $group ) === $column_name
 				) {
-					echo apply_filters(
-						'iworks/wordpress-plugin-stub/post/meta',
-						get_post_meta( $post_id, $column_name, true ),
-						$group,
-						$field
+					echo wp_kses_post(
+						apply_filters(
+							'iworks/wordpress-plugin-stub/post/meta',
+							get_post_meta( $post_id, $column_name, true ),
+							$group,
+							$field
+						)
 					);
 				}
 			}

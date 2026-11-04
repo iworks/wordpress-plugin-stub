@@ -18,7 +18,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -129,7 +128,7 @@ class iworks_wordpress_plugin_stub_posttype_post extends iworks_wordpress_plugin
 			setup_postdata( $post );
 			// Output the linked post
 			$content .= '<div class="element">';
-			if ( 1 == RP4WP::get()->settings->get_option( 'display_image' ) ) {
+			if ( 1 === intval( RP4WP::get()->settings->get_option( 'display_image' ) ) ) {
 				if ( has_post_thumbnail( $post->ID ) ) {
 					$content .= "<div class='related-post-image'>";
 					$content .= "<a href='" . get_permalink( $post->ID ) . "'>";
@@ -167,8 +166,8 @@ class iworks_wordpress_plugin_stub_posttype_post extends iworks_wordpress_plugin
 	 * @since 1.0.0
 	 *
 	 * @param WP_Term[]|WP_Error $terms Array of attached terms, or WP_Error on failure.
-	 * @param int $post_ID  Post ID.
-	 * @param string $taxonomy Name of the taxonomy.
+	 * @param int                $post_ID  Post ID.
+	 * @param string             $taxonomy Name of the taxonomy.
 	 */
 	public function add_hash( $terms, $post_ID, $taxonomy ) {
 		if ( empty( $terms ) ) {
@@ -267,7 +266,10 @@ class iworks_wordpress_plugin_stub_posttype_post extends iworks_wordpress_plugin
 			return;
 		}
 		delete_post_meta( $post_id, $this->option_name_post_gallery );
-		$data = $_POST[ $this->option_name_post_gallery ];
+		$data = filter_input( INPUT_POST, $this->option_name_post_gallery, FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+		if ( empty( $data ) || ! is_array( $data ) ) {
+			return;
+		}
 		foreach ( $data as $one ) {
 			$value = intval( $one );
 			if ( 0 < $value ) {

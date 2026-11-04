@@ -105,9 +105,9 @@ class iworks_wordpress_plugin_stub_db extends iworks_wordpress_plugin_stub_base 
 		 */
 		$version_to_update = 2;
 		if ( $db_version < $version_to_update ) {
-			//$sql = "CREATE TABLE IF NOT EXISTS X (id bigint(20) unsigned NOT NULL AUTO_INCREMENT)";
+			// $sql = "CREATE TABLE IF NOT EXISTS X (id bigint(20) unsigned NOT NULL AUTO_INCREMENT)";
 			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-			//dbDelta( $sql );
+			// dbDelta( $sql );
 			update_option( $this->_db_version, $version_to_update );
 			$db_version = intval( get_option( $this->_db_version ) );
 		}
@@ -122,18 +122,21 @@ class iworks_wordpress_plugin_stub_db extends iworks_wordpress_plugin_stub_base 
 	public function drop_tables() {
 		global $wpdb;
 
-		// Disable foreign key checks to avoid issues with table dependencies
-		$wpdb->query( 'SET FOREIGN_KEY_CHECKS = 0' );
+		// Disable foreign key checks to avoid issues with table dependencies.
+		$wpdb->query( 'SET FOREIGN_KEY_CHECKS = 0' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 
-		// Drop each table
+		// Drop each table. Table names are hardcoded (see $table_names),
+		// validated against a safe charset — they cannot be used with
+		// placeholders because they must not be quoted.
 		foreach ( $this->table_names as $table_name ) {
-			$sql   = 'DROP TABLE IF EXISTS %s';
-			$query = $wpdb->prepare( $sql, $wpdb->$table_name );
-			$wpdb->query( $query );
+			if ( ! preg_match( '/^[A-Za-z0-9_]+$/', $table_name ) ) {
+				continue;
+			}
+			$wpdb->query( sprintf( 'DROP TABLE IF EXISTS `%s%s`', $wpdb->prefix, $table_name ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		}
 
-		// Re-enable foreign key checks
-		$wpdb->query( 'SET FOREIGN_KEY_CHECKS = 1' );
+		// Re-enable foreign key checks.
+		$wpdb->query( 'SET FOREIGN_KEY_CHECKS = 1' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 
 		// Delete the database version option
 		delete_option( $this->_db_version );
