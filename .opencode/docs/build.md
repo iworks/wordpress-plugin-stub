@@ -120,6 +120,9 @@ replaced at build (grunt parity) — the scaffolding script bakes it in once.
 - `CURRENT_YEAR` stays literal in built ZIPs (scaffold-only replacement).
 - Copy rules: negations must precede the catch-all `**/*` include — reordering
   silently leaks sources into the ZIPs.
+- `install-libs` uses `git submodule add --force` on purpose: it recovers a
+  half-registered state (`.gitmodules` entry without a working dir, e.g. after
+  an interrupted clone) and reuses an existing local `.git` checkout.
 - Terser mangles variable names differently than grunt-uglify (e.g. `t` vs `e`)
   — minified bundles are not byte-identical to old artifacts, only equivalent.
 - `bun run make-pot` needs network on the first run (wp-cli.phar download) —

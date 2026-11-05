@@ -233,14 +233,18 @@ async function installLibs(args) {
     (protocol === "https" ? "https://github.com/" : "git@github.com:") + repo;
   let failed = 0;
   for (const { repo, path, label } of targets) {
-    if (existsSync(join(root, path))) {
+    // An empty placeholder dir (fresh clone of a repo with registered
+    // submodules) does not count as installed — only a real checkout does.
+    if (existsSync(join(root, path, ".git"))) {
       log(`${label} — ${path} already exists, skipped`, "w");
       continue;
     }
     log(`${label} — git submodule add ${url(repo)} ${path}`, "i");
     const result = await spawnAsync(
       "git",
-      ["submodule", "add", url(repo), path],
+      // --force reuses an existing local .git dir and recovers a
+      // half-registered state (.gitmodules entry without a working dir).
+      ["submodule", "add", "--force", url(repo), path],
       `git submodule add ${path}`,
       false,
     );

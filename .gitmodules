@@ -1,0 +1,6 @@
+[submodule "includes/iworks/options"]
+	path = includes/iworks/options
+	url = https://github.com/iworks/wordpress-options-class.git
+[submodule "includes/iworks/rate"]
+	path = includes/iworks/rate
+	url = https://github.com/iworks/iworks-rate.git

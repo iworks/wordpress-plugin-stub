@@ -113,6 +113,10 @@ xgettext -D languages/ -o ./languages/pl_PO.po
 rm -rf ./.git ./assets/bin
 rm -f bun.lock bun.lockb
 #
+# submodules are empty dirs after a fresh clone - install-libs fills them
+#
+rm -rf includes/iworks/options includes/iworks/rate
+#
 # submodules - install with bun
 #
 echo "next: bun run install-libs https all && bun install && bun run build"
