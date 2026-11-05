@@ -17,11 +17,13 @@ then
 fi
 CLASS=${SLUG//-/_}
 PREFIX=${CLASS^^}
+PACKAGE=$(echo ${CLASS} | perl -pe 's/([a-zA-Z]+)/(ucfirst $1)/ge')
 YEAR=$(date +%Y)
 
 echo Plugin class:  ${CLASS}
 echo Plugin name:   ${NAME}
 echo Plugin prefix: ${PREFIX}
+echo Plugin package: ${PACKAGE}
 echo Plugin slug:   ${SLUG}
 
 #
@@ -51,11 +53,17 @@ perl -pi -e "s/wordpress-plugin-stub/${SLUG}/g"   ${FILES}
 perl -pi -e "s/WORDPRESS_PLUGIN_STUB/${PREFIX}/g" ${FILES}
 perl -pi -e "s/wordpress_plugin_stub/${CLASS}/g"  ${FILES}
 perl -pi -e "s/WordPress Plugin Stub/${NAME}/g"   ${FILES}
+perl -pi -e "s/WordPress_Plugin_Stub/${PACKAGE}/g"   ${FILES}
+perl -pi -e "s/IWorks\\\\WordPressPluginStub/${PACKAGE}/g"   ${FILES}
 #
 # docs - drop stub-only fragments (assets/bin is removed below)
 #
 perl -0pi -e 's/## Scaffolding[^\n]*\n.*?\n\n(?=## )//s' .opencode/docs/build.md
-perl -0pi -e 's/New plugins are scaffolded from this stub \(`assets\/bin\/wp-plugin-create\.sh`\);\ns/S/' AGENTS.md
+#
+# docs - AGENTS.md: describe the generated plugin, not the stub
+#
+export GENERATED_PLUGIN_NAME=${NAME}
+perl -0pi -e 's/## What the project is\n\n.*?(?=\n\n## )/"## What the project is\n\nThe \"$ENV{GENERATED_PLUGIN_NAME}\" WordPress plugin:\nmain file + PHP classes (`\/includes\/iworks`) + options config (`\/etc\/options.php`)\n+ assets (`\/assets`), built with a bun bundler (`\/bundler` \x{2192} `release\/` ZIPs);\nsources contain build-time placeholders (`PLUGIN_VERSION`, `CURRENT_YEAR`, \x{2026})"/se' AGENTS.md
 #
 # make dirs
 #
@@ -105,8 +113,6 @@ xgettext -D languages/ -o ./languages/pl_PO.po
 rm -rf ./.git ./assets/bin
 rm -f bun.lock bun.lockb
 #
-# submodules - show commands
+# submodules - install with bun
 #
-echo git submodule add git@github.com:iworks/wordpress-options-class.git includes/iworks/options
-echo git submodule add git@github.com:iworks/iworks-rate.git includes/iworks/rate
-echo "next: bun install && bun run build"
+echo "next: bun run install-libs https all && bun install && bun run build"

@@ -5,8 +5,8 @@
  * This file contains the configuration options for the WordPress Plugin Stub.
  * It defines the structure of the plugin's options and settings pages.
  *
- * @package    iWorks
- * @subpackage WordPress Plugin Stub
+ * @package    WordPress_Plugin_Stub
+ * @subpackage WordPress_Plugin_Stub
  * @author     Marcin Pietrzak <marcin@iworks.pl>
  * @copyright  CURRENT_YEAR-PLUGIN_TILL_YEAR Marcin Pietrzak
  * @license    http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License v2.0

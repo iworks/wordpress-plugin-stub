@@ -5,7 +5,7 @@
  * This is the base class for the WordPress Plugin Stub, providing
  * common functionality and properties for the plugin.
  *
- * @package    IWorks\WordPressPluginStub
+ * @package    WordPress_Plugin_Stub
  * @subpackage Includes
  * @author     Marcin Pietrzak <marcin@iworks.pl>
  * @copyright  CURRENT_YEAR-PLUGIN_TILL_YEAR Marcin Pietrzak
@@ -34,8 +34,8 @@ if ( class_exists( 'iworks_wordpress_plugin_stub_base' ) ) {
  * This class provides the foundation for the WordPress Plugin Stub,
  * offering essential properties and methods used throughout the plugin.
  *
+ * @package WordPress_Plugin_Stub
  * @since 1.0.0
- * @package IWorks\WordPressPluginStub
  */
 class iworks_wordpress_plugin_stub_base {
 

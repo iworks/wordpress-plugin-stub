@@ -37,7 +37,13 @@ sources contain build-time placeholders (`PLUGIN_VERSION`, `CURRENT_YEAR`, …).
 
 ## Commands
 
-`bun run dev` (watcher) · `bun run compile` (one-shot assets) ·
-`bun run build` (both ZIPs) · `bun run build:wporg` (wp.org ZIP) ·
-`bun run build:github` (GitHub ZIP) · `bun run make-pot` (translations) · `bun run update-libs` (iWorks submodules) ·
-`bun run test` (phpunit)
+- `bun run dev` — watcher, compile assets on change
+- `bun run compile` — one-shot asset compile
+- `bun run build` — production build, both ZIPs (wporg + github)
+- `bun run build:wporg` — production build, wp.org ZIP only
+- `bun run build:github` — production build, GitHub ZIP only
+- `bun run make-pot` — translations (.pot + .po update)
+- `bun run install-libs <https|git> <option|rate|all>` — add iWorks libraries as git submodules
+- `bun run update-libs` — git pull on the installed iWorks submodules
+- `bun run test` — PHPUnit
+- `postinstall` — runs automatically on `bun install` (downloads wp-cli.phar)
