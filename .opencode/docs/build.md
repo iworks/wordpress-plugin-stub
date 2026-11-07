@@ -43,6 +43,7 @@ script renames the plugin and the bundler follows automatically.
 | `bun run make-pot`     | Translations only (`.pot` + `.po` update)                                                     |
 | `bun run update-libs`  | `git pull` on the vendored iWorks libraries (`includes/iworks/options`, `includes/iworks/rate`) |
 | `bun run install-libs` | Add iWorks libraries as git submodules: `bun run install-libs <https\|git> <option\|rate\|all>` — both args required |
+| `bun run check`        | Coding standards: phpcs with `phpcs.xml.dist` (WPCS). Uses `phpcs` from PATH or `~/.config/composer/vendor/bin/phpcs` |
 | `bun run test`         | PHPUnit (`tests/php/phpunit.xml`); jshint was dropped with Grunt                              |
 | (env) `DEV_EXIT_AFTER_MS` | Dev mode exits itself after N ms — headless testing (put it in `.env`, see `.env.example`) |
 

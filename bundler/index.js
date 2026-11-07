@@ -11,6 +11,7 @@
  *   make-pot      — translations only (.pot + .po update)
  *   update-libs   — git pull on the vendored iWorks libraries (submodules)
  *   install-libs  — git submodule add for iWorks libs: <https|git> <option|rate|all>
+ *   check         — coding standards (WPCS via phpcs + phpcs.xml.dist)
  *   test          — PHPUnit (tests/php/phpunit.xml)
  */
 
@@ -264,6 +265,40 @@ async function installLibs(args) {
 }
 
 /**
+ * Coding standards check (WPCS via phpcs + phpcs.xml.dist).
+ */
+async function check() {
+  // phpcs may be a global composer binary, not on PATH.
+  const candidates = [
+    "phpcs",
+    join(process.env.HOME || "", ".config/composer/vendor/bin/phpcs"),
+  ];
+  let phpcs = null;
+  for (const candidate of candidates) {
+    if (candidate.includes("/") === false || existsSync(candidate)) {
+      phpcs = candidate;
+      break;
+    }
+  }
+  if (!phpcs) {
+    const err = new Error(
+      "phpcs not found. Install it: composer global require wp-coding-standards/wpcs dealerdirect/phpcodesniffer-composer-installer",
+    );
+    err.friendly = true;
+    throw err;
+  }
+  const result = await spawnAsync(phpcs, ["--colors"], "phpcs", false);
+  if (result.stdout.trim()) {
+    console.log(result.stdout.trim());
+  }
+  if (result.code !== 0) {
+    log(`phpcs found violations (exit ${result.code})`, "e");
+    process.exit(result.code);
+  }
+  log("check — WPCS passed", "s");
+}
+
+/**
  * PHPUnit (grunt `test` parity, jshint dropped).
  */
 async function test() {
@@ -297,14 +332,15 @@ const modes = {
       compileAssets({ maps: true, strip: false, format: false }),
     ),
   build: async () => {
-    await build("wporg");
     await build("github");
+    await build("wporg");
   },
   "build:wporg": () => build("wporg"),
   "build:github": () => build("github"),
   "make-pot": () => executionTime("make-pot", () => makePot(false)),
   "update-libs": () => executionTime("update-libs", () => updateLibs()),
   "install-libs": () => installLibs(process.argv.slice(3)),
+  check: () => check(),
   test: () => test(),
 };
 

@@ -45,5 +45,6 @@ sources contain build-time placeholders (`PLUGIN_VERSION`, `CURRENT_YEAR`, …).
 - `bun run make-pot` — translations (.pot + .po update)
 - `bun run install-libs <https|git> <option|rate|all>` — add iWorks libraries as git submodules
 - `bun run update-libs` — git pull on the installed iWorks submodules
+- `bun run check` — coding standards (WPCS via phpcs)
 - `bun run test` — PHPUnit
 - `postinstall` — runs automatically on `bun install` (downloads wp-cli.phar)

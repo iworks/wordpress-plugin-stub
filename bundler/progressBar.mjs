@@ -4,6 +4,12 @@
 
 const WIDTH = 30;
 
+/**
+ * Shared dirty-line flag: the bar writes without a trailing newline, so
+ * log() knows when to break the line first.
+ */
+export const progressState = { dirty: false };
+
 export class ProgressBar {
   constructor(total) {
     this.total = total;
@@ -25,8 +31,10 @@ export class ProgressBar {
     process.stdout.write(
       `\r\x1b[K${bar} ${this.current}/${this.total} ${this.label}`,
     );
+    progressState.dirty = true;
     if (this.current >= this.total) {
       process.stdout.write("\n");
+      progressState.dirty = false;
     }
   }
 }
