@@ -12,6 +12,7 @@ import {
   readdirSync,
   readFileSync,
   rmSync,
+  writeFileSync,
 } from "node:fs";
 import archiver from "archiver";
 import { log } from "./consoleHelpers.mjs";
@@ -91,6 +92,33 @@ function replacePlaceholders(file) {
 }
 
 /**
+ * Silently suppress direct directory access (WordPress standard guard file).
+ */
+const INDEX_GUARD = `<?php\n// Silence is golden.\n`;
+
+/**
+ * Ensure every directory under `dir` contains an index.php, creating any
+ * that are missing. Runs on the staged release copy only — source trees
+ * are never modified.
+ *
+ * @param {string}   dir      Staging directory to scan.
+ * @param {Function} onCreated Called once per created file (counter).
+ */
+function addIndexGuards(dir, onCreated) {
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    if (!entry.isDirectory()) {
+      continue;
+    }
+    const full = join(dir, entry.name);
+    if (!existsSync(join(full, "index.php"))) {
+      writeFileSync(join(full, "index.php"), INDEX_GUARD);
+      onCreated();
+    }
+    addIndexGuards(full, onCreated);
+  }
+}
+
+/**
  * Build one release flavor.
  *
  * @param {string} flavor "wporg" or "github".
@@ -118,6 +146,13 @@ export async function makeZip(flavor) {
     replacePlaceholders(dest);
   }
   log(`makeZip — ${files.length} files staged for ${flavor}`, "i");
+
+  // Directory-browsing guard: every staged directory gets an index.php.
+  let guards = 0;
+  addIndexGuards(stagingDir, () => guards++);
+  if (guards > 0) {
+    log(`makeZip — added ${guards} index.php guard(s) for ${flavor}`, "i");
+  }
 
   // Zip (level 9), wrapper folder {name}/ inside.
   await new Promise((resolveZip, rejectZip) => {

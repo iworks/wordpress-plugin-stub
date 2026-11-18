@@ -29,4 +29,5 @@ o
 
 # bun / local tools
 wp-cli.phar
+plugin-check.log
 .env

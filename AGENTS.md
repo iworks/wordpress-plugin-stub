@@ -29,6 +29,7 @@ sources contain build-time placeholders (`PLUGIN_VERSION`, `CURRENT_YEAR`, …).
   (desired format when asked: `## X.Y.Z - RRRR.MM`, categories `Added` / `Improved` / `Fixed` /
   `Removed` (tabs), English, concise).
 - Never commit, push, amend or create PRs without an explicit request.
+- The default (and only) git branch is `master` — do not look for or create `main`.
 - Naming: kebab-case files (`class-iworks-wordpress-plugin-stub-{name}.php`);
   PHP classes `iworks_wordpress_plugin_stub_` prefix, snake_case, lowercase.
 - Version lives only in `package.json` — placeholders (`PLUGIN_VERSION`,

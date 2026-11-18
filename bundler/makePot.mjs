@@ -4,10 +4,11 @@
  */
 
 import { dirname, join, resolve } from "node:path";
-import { existsSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { log } from "./consoleHelpers.mjs";
 import { config } from "./config.mjs";
 import { spawnAsync } from "./spawnAsync.mjs";
+import { writeFileAtomic } from "./tools.mjs";
 
 const root = resolve(dirname(new URL(import.meta.url).pathname), "..");
 const WP_CLI_URL =
@@ -68,6 +69,17 @@ async function wpCliI18n(args, label) {
  */
 export async function makePot(makeMo = false) {
   const potFile = join(config.languagesDir, `${config.textdomain}.pot`);
+  const potPath = join(root, potFile);
+  // Remember the current POT-Creation-Date: if the regenerated file differs
+  // only by that timestamp, the old one is restored (no VCS churn).
+  // The date lives in a quoted PO string: "POT-Creation-Date: …\n".
+  const datePattern = /^("POT-Creation-Date: ).*(\\n")$/m;
+  let previousDateLine = null;
+  let previousContent = null;
+  if (existsSync(potPath)) {
+    previousContent = readFileSync(potPath, "utf8");
+    previousDateLine = previousContent.match(datePattern)?.[0] ?? null;
+  }
   const excludes =
     "release,node_modules,.git,.opencode,bundler,tests,.sass-cache";
   await wpCliI18n(
@@ -80,6 +92,24 @@ export async function makePot(makeMo = false) {
     ],
     "make-pot",
   );
+  const newDateLine = previousContent
+    ? (readFileSync(potPath, "utf8").match(datePattern)?.[0] ?? null)
+    : null;
+  if (previousDateLine && newDateLine) {
+    // Compare both files with the timestamp blanked out (keep the quoted
+    // line shape, only the value differs): X stands for the blanked date.
+    const blank = (s) => s.replace(datePattern, "$1X$2");
+    const content = readFileSync(potPath, "utf8");
+    if (blank(content) === blank(previousContent)) {
+      writeFileAtomic(potPath, content.replace(datePattern, previousDateLine));
+      log("make-pot — strings unchanged, POT-Creation-Date preserved", "i");
+    } else {
+      log(
+        `make-pot — strings changed, POT-Creation-Date updated (${previousDateLine} → ${newDateLine})`,
+        "i",
+      );
+    }
+  }
   const poFiles = existsSync(join(root, config.languagesDir))
     ? readdirSync(join(root, config.languagesDir)).filter((f) =>
         f.endsWith(".po"),

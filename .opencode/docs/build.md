@@ -37,13 +37,13 @@ script renames the plugin and the bundler follows automatically.
 | ---------------------- | -------------------------------------------------------------------------------------------- |
 | `bun run dev`          | Watcher: `.scss` → CSS pipeline, `assets/scripts/src/**` → prettier + JS pipeline (200 ms debounce); no ZIP, no i18n, no auto browser reload |
 | `bun run compile`      | One-shot asset compile with source maps (old `grunt` default task)                            |
-| `bun run build`        | Both flavors back-to-back: wporg + github                                                     |
-| `bun run build:wporg`  | Production → `release/wporg/{name}.zip`                                                       |
-| `bun run build:github` | Production + `.mo` → `release/github/{name}.zip`                                              |
+| `bun run build`        | Both flavors back-to-back: wporg + github                                                       |
+| `bun run build:wporg`  | Production → `release/wporg/{name}.zip`                                                        |
+| `bun run build:github` | Production + `.mo` → `release/github/{name}.zip`. Both flavors: every ZIP directory gets an `index.php` guard (silence is golden) if missing |
 | `bun run make-pot`     | Translations only (`.pot` + `.po` update)                                                     |
 | `bun run update-libs`  | `git pull` on the vendored iWorks libraries (`includes/iworks/options`, `includes/iworks/rate`) |
 | `bun run install-libs` | Add iWorks libraries as git submodules: `bun run install-libs <https\|git> <option\|rate\|all>` — both args required |
-| `bun run check`        | Coding standards: phpcs with `phpcs.xml.dist` (WPCS). Uses `phpcs` from PATH or `~/.config/composer/vendor/bin/phpcs` |
+| `bun run check`        | Coding standards: phpcs with `phpcs.xml.dist` (WPCS). Uses `phpcs` from PATH or `~/.config/composer/vendor/bin/phpcs`; full report → `plugin-check.log` (gitignored, never shipped) |
 | `bun run test`         | PHPUnit (`tests/php/phpunit.xml`); jshint was dropped with Grunt                              |
 | (env) `DEV_EXIT_AFTER_MS` | Dev mode exits itself after N ms — headless testing (put it in `.env`, see `.env.example`) |
 

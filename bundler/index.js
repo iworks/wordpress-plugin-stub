@@ -16,7 +16,7 @@
  */
 
 import { dirname, join, resolve } from "node:path";
-import { existsSync, watch } from "node:fs";
+import { existsSync, watch, writeFileSync } from "node:fs";
 import { executionTime, log } from "./consoleHelpers.mjs";
 import { ProgressBar } from "./progressBar.mjs";
 import { spawnAsync } from "./spawnAsync.mjs";
@@ -287,10 +287,14 @@ async function check() {
     err.friendly = true;
     throw err;
   }
-  const result = await spawnAsync(phpcs, ["--colors"], "phpcs", false);
-  if (result.stdout.trim()) {
-    console.log(result.stdout.trim());
+  const result = await spawnAsync(phpcs, ["--report=full"], "phpcs", false);
+  // Full report to console + plain-text log file (gitignored, never shipped).
+  const output = result.stdout.trim();
+  if (output) {
+    console.log(output);
   }
+  writeFileSync(join(root, "plugin-check.log"), `${output}\n`);
+  log("check — full report written to plugin-check.log", "i");
   if (result.code !== 0) {
     log(`phpcs found violations (exit ${result.code})`, "e");
     process.exit(result.code);
